@@ -1,0 +1,36 @@
+{
+  "name": "slotmachine",
+  "version": "1.0.0",
+  "description": "Alexa slot machine",
+  "main": "index.js",
+  "dependencies": {
+    "alexa-speech-utils": "0.0.4",
+    "ask-sdk": "^2.0.7",
+    "aws-sdk": "^2.282.1",
+    "bluebird": "^3.5.0",
+    "dashbot": "^9.9.2",
+    "moment-timezone": "^0.5.21",
+    "poker-ranking": "^1.1.1",
+    "seedrandom": "^2.4.3"
+  },
+  "devDependencies": {
+    "eslint-config-google": "^0.7.1",
+    "gulp": "^4.0.0",
+    "gulp-eslint": "^3.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"Error: please run gulp command instead\" && exit 1",
+    "lint-fix": "eslint --fix ./**/*.js *.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsdriver/slotmachine.git"
+  },
+  "author": "gsdriver@live.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gsdriver/slotmachine/issues"
+  },
+  "homepage": "https://github.com/gsdriver/slotmachine#readme"
+}
