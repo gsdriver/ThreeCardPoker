@@ -13,6 +13,9 @@ const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
 
 module.exports = {
+  STARTING_HANDS: 10,
+  DAILY_REFRESH_HANDS: 5,
+  PURCHASE_REFRESH_HANDS: 10,
   getGreeting: function(handlerInput, callback) {
     const event = handlerInput.requestEnvelope;
     const res = require('./resources')(handlerInput);
@@ -101,6 +104,70 @@ module.exports = {
       // Wow!  A tie?!
       return 'tie';
     }
+  },
+  getPurchaseDirective: function(attributes, product, message) {
+    return {
+      'type': 'Connections.SendRequest',
+      'name': 'morehands',
+      'payload': {
+        'InSkillProduct': {
+          'productId': attributes.paid[product].productId,
+        },
+        'upsellMessage': message,
+      },
+      'token': product,
+    };
+  },
+  getPurchasedProducts: function(handlerInput, callback) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    // Invoke the entitlement API to load products
+    const options = {
+      host: 'api.amazonalexa.com',
+      path: '/v1/users/~current/skills/~current/inSkillProducts',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': event.request.locale,
+        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+      },
+    };
+    const req = https.get(options, (res) => {
+      let returnData = '';
+      res.setEncoding('utf8');
+      if (res.statusCode != 200) {
+        console.log('inSkillProducts returned status code ' + res.statusCode);
+        callback(res.statusCode);
+      } else {
+        res.on('data', (chunk) => {
+          returnData += chunk;
+        });
+
+        res.on('end', () => {
+          const inSkillProductInfo = JSON.parse(returnData);
+          if (Array.isArray(inSkillProductInfo.inSkillProducts)) {
+            // Let's see what they paid for
+            if (!attributes.paid) {
+              attributes.paid = {};
+            }
+
+            inSkillProductInfo.inSkillProducts.forEach((product) => {
+              attributes.paid[product.referenceName] = {
+                productId: product.productId,
+                state: (product.entitled == 'ENTITLED') ? 'PURCHASED' : 'AVAILABLE',
+              };
+            });
+          }
+          callback();
+        });
+      }
+    });
+
+    req.on('error', (err) => {
+      console.log('Error calling inSkillProducts API: ' + err.message);
+      callback(err);
+    });
   },
 };
 

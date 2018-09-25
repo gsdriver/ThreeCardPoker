@@ -86,11 +86,15 @@ module.exports = {
       const result = utils.determineWinner(game);
       if (result === 'player') {
         speech += res.getString('HOLD_WIN');
+        game.remainingHands++;
       } else if (result === 'opponent') {
         speech += res.getString('HOLD_LOSE');
+        game.remainingHands--;
       } else {
         speech += res.getString('HOLD_TIE');
+        game.remainingHands--;
       }
+      speech += res.getString('HANDS_LEFT').replace('{0}', game.remainingHands);
       reprompt = res.getString('HOLD_GAMEOVER_REPROMPT');
       speech += reprompt;
       attributes.temp.holding = undefined;

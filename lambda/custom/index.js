@@ -7,6 +7,10 @@ const SessionEnd = require('./intents/SessionEnd');
 const Unhandled = require('./intents/Unhandled');
 const StartGame = require('./intents/StartGame');
 const ChangeName = require('./intents/ChangeName');
+const Purchase = require('./intents/Purchase');
+const Refund = require('./intents/Refund');
+const ProductResponse = require('./intents/ProductResponse');
+const Help = require('./intents/Help');
 const Play = require('./intents/Play');
 const Exit = require('./intents/Exit');
 const Hold = require('./intents/Hold');
@@ -34,13 +38,17 @@ const requestInterceptor = {
               attributes.currentGame = 'standard';
               attributes.prompts = {};
               attributes.standard = {
+                remainingHands: utils.STARTING_HANDS,
               };
             }
 
-            // Since there were no session attributes, this is the first
-            // round of the session - set the temp attributes
-            attributesManager.setSessionAttributes(attributes);
-            resolve();
+            // Now get the product ID of any purchasable products
+            utils.getPurchasedProducts(handlerInput, () => {
+              // Since there were no session attributes, this is the first
+              // round of the session - set the temp attributes
+              attributesManager.setSessionAttributes(attributes);
+              resolve();
+            });
           })
           .catch((error) => {
             reject(error);
@@ -125,8 +133,12 @@ function runGame(event, context, callback) {
       Launch,
       StartGame,
       ChangeName,
+      Purchase,
+      Refund,
+      ProductResponse,
       Play,
       Hold,
+      Help,
       Exit,
       SessionEnd,
       Unhandled

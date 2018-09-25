@@ -1,7 +1,7 @@
 {
-  "name": "slotmachine",
+  "name": "threecardpoker",
   "version": "1.0.0",
-  "description": "Alexa slot machine",
+  "description": "Alexa three card poker",
   "main": "index.js",
   "dependencies": {
     "alexa-speech-utils": "0.0.4",
@@ -25,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gsdriver/slotmachine.git"
+    "url": "git+https://github.com/gsdriver/threecardpoker.git"
   },
   "author": "gsdriver@live.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gsdriver/slotmachine/issues"
+    "url": "https://github.com/gsdriver/threecardpoker/issues"
   },
-  "homepage": "https://github.com/gsdriver/slotmachine#readme"
+  "homepage": "https://github.com/gsdriver/threecardpoker#readme"
 }

@@ -20,7 +20,7 @@
         },
         "interactionModel": {
           "en-US": {
-            "eTag": "26292fc7d4b6ee1dc66eb925cff14113"
+            "eTag": "6eade01f30aca0883eed2244a564efb3"
           }
         },
         "lambda": [
@@ -31,10 +31,18 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "91357106-4aa2-4c7f-bff2-6d350b7be88f"
+            "revisionId": "353214fb-2488-45ff-acc5-de6e0c6d2f9c"
           }
         ]
-      }
+      },
+      "in_skill_products": [
+        {
+          "deploy_status": "Update",
+          "filePath": "isps\\consumable\\morehands.json",
+          "productId": "amzn1.adg.product.4e760229-10aa-4fc7-bdf3-d7f0bc31ee7c",
+          "eTag": "3d1297e0ebafbaa3249e66c537ffcc28"
+        }
+      ]
     }
   }
 }
