@@ -40,8 +40,9 @@ const common = {
   'LAUNCH_BUSTED_REPLENISH': 'Thanks for coming back {1}! Here are {0} points to get you back in the game. |Good to see you again {1}! Here are {0} points to keep playing. |Hey {1}! Here are {0} points to get you back in the game. ',
   'LAUNCH_REPROMPT_BUTTON': 'Or press an Echo Button to start playing. ',
   // Play.js
-  'PLAY_READ_HAND': 'You have {0} <break time=\'300ms\'/> {1} is showing {2}. |You have {0} <break time=\'300ms\'/> and I see {2} in {1}\'s hand. ',
+  'PLAY_READ_HAND': 'You have {0} giving you {3} <break time=\'300ms\'/> {1} is showing {2}. |You have {0} making {3} <break time=\'300ms\'/> and I see {2} in {1}\'s hand. ',
   'PLAY_REPRONPT': '<break time=\'300ms\'/> Would you like to hold {0}?',
+  'PLAY_HOLDALL_REPROMPT': '<break time=\'300ms\'/> Would you like to hold all your cards?',
   // From Purchase.js
   'PURCHASE_MOREHANDS': 'We have a product available for purchase to give you 10 extra points. Would you like to buy it? ',
   'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy more points',

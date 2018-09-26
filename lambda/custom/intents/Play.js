@@ -29,11 +29,24 @@ module.exports = {
     const cards = game.player.cards.slice(0, 3).map((x) => {
       return res.readCard(x);
     });
+    const firstCards = {
+      cards: game.player.cards,
+      hold: [0, 1, 2],
+    };
+    const details = utils.evaluateHand(firstCards);
     let speech = res.getString('PLAY_READ_HAND')
       .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}))
       .replace('{1}', game.opponent.name)
-      .replace('{2}', res.readCard(game.opponent.cards[0]));
-    const reprompt = res.getString('PLAY_REPRONPT').replace('{0}', res.readCard(game.player.cards[0]));
+      .replace('{2}', res.readCard(game.opponent.cards[0]))
+      .replace('{3}', utils.readHandRank(handlerInput, firstCards));
+    let reprompt;
+
+    if (details.cards.length === 3) {
+      reprompt = res.getString('PLAY_HOLDALL_REPROMPT');
+      attributes.temp.holdingAll = true;
+    } else {
+      reprompt = res.getString('PLAY_REPRONPT').replace('{0}', res.readCard(game.player.cards[0]));
+    }
     speech += ('<break time=\'300ms\'/> ' + reprompt);
 
     // Now we are going into holding mode

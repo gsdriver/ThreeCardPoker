@@ -105,16 +105,20 @@ module.exports = {
       return 'tie';
     }
   },
-  readHandRank: function(handlerInput, hand) {
-    const res = require('./resources')(handlerInput);
+  evaluateHand: function(hand) {
     const cards = mapHand(hand);
     const details = poker.evaluateAndFindCards(cards,
       {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
+    return details;
+  },
+  readHandRank: function(handlerInput, hand) {
+    const res = require('./resources')(handlerInput);
+    const details = module.exports.evaluateHand(hand);
     let rank = JSON.parse(res.getString('HAND_NAMES'))[details.match];
 
     if (rank.includes('{0}')) {
       // Need to replace with high card in hand
-      const sorted = sortHand(cards, details);
+      const sorted = sortHand(mapHand(hand), details);
       rank = rank.replace('{0}', res.readRank(sorted[0]));
     }
 
