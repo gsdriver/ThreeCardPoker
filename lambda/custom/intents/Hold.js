@@ -35,10 +35,14 @@ module.exports = {
     let reprompt;
     let response;
     let output;
+    const willHold = (((event.request.type === 'GameEngine.InputHandlerEvent')
+      && (attributes.temp.buttons.hold === attributes.temp.buttonId))
+      || ((event.request.type === 'IntentRequest')
+      && (event.request.intent.name === 'AMAZON.YesIntent')));
 
     // Are they holding all?
     if (Array.isArray(attributes.temp.holding)) {
-      if (event.request.intent.name === 'AMAZON.YesIntent') {
+      if (willHold) {
         game.player.hold = attributes.temp.holding;
         attributes.temp.holding = undefined;
         output = finishHand(handlerInput);
@@ -53,10 +57,7 @@ module.exports = {
       }
     } else {
       // OK, are they holding this one?
-      if (((event.request.type === 'GameEngine.InputHandlerEvent')
-        && (attributes.temp.buttons.hold === attributes.temp.buttonId))
-        || ((event.request.type === 'IntentRequest')
-        && (event.request.intent.name === 'AMAZON.YesIntent'))) {
+      if (willHold) {
         game.player.hold.push(attributes.temp.holding);
       }
 
