@@ -33,25 +33,29 @@ module.exports = {
       cards: game.player.cards,
       hold: [0, 1, 2],
     };
+    const handRank = utils.readHandRank(handlerInput, firstCards);
     const details = utils.evaluateHand(firstCards);
     let speech = res.getString('PLAY_READ_HAND')
       .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}))
       .replace('{1}', game.opponent.name)
       .replace('{2}', res.readCard(game.opponent.cards[0]))
-      .replace('{3}', utils.readHandRank(handlerInput, firstCards));
+      .replace('{3}', handRank);
     let reprompt;
 
-    if (details.cards.length === 3) {
-      reprompt = res.getString('PLAY_HOLDALL_REPROMPT');
-      attributes.temp.holdingAll = true;
+    if (details.cards.length > 0) {
+      reprompt = res.getString('PLAY_HOLDALL_REPROMPT').replace('{0}', handRank);
+      attributes.temp.holding = [];
+      details.cards.forEach((card) => {
+        attributes.temp.holding.push(firstCards.cards.indexOf(card));
+      });
     } else {
       reprompt = res.getString('PLAY_REPRONPT').replace('{0}', res.readCard(game.player.cards[0]));
+      attributes.temp.holding = 0;
     }
     speech += ('<break time=\'300ms\'/> ' + reprompt);
 
     // Now we are going into holding mode
     attributes.temp.newGame = undefined;
-    attributes.temp.holding = 0;
     return handlerInput.responseBuilder
       .speak(speech)
       .reprompt(reprompt)

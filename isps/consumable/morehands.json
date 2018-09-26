@@ -49,6 +49,6 @@
       }
     }
   },
-  "testingInstructions": "By buying this product, you will increase the number of points you have by 10. You can hear how many points you have left by asking for Help or after each game.",
+  "testingInstructions": "By buying this product, you will increase the number of hands you can play by 10. You can hear how many hands you have left by asking for Help or after each game.",
   "purchasableState": "PURCHASABLE"
 }

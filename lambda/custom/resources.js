@@ -42,14 +42,17 @@ const common = {
   // Play.js
   'PLAY_READ_HAND': 'You have {0} giving you {3} <break time=\'300ms\'/> {1} is showing {2}. |You have {0} making {3} <break time=\'300ms\'/> and I see {2} in {1}\'s hand. ',
   'PLAY_REPRONPT': '<break time=\'300ms\'/> Would you like to hold {0}?',
-  'PLAY_HOLDALL_REPROMPT': '<break time=\'300ms\'/> Would you like to hold all your cards?',
+  'PLAY_HOLDALL_REPROMPT': '<break time=\'300ms\'/> Would you like to hold {0}?',
   // From Purchase.js
   'PURCHASE_MOREHANDS': 'We have a product available for purchase to give you 10 extra points. Would you like to buy it? ',
   'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy more points',
   'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
   // StartGame.js
-  'STARTGAME_START': 'Thanks <break time=\'300ms\'/> you can use your Echo Button to start a round or hold cards. ',
-  'STARTGAME_REPROMPT': 'Please say your name to get started.',
+  'STARTGAME_PRESS_DISCARD': 'Thanks {0} <break time=\'300ms\'/> this green button will be used to hold cards <break time=\'300ms\'/> ',
+  'STARTGAME_PRESS_DISCARD_REPROMPT': 'Press another button to use for discarding cards. ',
+  'STARTGAME_START': 'Great. This button will be used to discard cards. ',
+  'STARTGAME_START_REPROMPT': 'Say play to get started.',
+  'STARTGAME_START_REPROMPT_NONAME': 'Please say your name to get started.',
   // Unhandled.js
   'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Bet.',
   'UNKNOWN_INTENT_REPROMPT': 'Try saying Bet.',

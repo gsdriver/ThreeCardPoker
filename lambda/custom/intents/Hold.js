@@ -6,11 +6,20 @@
 
 const utils = require('../utils');
 const speechUtils = require('alexa-speech-utils')();
+const buttons = require('../buttons');
 
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    if ((request.type === 'GameEngine.InputHandlerEvent') && !attributes.temp.newGame) {
+      attributes.temp.buttonId = buttons.getPressedButton(request);
+      return (attributes.temp.buttons && attributes.temp.buttons.hold
+        && attributes.temp.buttons.discard
+        && ((attributes.temp.buttons.hold === attributes.temp.buttonId) ||
+          (attributes.temp.buttons.discard === attributes.temp.buttonId)));
+    }
 
     return ((request.type === 'IntentRequest') &&
       (attributes.temp.holding !== undefined) &&
@@ -28,10 +37,10 @@ module.exports = {
     let output;
 
     // Are they holding all?
-    if (attributes.temp.holdingAll) {
-      attributes.temp.holdingAll = undefined;
+    if (Array.isArray(attributes.temp.holding)) {
       if (event.request.intent.name === 'AMAZON.YesIntent') {
-        game.player.hold = [0, 1, 2];
+        game.player.hold = attributes.temp.holding;
+        attributes.temp.holding = undefined;
         output = finishHand(handlerInput);
         speech = output.speech;
         reprompt = output.reprompt;
@@ -44,7 +53,10 @@ module.exports = {
       }
     } else {
       // OK, are they holding this one?
-      if (event.request.intent.name === 'AMAZON.YesIntent') {
+      if (((event.request.type === 'GameEngine.InputHandlerEvent')
+        && (attributes.temp.buttons.hold === attributes.temp.buttonId))
+        || ((event.request.type === 'IntentRequest')
+        && (event.request.intent.name === 'AMAZON.YesIntent'))) {
         game.player.hold.push(attributes.temp.holding);
       }
 

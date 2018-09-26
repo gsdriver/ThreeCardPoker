@@ -36,17 +36,37 @@ module.exports = {
     if (module.exports.supportButtons(handlerInput)) {
       // We'll allow them to press the button again if we haven't already
       const response = handlerInput.responseBuilder.getResponse();
-      let ignore;
-
-      if (response.directives) {
-        response.directives.forEach((directive) => {
-          if (directive.type === 'GameEngine.StartInputHandler') {
-            ignore = true;
-          }
-        });
-      }
-
-      if (!ignore) {
+      const inputDirective = {
+        'type': 'GameEngine.StartInputHandler',
+        'timeout': 90000,
+        'recognizers': {
+          'button_down_recognizer': {
+            'type': 'match',
+            'fuzzy': false,
+            'anchor': 'end',
+            'pattern': [{
+              'action': 'down',
+            }],
+          },
+        },
+        'events': {
+          'button_down_event': {
+            'meets': ['button_down_recognizer'],
+            'reports': 'matches',
+            'shouldEndInputHandler': false,
+          },
+        },
+      };
+      handlerInput.responseBuilder.addDirective(inputDirective);
+    }
+  },
+  playInputHandler: function(handlerInput) {
+    if (module.exports.supportButtons(handlerInput)) {
+      // Need both hold and discard buttons
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      if (attributes.temp.buttons && attributes.temp.buttons.hold && attributes.temp.buttons.discard) {
+        // We'll allow them to press the button again if we haven't already
+        const response = handlerInput.responseBuilder.getResponse();
         const inputDirective = {
           'type': 'GameEngine.StartInputHandler',
           'timeout': 90000,
@@ -54,6 +74,7 @@ module.exports = {
             'button_down_recognizer': {
               'type': 'match',
               'fuzzy': false,
+              'gadgetIds': [attributes.temp.buttons.hold, attributes.temp.buttons.discard],
               'anchor': 'end',
               'pattern': [{
                 'action': 'down',
@@ -123,29 +144,51 @@ module.exports = {
         .addDirective(turnOffButtonDirective);
     }
   },
-  lightPlayer: function(handlerInput, buttonId, buttonColor) {
+  lightPlayer: function(handlerInput) {
     if (module.exports.supportButtons(handlerInput)) {
-      const buttonIdleDirective = {
-        'type': 'GadgetController.SetLight',
-        'version': 1,
-        'targetGadgets': [buttonId],
-        'parameters': {
-          'animations': [{
-            'repeat': 1,
-            'targetLights': ['1'],
-            'sequence': [],
-          }],
-          'triggerEvent': 'none',
-          'triggerEventTimeMs': 0,
-        },
-      };
-
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 60000,
-        'color': buttonColor,
-        'blend': false,
-      });
-      handlerInput.responseBuilder.addDirective(buttonIdleDirective);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      if (attributes.temp.buttons.hold) {
+        const holdDirective = {
+          'type': 'GadgetController.SetLight',
+          'version': 1,
+          'targetGadgets': [attributes.temp.buttons.hold],
+          'parameters': {
+            'animations': [{
+              'repeat': 1,
+              'targetLights': ['1'],
+              'sequence': [{
+                'durationMs': 60000,
+                'color': '00FF00',
+                'blend': false,
+              }],
+            }],
+            'triggerEvent': 'none',
+            'triggerEventTimeMs': 0,
+          },
+        };
+        handlerInput.responseBuilder.addDirective(holdDirective);
+      }
+      if (attributes.temp.buttons.discard) {
+        const discardDirective = {
+          'type': 'GadgetController.SetLight',
+          'version': 1,
+          'targetGadgets': [attributes.temp.buttons.discard],
+          'parameters': {
+            'animations': [{
+              'repeat': 1,
+              'targetLights': ['1'],
+              'sequence': [{
+                'durationMs': 60000,
+                'color': '0000FF',
+                'blend': false,
+              }],
+            }],
+            'triggerEvent': 'none',
+            'triggerEventTimeMs': 0,
+          },
+        };
+        handlerInput.responseBuilder.addDirective(discardDirective);
+      }
     }
   },
   addLaunchAnimation: function(handlerInput) {
