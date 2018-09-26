@@ -27,7 +27,9 @@ module.exports = {
     }
 
     // Tell them the number of hands remaining, and read their hand if in play
-    speech += res.getString('HANDS_LEFT').replace('{0}', game.remainingHands);
+    speech += res.getString('HELP_TEXT')
+      .replace('{0}', attributes.points)
+      .replace('{1}', utils.DAILY_REFRESH_POINTS);
     const reprompt = res.getString('HELP_REPROMPT');
     speech += reprompt;
     return handlerInput.responseBuilder

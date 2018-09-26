@@ -146,12 +146,17 @@
           "values": [
             {
               "name": {
-                "value": "more hands"
+                "value": "points"
               }
             },
             {
               "name": {
-                "value": "extra hands"
+                "value": "more points"
+              }
+            },
+            {
+              "name": {
+                "value": "extra points"
               }
             }
           ],

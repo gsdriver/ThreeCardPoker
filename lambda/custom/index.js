@@ -36,14 +36,14 @@ const requestInterceptor = {
 
             if (!attributes.currentGame) {
               attributes.currentGame = 'standard';
+              attributes.points = utils.STARTING_POINTS;
               attributes.prompts = {};
               attributes.standard = {
-                remainingHands: utils.STARTING_HANDS,
               };
             }
 
             // Now get the product ID of any purchasable products
-            utils.getPurchasedProducts(handlerInput, () => {
+            utils.getPurchasedProducts(event, attributes, () => {
               // Since there were no session attributes, this is the first
               // round of the session - set the temp attributes
               attributesManager.setSessionAttributes(attributes);
@@ -130,12 +130,12 @@ function runGame(event, context, callback) {
   }
 
   const skillFunction = skillBuilder.addRequestHandlers(
+      ProductResponse,
       Launch,
       StartGame,
       ChangeName,
       Purchase,
       Refund,
-      ProductResponse,
       Play,
       Hold,
       Help,

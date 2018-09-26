@@ -13,7 +13,9 @@ module.exports = {
 
     if ((request.type === 'IntentRequest')
       && ((attributes.paid && (request.intent.name === 'PurchaseIntent'))
-      || (attributes.temp.purchasing && (request.intent.name === 'AMAZON.NoIntent')))) {
+      || (attributes.temp.purchasing &&
+        ((request.intent.name === 'AMAZON.NoIntent')
+          || (request.intent.name === 'AMAZON.YesIntent'))))) {
       return true;
     }
 
@@ -32,8 +34,9 @@ module.exports = {
         .reprompt(res.getString('PURCHASE_NO_PURCHASE'))
         .getResponse();
     } else {
-      if (event.request.intent.slots && event.request.intent.slots.Product
-        && event.request.intent.slots.Product.value) {
+      if ((event.request.intent.name === 'AMAZON.YesIntent') ||
+        (event.request.intent.slots && event.request.intent.slots.Product
+          && event.request.intent.slots.Product.value)) {
         // They specified a product so let's go with that one
         // Since we only support morehands, that's the one we'll offer
         return handlerInput.responseBuilder

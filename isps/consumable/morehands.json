@@ -5,15 +5,15 @@
   "publishingInformation": {
     "locales": {
       "en-US": {
-        "name": "More hands",
-        "summary": "Adds 10 more hands to your gameplay",
-        "description": "Out of turns for the day? You can instantly add 10 more hands to continue playing instead of waiting until the next day",
+        "name": "More points",
+        "summary": "Adds 10 more points to your total",
+        "description": "Out of turns for the day? You can instantly add 10 more points to continue playing instead of waiting until the next day",
         "smallIconUri": "http://garrettvargas.com/img/coins108.png",
         "largeIconUri": "http://garrettvargas.com/img/coins512.png",
         "examplePhrases": [
-          "Alexa, buy more hands",
-          "Alexa, get more hands",
-          "Alexa, purchase more hands"
+          "Alexa, buy more points",
+          "Alexa, get more points",
+          "Alexa, purchase more points"
         ],
         "keywords": [
           "poker",
@@ -21,7 +21,7 @@
           "casino games"
         ],
         "customProductPrompts": {
-          "purchasePromptDescription": "You can immediately add 10 more hands to continue your game.",
+          "purchasePromptDescription": "You can immediately add 10 more points to continue your game.",
           "boughtCardDescription": "Congratulations! You can continue playing Three Card Poker."
         }
       }
@@ -49,6 +49,6 @@
       }
     }
   },
-  "testingInstructions": "By buying this product, you will increase the number of hands you can play by 10. You can hear how many hands you have left by asking for Help or after each game.",
+  "testingInstructions": "By buying this product, you will increase the number of points you have by 10. You can hear how many points you have left by asking for Help or after each game.",
   "purchasableState": "PURCHASABLE"
 }

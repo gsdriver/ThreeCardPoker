@@ -18,7 +18,6 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const game = attributes[attributes.currentGame];
 
     return new Promise((resolve, reject) => {
       // Publish to SNS so we know something happened
@@ -47,11 +46,15 @@ module.exports = {
 
         if (accepted) {
           // If they accepted a purchase (or upsell) then add to the bankroll
-          if ((event.request.name === 'Upsell') || (event.requenst.name === 'Buy')) {
-            game.remainingHands += utils.PURCHASE_REFRESH_HANDS;
+          if ((event.request.name === 'Upsell') || (event.request.name === 'Buy')) {
+            attributes.points += utils.PURCHASE_REFRESH_POINTS;
+            attributes.busted = undefined;
           } else if (event.request.name === 'Cancel') {
             // If they accepted a cancel so nuke their remaining hands
-            game.remainingHands = 0;
+            // We also don't want to upsell since they just cancelled
+            attributes.points = 0;
+            attributes.busted = Date.now();
+            attributes.temp.noUpsell = true;
           }
         } else if (event.request.name === 'Upsell') {
           // Set the no upsell flag so they avoid an infinite loop
@@ -59,8 +62,10 @@ module.exports = {
         }
 
         // We will drop them directly into a game
-        attributes.temp.resumeGame = true;
-        return Launch.handle(handlerInput);
+        Launch.handle(handlerInput)
+        .then((response) => {
+          resolve(response);
+        });
       }
     });
   },

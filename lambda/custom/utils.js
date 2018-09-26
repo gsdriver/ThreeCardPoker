@@ -13,9 +13,9 @@ const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
 
 module.exports = {
-  STARTING_HANDS: 10,
-  DAILY_REFRESH_HANDS: 5,
-  PURCHASE_REFRESH_HANDS: 10,
+  STARTING_POINTS: 10,
+  DAILY_REFRESH_POINTS: 5,
+  PURCHASE_REFRESH_POINTS: 10,
   getGreeting: function(handlerInput, callback) {
     const event = handlerInput.requestEnvelope;
     const res = require('./resources')(handlerInput);
@@ -81,9 +81,9 @@ module.exports = {
     const player = mapHand(game.player);
     const opponent = mapHand(game.opponent);
     const playerDetails = poker.evaluateAndFindCards(player,
-      {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: 'royalflush'});
+      {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
     const opponentDetails = poker.evaluateAndFindCards(opponent,
-      {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: 'royalflush'});
+      {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
     const order = ['nothing', 'pair', 'flush', 'straight', '3ofakind', 'straightflush'];
 
     if (playerDetails.match !== opponentDetails.match) {
@@ -105,23 +105,44 @@ module.exports = {
       return 'tie';
     }
   },
-  getPurchaseDirective: function(attributes, product, message) {
+  readHandRank: function(handlerInput, hand) {
+    const res = require('./resources')(handlerInput);
+    const cards = mapHand(hand);
+    const details = poker.evaluateAndFindCards(cards,
+      {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
+    let rank = JSON.parse(res.getString('HAND_NAMES'))[details.match];
+
+    if (rank.includes('{0}')) {
+      // Need to replace with high card in hand
+      const sorted = sortHand(cards, details);
+      rank = rank.replace('{0}', res.readRank(sorted[0]));
+    }
+
+    return rank;
+  },
+  isNextDay: function(event, attributes, callback) {
+    getUserTimezone(event, (timezone) => {
+      const tz = (timezone) ? timezone : 'America/Los_Angeles';
+      const busted = moment.tz(attributes.busted, tz).format('YYYY-MM-DD');
+      const now = moment.tz(Date.now(), tz).format('YYYY-MM-DD');
+
+      callback(busted !== now);
+    });
+  },
+  getPurchaseDirective: function(attributes, action, message) {
     return {
       'type': 'Connections.SendRequest',
-      'name': 'morehands',
+      'name': action,
       'payload': {
         'InSkillProduct': {
-          'productId': attributes.paid[product].productId,
+          'productId': attributes.paid.morehands.productId,
         },
         'upsellMessage': message,
       },
-      'token': product,
+      'token': action,
     };
   },
-  getPurchasedProducts: function(handlerInput, callback) {
-    const event = handlerInput.requestEnvelope;
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-
+  getPurchasedProducts: function(event, attributes, callback) {
     // Invoke the entitlement API to load products
     const options = {
       host: 'api.amazonalexa.com',
@@ -151,7 +172,6 @@ module.exports = {
             if (!attributes.paid) {
               attributes.paid = {};
             }
-
             inSkillProductInfo.inSkillProducts.forEach((product) => {
               attributes.paid[product.referenceName] = {
                 productId: product.productId,
@@ -263,11 +283,11 @@ function playHand(cards) {
   // Look at the first three cards, and figure out what you want to hold
   const currentHand = cards.slice(0, 3);
   const details = poker.evaluateAndFindCards(currentHand,
-    {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: 'royalflush'});
+    {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
   if (details.match === 'nothing') {
     // OK, do we have two cards to a straight or flush?
     const twocard = poker.evaluateAndFindCards(currentHand,
-      {aceCanBeLow: true, cardsToEvaluate: 2, dontAllow: 'royalflush'});
+      {aceCanBeLow: true, cardsToEvaluate: 2, dontAllow: ['royalflush']});
     if ((twocard.match === 'flush') || (twocard.match === 'straight')) {
       hold = [cards.indexOf(twocard.cards[0]), cards.indexOf(twocard.cards[1])];
     } else {
