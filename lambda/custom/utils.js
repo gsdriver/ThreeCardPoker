@@ -13,6 +13,7 @@ const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const request = require('request');
+const querystring = require('querystring');
 
 module.exports = {
   STARTING_POINTS: 10,
@@ -106,7 +107,6 @@ module.exports = {
             imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
           } else {
             imageUrl = JSON.parse(body).file;
-            console.log(imageUrl);
             end = Date.now();
           }
           console.log('Drawing table took ' + (end - start) + ' ms');
@@ -124,6 +124,7 @@ module.exports = {
           backButton: 'HIDDEN',
           backgroundImage: image,
         });
+        callback();
       }
     }
   },
@@ -146,6 +147,50 @@ module.exports = {
       callback();
     });
   },
+  readLeaderBoard: function(handlerInput, callback) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    let leaderURL = process.env.SERVICEURL + 'threecard/leaders';
+    const params = {};
+
+    params.userId = event.session.user.userId;
+    params.score = attributes.high;
+    const paramText = querystring.stringify(params);
+    leaderURL += '?' + paramText;
+
+    request(
+      {
+        uri: leaderURL,
+        method: 'GET',
+        timeout: 1000,
+      }, (err, response, body) => {
+        let leaders;
+
+        if (!err) {
+          leaders = JSON.parse(body);
+        }
+        callback(err, leaders);
+    });
+  },
+  updateLeaderBoard: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    // Update the leader board
+    const formData = {
+      userId: event.session.user.userId,
+      attributes: JSON.stringify(attributes),
+    };
+    const params = {
+      url: process.env.SERVICEURL + 'threecard/updateLeaderBoard',
+      formData: formData,
+    };
+    request.post(params, (err, res, body) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  },
   deal: function(handlerInput) {
     // First get a player hand
     // For now, we're going to just computer generate it
@@ -161,6 +206,7 @@ module.exports = {
       cards: createHand(handlerInput, game.opponent.cards),
       hold: [],
     };
+    game.showOpponent = false;
   },
   determineWinner: function(game) {
     // Get the three card hands the player and opponent are playing

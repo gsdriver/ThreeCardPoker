@@ -64,12 +64,29 @@
           "samples": []
         },
         {
+          "name": "AMAZON.RepeatIntent",
+          "samples": []
+        },
+        {
           "name": "AMAZON.YesIntent",
           "samples": []
         },
         {
           "name": "AMAZON.NoIntent",
           "samples": []
+        },
+        {
+          "name": "HighScoreIntent",
+          "slots": [],
+          "samples": [
+            "read high scores",
+            "tell me high scores",
+            "what are the high scores",
+            "what is the leader board",
+            "read leader board",
+            "say high scores",
+            "say leader board"
+          ]
         },
         {
           "name": "PlayIntent",

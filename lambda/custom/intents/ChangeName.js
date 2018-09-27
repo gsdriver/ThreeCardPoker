@@ -33,8 +33,9 @@ module.exports = {
       speech += res.getString('CHANGE_PROMPT_CHANGE');
       attributes.temp.namePrompt = true;
     }
+
     reprompt = res.getString('CHANGE_REPROMPT');
-    if (attributes.temp.newGame && !attributes.temp.buttons && !attributes.temp.buttons.discard) {
+    if (attributes.temp.newGame && !(attributes.temp.buttons && attributes.temp.buttons.discard)) {
       reprompt += res.getString('CHANGE_REPROMPT_BUTTON');
     }
     speech += reprompt;

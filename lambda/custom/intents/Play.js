@@ -58,7 +58,6 @@ module.exports = {
     // Now we are going into holding mode
     buttons.startInputHandler(handlerInput);
     attributes.temp.newGame = undefined;
-    game.showOpponent = false;
     return handlerInput.responseBuilder
       .speak(speech)
       .reprompt(reprompt)

@@ -18,6 +18,12 @@ const common = {
   'HELP_REPROMPT': 'What else can I help you with?',
   'HELP_CARD_TEXT': 'The rankings of hands from high to low are Straight Flush (three consecutive cards of the same suit - Ace can be high or low), Three of a Kind, Straight, Flush (three cards of the same suit), Pair, and High Card. If both players have the same type of hand, the ranking of cards in the hands are used to break ties.  In the event that both players have the same hand, the game ends in a tie which is awarded to the opponent.',
   'HELP_CARD_TITLE': 'Three Card Poker',
+  // HighScore.js
+  'LEADER_RANKING': 'Your peak point balance of {0} coins ranks you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
+  'LEADER_NO_SCORES': 'Sorry, I\'m unable to read the current leader board. ',
+  'LEADER_FORMAT': '{0} points',
+  'LEADER_TOP_SCORES': 'The top {0} players have peak point values of {1}. ',
+  'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // Hold.js
   'HOLD_NEXTCARD': 'Would you like to hold {0}?',
   'HOLD_DREW': 'You drew {0}. |You got {0}. |Here\'s {0} for you. ',
@@ -55,8 +61,8 @@ const common = {
   'STARTGAME_START_REPROMPT': 'Say play to get started.',
   'STARTGAME_START_REPROMPT_NONAME': 'Please say your name to get started.',
   // Unhandled.js
-  'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Bet.',
-  'UNKNOWN_INTENT_REPROMPT': 'Try saying Bet.',
+  'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Help.',
+  'UNKNOWN_INTENT_REPROMPT': 'Try saying Help.',
   // utils.js
   'GOOD_MORNING': 'Good morning <break time=\"200ms\"/> ',
   'GOOD_AFTERNOON': 'Good afternoon <break time=\"200ms\"/> ',
@@ -69,18 +75,9 @@ const common = {
   'FORMAT_CARD': '{0} of {1}',
 };
 
-const dollar = {
-};
-
-const pound = {
-};
-
 const resources = {
   'en-US': {
-    'translation': Object.assign({}, common, dollar),
-  },
-  'en-GB': {
-    'translation': Object.assign({}, common, pound),
+    'translation': Object.assign({}, common),
   },
 };
 

@@ -20,6 +20,7 @@ function BuildEvent(argv)
   const fallback = {'name': 'AMAZON.FallbackIntent', 'slots': {}};
   const stop = {'name': 'AMAZON.StopIntent', 'slots': {}};
   const cancel = {'name': 'AMAZON.CancelIntent', 'slots': {}};
+  const highscore = {'name': 'HighScoreIntent', 'slots': {}};
   const play = {'name': 'PlayIntent', 'slots': {}};
   const name = {'name': 'ChangeNameIntent', 'slots': {'Name': {'name': 'Name', 'value': ''}}};
   var returnEvent;
@@ -219,6 +220,8 @@ function BuildEvent(argv)
     returnEvent = buttonEvent;
   } else if (argv[2] == 'play') {
     lambda.request.intent = play;
+  } else if (argv[2] == 'highscore') {
+    lambda.request.intent = highscore;
   } else if (argv[2] == 'help') {
     lambda.request.intent = help;
   } else if (argv[2] == 'fallback') {

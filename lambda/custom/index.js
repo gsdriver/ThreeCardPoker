@@ -12,7 +12,9 @@ const Purchase = require('./intents/Purchase');
 const Refund = require('./intents/Refund');
 const ProductResponse = require('./intents/ProductResponse');
 const Help = require('./intents/Help');
+const HighScore = require('./intents/HighScore');
 const Play = require('./intents/Play');
+const Repeat = require('./intents/Repeat');
 const Exit = require('./intents/Exit');
 const Hold = require('./intents/Hold');
 const utils = require('./utils');
@@ -38,6 +40,7 @@ const requestInterceptor = {
             if (!attributes.currentGame) {
               attributes.currentGame = 'standard';
               attributes.points = utils.STARTING_POINTS;
+              attributes.high = utils.STARTING_POINTS;
               attributes.prompts = {};
               attributes.standard = {
               };
@@ -141,6 +144,8 @@ function runGame(event, context, callback) {
       Play,
       Hold,
       Help,
+      HighScore,
+      Repeat,
       Exit,
       SessionEnd,
       Unhandled

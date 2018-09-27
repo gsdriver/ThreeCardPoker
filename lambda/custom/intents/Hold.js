@@ -186,6 +186,12 @@ function finishHand(handlerInput, callback) {
   attributes.temp.holding = undefined;
   game.showOpponent = true;
 
+  // Is it a new high?
+  if (attributes.points > attributes.high) {
+    attributes.high = attributes.points;
+    utils.updateLeaderBoard(handlerInput);
+  }
+
   // Add reprompt if they still have points
   if (attributes.points > 0) {
     reprompt = res.getString('HOLD_GAMEOVER_REPROMPT');
