@@ -184,6 +184,7 @@ function finishHand(handlerInput, callback) {
   }
   speech += res.getString('HANDS_LEFT').replace('{0}', attributes.points);
   attributes.temp.holding = undefined;
+  game.showOpponent = true;
 
   // Add reprompt if they still have points
   if (attributes.points > 0) {

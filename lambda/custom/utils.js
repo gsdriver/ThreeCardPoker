@@ -12,6 +12,7 @@ const moment = require('moment-timezone');
 const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
+const request = require('request');
 
 module.exports = {
   STARTING_POINTS: 10,
@@ -42,6 +43,7 @@ module.exports = {
     const response = handlerInput.responseBuilder;
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
     const res = require('./resources')(handlerInput);
 
     if (event.context && event.context.System &&
@@ -49,16 +51,80 @@ module.exports = {
       event.context.System.device.supportedInterfaces &&
       event.context.System.device.supportedInterfaces.Display) {
       attributes.display = true;
+      let imageUrl;
 
-      const image = new Alexa.ImageHelper()
-        .addImageInstance('http://garrettvargas.com/img/slot-background.png')
-        .getImage();
-      response.addRenderTemplateDirective({
-        type: 'BodyTemplate1',
-        title: res.getString('GAME_TITLE'),
-        backButton: 'HIDDEN',
-        backgroundImage: image,
-      });
+      // Do we have hands?
+      if (!game.player || !game.opponent) {
+        // Use the background image
+        imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
+        done();
+      } else {
+        const start = Date.now();
+        let end;
+
+        function splitCard(card) {
+          const result = {};
+          const rank = card.charAt(0);
+          const faceCards = '1JQKA';
+
+          if (faceCards.indexOf(rank) > -1) {
+            result.rank = 10 + faceCards.indexOf(rank);
+          } else {
+            result.rank = rank;
+          }
+          result.suit = card.charAt(card.length - 1);
+          return result;
+        }
+
+        let playerCards;
+        const opponent = mapHand(game.opponent);
+        const opponentCards = [];
+        opponentCards.push(splitCard(opponent[0]));
+        if (game.showOpponent) {
+          playerCards = mapHand(game.player).map(splitCard);
+          opponentCards.push(splitCard(opponent[1]));
+          opponentCards.push(splitCard(opponent[2]));
+        } else {
+          playerCards = game.player.cards.slice(0, 3).map(splitCard);
+          opponentCards.push({rank: '1', suit: 'N'});
+          opponentCards.push({rank: '1', suit: 'N'});
+        }
+        const formData = {
+          player: JSON.stringify(playerCards),
+          opponent: JSON.stringify(opponentCards),
+        };
+
+        const params = {
+          url: process.env.SERVICEURL + 'threecard/drawImage',
+          formData: formData,
+          timeout: 3000,
+        };
+
+        request.post(params, (err, res, body) => {
+          if (err) {
+            console.log(err);
+            imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
+          } else {
+            imageUrl = JSON.parse(body).file;
+            console.log(imageUrl);
+            end = Date.now();
+          }
+          console.log('Drawing table took ' + (end - start) + ' ms');
+          done();
+        });
+      }
+
+      function done() {
+        const image = new Alexa.ImageHelper()
+          .addImageInstance(imageUrl)
+          .getImage();
+        response.addRenderTemplateDirective({
+          type: 'BodyTemplate1',
+          title: res.getString('GAME_TITLE'),
+          backButton: 'HIDDEN',
+          backgroundImage: image,
+        });
+      }
     }
   },
   saveHand: function(handlerInput, callback) {
