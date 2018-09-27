@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const speechUtils = require('alexa-speech-utils')();
+const buttons = require('../buttons');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -55,6 +56,7 @@ module.exports = {
     speech += ('<break time=\'300ms\'/> ' + reprompt);
 
     // Now we are going into holding mode
+    buttons.startInputHandler(handlerInput);
     attributes.temp.newGame = undefined;
     return handlerInput.responseBuilder
       .speak(speech)

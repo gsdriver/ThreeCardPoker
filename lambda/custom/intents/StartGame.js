@@ -20,7 +20,8 @@ module.exports = {
         return false;
       }
       attributes.temp.buttonId = buttons.getPressedButton(request);
-      return (!attributes.temp.buttons || (attributes.temp.buttons.hold !== attributes.temp.buttonId));
+      return (attributes.temp.buttonId && (!attributes.temp.buttons
+        || (attributes.temp.buttons.hold !== attributes.temp.buttonId)));
     }
 
     return false;
@@ -28,7 +29,6 @@ module.exports = {
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(handlerInput);
-    let buttonColor;
     let speech;
     let reprompt;
 
@@ -41,20 +41,25 @@ module.exports = {
       attributes.temp.buttons.hold = attributes.temp.buttonId;
       speech = res.getString('STARTGAME_PRESS_DISCARD')
         .replace('{0}', (attributes.name) ? attributes.name : '');
-      reprompt = res.getString('STARTGAME_PRESS_DISCARD_REPROMPT');
+
+      // Turn off the microphone until they press the second button
+      buttons.secondButtonInputHandler(handlerInput);
+      handlerInput.responseBuilder
+        .speak(speech)
+        .withShouldEndSession(undefined);
     } else {
       attributes.temp.buttons.discard = attributes.temp.buttonId;
       speech = res.getString('STARTGAME_START');
       reprompt = res.getString((attributes.name) ? 'STARTGAME_START_REPROMPT' : 'STARTGAME_START_REPROMPT_NONAME');
+      speech += reprompt;
       buttons.turnOffButtons(handlerInput);
+      handlerInput.responseBuilder
+        .speak(speech)
+        .reprompt(reprompt);
     }
 
     // OK, set the button up for betting mode - flashing different colors
     buttons.lightPlayer(handlerInput);
-    speech += reprompt;
-    return handlerInput.responseBuilder
-      .speak(speech)
-      .reprompt(reprompt)
-      .getResponse();
+    return handlerInput.responseBuilder.getResponse();
   },
 };

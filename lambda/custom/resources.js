@@ -8,6 +8,8 @@ const common = {
   'CHANGE_PROMPT_CHANGE': 'You can change your name at any time by saying change name. |Say change name if you want to change your player name in the future. ',
   'CHANGE_REPROMPT': 'Say play to start the game ',
   'CHANGE_REPROMPT_BUTTON': 'or press your Echo Button ',
+  // EndRollCall.js
+  'ENDROLLCALL_TWOBUTTONS': 'To use buttons with Three Card Poker, you need two buttons. Try playing this game again with no or two buttons.',
   // Exit.js
   'EXIT_GAME': '{0} Goodbye.',
   // Help.js
@@ -48,8 +50,7 @@ const common = {
   'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy more points',
   'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
   // StartGame.js
-  'STARTGAME_PRESS_DISCARD': 'Thanks {0} <break time=\'300ms\'/> this green button will be used to hold cards <break time=\'300ms\'/> ',
-  'STARTGAME_PRESS_DISCARD_REPROMPT': 'Press another button to use for discarding cards. ',
+  'STARTGAME_PRESS_DISCARD': 'Thanks {0} <break time=\'300ms\'/> this green button will be used to hold cards <break time=\'300ms\'/> Press another button to use for discarding cards.',
   'STARTGAME_START': 'Great. This button will be used to discard cards. ',
   'STARTGAME_START_REPROMPT': 'Say play to get started.',
   'STARTGAME_START_REPROMPT_NONAME': 'Please say your name to get started.',

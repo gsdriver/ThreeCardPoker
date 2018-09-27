@@ -35,7 +35,6 @@ module.exports = {
   startInputHandler: function(handlerInput) {
     if (module.exports.supportButtons(handlerInput)) {
       // We'll allow them to press the button again if we haven't already
-      const response = handlerInput.responseBuilder.getResponse();
       const inputDirective = {
         'type': 'GameEngine.StartInputHandler',
         'timeout': 90000,
@@ -60,13 +59,45 @@ module.exports = {
       handlerInput.responseBuilder.addDirective(inputDirective);
     }
   },
+  secondButtonInputHandler: function(handlerInput) {
+    if (module.exports.supportButtons(handlerInput)) {
+      // 10 seconds to press the second button - and we'd like a timeout
+      const inputDirective = {
+        'type': 'GameEngine.StartInputHandler',
+        'timeout': 10000,
+        'recognizers': {
+          'button_down_recognizer': {
+            'type': 'match',
+            'fuzzy': false,
+            'anchor': 'end',
+            'pattern': [{
+              'action': 'down',
+            }],
+          },
+        },
+        'events': {
+          'button_down_event': {
+            'meets': ['button_down_recognizer'],
+            'reports': 'matches',
+            'shouldEndInputHandler': false,
+          },
+          'timeout': {
+            'meets': ['timed out'],
+            'reports': 'history',
+            'shouldEndInputHandler': true,
+          },
+        },
+      };
+      handlerInput.responseBuilder.addDirective(inputDirective);
+    }
+  },
   playInputHandler: function(handlerInput) {
     if (module.exports.supportButtons(handlerInput)) {
       // Need both hold and discard buttons
       const attributes = handlerInput.attributesManager.getSessionAttributes();
-      if (attributes.temp.buttons && attributes.temp.buttons.hold && attributes.temp.buttons.discard) {
+      if (attributes.temp.buttons && attributes.temp.buttons.hold
+        && attributes.temp.buttons.discard) {
         // We'll allow them to press the button again if we haven't already
-        const response = handlerInput.responseBuilder.getResponse();
         const inputDirective = {
           'type': 'GameEngine.StartInputHandler',
           'timeout': 90000,

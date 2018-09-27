@@ -11,6 +11,7 @@ const https = require('https');
 const moment = require('moment-timezone');
 const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 module.exports = {
   STARTING_POINTS: 10,
@@ -59,6 +60,25 @@ module.exports = {
         backgroundImage: image,
       });
     }
+  },
+  saveHand: function(handlerInput, callback) {
+    // If there isn't a name, then we need to make one up
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
+    const hand = JSON.parse(JSON.stringify(game.player));
+    const res = require('./resources')(handlerInput);
+
+    hand.name = (attributes.name) ? attributes.name : res.getString('COMPUTER_NAME');
+    hand.hash = userHash(handlerInput);
+    const params = {Body: JSON.stringify(hand),
+      Bucket: 'threecardpokerhands',
+      Key: 'raw/' + Date.now() + '.txt'};
+    s3.putObject(params, (err, data) => {
+      if (err) {
+        console.log('Error writing to S3 ' + err.stack);
+      }
+      callback();
+    });
   },
   deal: function(handlerInput) {
     // First get a player hand
@@ -367,4 +387,12 @@ function getRank(card) {
   const cardRanks = ['2', '3', '4', '5', '6', '7', '8', '9', '1', 'J', 'Q', 'K', 'A'];
 
   return cardRanks.indexOf(card.charAt(0));
+}
+
+function userHash(handlerInput) {
+  const event = handlerInput.requestEnvelope;
+  const randomValue = seedrandom(event.session.user.userId)();
+
+  // Hash user ID so we can avoid playing against yourself
+  return Math.floor(randomValue * 65536).toString(16);
 }

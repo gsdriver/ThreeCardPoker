@@ -6,6 +6,7 @@ const Launch = require('./intents/Launch');
 const SessionEnd = require('./intents/SessionEnd');
 const Unhandled = require('./intents/Unhandled');
 const StartGame = require('./intents/StartGame');
+const EndRollCall = require('./intents/EndRollCall');
 const ChangeName = require('./intents/ChangeName');
 const Purchase = require('./intents/Purchase');
 const Refund = require('./intents/Refund');
@@ -133,6 +134,7 @@ function runGame(event, context, callback) {
       ProductResponse,
       Launch,
       StartGame,
+      EndRollCall,
       ChangeName,
       Purchase,
       Refund,

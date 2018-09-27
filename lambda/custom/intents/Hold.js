@@ -34,72 +34,81 @@ module.exports = {
     let speech;
     let reprompt;
     let response;
-    let output;
     const willHold = (((event.request.type === 'GameEngine.InputHandlerEvent')
       && (attributes.temp.buttons.hold === attributes.temp.buttonId))
       || ((event.request.type === 'IntentRequest')
       && (event.request.intent.name === 'AMAZON.YesIntent')));
 
-    // Are they holding all?
-    if (Array.isArray(attributes.temp.holding)) {
-      if (willHold) {
-        game.player.hold = attributes.temp.holding;
-        attributes.temp.holding = undefined;
-        output = finishHand(handlerInput);
-        speech = output.speech;
-        reprompt = output.reprompt;
+    return new Promise((resolve, reject) => {
+      // Are they holding all?
+      if (Array.isArray(attributes.temp.holding)) {
+        if (willHold) {
+          game.player.hold = attributes.temp.holding;
+          attributes.temp.holding = undefined;
+          finishHand(handlerInput, (endSpeech, endReprompt) => {
+            speech = endSpeech;
+            reprompt = endReprompt;
+            done();
+          });
+        } else {
+          // Ask card by card
+          attributes.temp.holding = 0;
+          speech = res.getString('HOLD_NEXTCARD')
+            .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
+          reprompt = speech;
+          done();
+        }
       } else {
-        // Ask card by card
-        attributes.temp.holding = 0;
-        speech = res.getString('HOLD_NEXTCARD')
-          .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
-        reprompt = speech;
-      }
-    } else {
-      // OK, are they holding this one?
-      if (willHold) {
-        game.player.hold.push(attributes.temp.holding);
+        // OK, are they holding this one?
+        if (willHold) {
+          game.player.hold.push(attributes.temp.holding);
+        }
+
+        attributes.temp.holding++;
+        if (attributes.temp.holding < 3) {
+          // Next one
+          speech = res.getString('HOLD_NEXTCARD')
+            .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
+          reprompt = speech;
+          done();
+        } else {
+          finishHand(handlerInput, (endSpeech, endReprompt) => {
+            speech = endSpeech;
+            reprompt = endReprompt;
+            done();
+          });
+        }
       }
 
-      attributes.temp.holding++;
-      if (attributes.temp.holding < 3) {
-        // Next one
-        speech = res.getString('HOLD_NEXTCARD')
-          .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
-        reprompt = speech;
-      } else {
-        output = finishHand(handlerInput);
-        speech = output.speech;
-        reprompt = output.reprompt;
-      }
-    }
+      function done() {
+        // You are out of points - come back tomorrow
+        if (attributes.points === 0) {
+          attributes.busted = Date.now();
+          if (attributes.paid && attributes.paid.morehands) {
+            response = handlerInput.responseBuilder
+              .addDirective(utils.getPurchaseDirective(attributes, 'Upsell', speech))
+              .withShouldEndSession(true)
+              .getResponse();
+          } else {
+            response = handlerInput.responseBuilder
+              .speak(speech)
+              .withShouldEndSession(true)
+              .getResponse();
+          }
+        } else {
+          response = handlerInput.responseBuilder
+            .speak(speech)
+            .reprompt(reprompt)
+            .getResponse();
+        }
 
-    // You are out of points - come back tomorrow
-    if (attributes.points === 0) {
-      attributes.busted = Date.now();
-      if (attributes.paid && attributes.paid.morehands) {
-        response = handlerInput.responseBuilder
-          .addDirective(utils.getPurchaseDirective(attributes, 'Upsell', speech))
-          .withShouldEndSession(true)
-          .getResponse();
-      } else {
-        response = handlerInput.responseBuilder
-          .speak(speech)
-          .withShouldEndSession(true)
-          .getResponse();
+        resolve(response);
       }
-    } else {
-      response = handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(reprompt)
-        .getResponse();
-    }
-
-    return response;
+    });
   },
 };
 
-function finishHand(handlerInput) {
+function finishHand(handlerInput, callback) {
   // Reveal the result
   const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
@@ -182,5 +191,8 @@ function finishHand(handlerInput) {
     speech += reprompt;
   }
 
-  return {speech: speech, reprompt: reprompt};
+  // Save the result to S3
+  utils.saveHand(handlerInput, () => {
+    callback(speech, reprompt);
+  });
 }
