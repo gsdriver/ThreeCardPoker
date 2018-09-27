@@ -41,7 +41,6 @@ module.exports = {
     });
   },
   drawTable: function(handlerInput, callback) {
-    const response = handlerInput.responseBuilder;
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
@@ -118,14 +117,17 @@ module.exports = {
         const image = new Alexa.ImageHelper()
           .addImageInstance(imageUrl)
           .getImage();
-        response.addRenderTemplateDirective({
-          type: 'BodyTemplate1',
+        handlerInput.responseBuilder.addRenderTemplateDirective({
+          type: 'BodyTemplate6',
           title: res.getString('GAME_TITLE'),
           backButton: 'HIDDEN',
           backgroundImage: image,
         });
         callback();
       }
+    } else {
+      // Not a display device
+      callback();
     }
   },
   saveHand: function(handlerInput, callback) {

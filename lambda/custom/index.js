@@ -78,25 +78,26 @@ const saveResponseInterceptor = {
           buttons.startInputHandler(handlerInput);
           attributes.temp.newSession = undefined;
         }
-        utils.drawTable(handlerInput);
-        if (response.shouldEndSession) {
-          // We are meant to end the session
-          SessionEnd.handle(handlerInput);
-        } else if (attributes.temp) {
-          // Save the response and reprompt for repeat
-          if (response.outputSpeech && response.outputSpeech.ssml) {
-            attributes.temp.lastResponse = response.outputSpeech.ssml;
+        utils.drawTable(handlerInput, () => {
+          if (response.shouldEndSession) {
+            // We are meant to end the session
+            SessionEnd.handle(handlerInput);
+          } else if (attributes.temp) {
+            // Save the response and reprompt for repeat
+            if (response.outputSpeech && response.outputSpeech.ssml) {
+              attributes.temp.lastResponse = response.outputSpeech.ssml;
+            }
+            if (response.reprompt && response.reprompt.outputSpeech
+              && response.reprompt.outputSpeech.ssml) {
+              attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
+            }
           }
-          if (response.reprompt && response.reprompt.outputSpeech
-            && response.reprompt.outputSpeech.ssml) {
-            attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
+          if (!process.env.NOLOG) {
+            console.log(JSON.stringify(response));
           }
-        }
+          resolve();
+        });
       }
-      if (!process.env.NOLOG) {
-        console.log(JSON.stringify(response));
-      }
-      resolve();
     });
   },
 };
