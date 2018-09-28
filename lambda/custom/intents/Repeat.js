@@ -15,8 +15,8 @@ module.exports = {
     const res = require('../resources')(handlerInput);
     let speech = '';
 
-    // Tell them their point balance
-    speech += res.getString('HANDS_LEFT').replace('{0}', attributes.points);
+    // Tell them their chip balance
+    speech += res.getString('CHIPS_LEFT').replace('{0}', res.sayChips(attributes.points));
     speech += attributes.temp.lastResponse;
     return handlerInput.responseBuilder
       .speak(speech)

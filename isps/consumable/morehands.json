@@ -5,15 +5,15 @@
   "publishingInformation": {
     "locales": {
       "en-US": {
-        "name": "More points",
-        "summary": "Adds 10 more points to your total",
-        "description": "Out of turns for the day? You can instantly add 10 more points to continue playing instead of waiting until the next day",
+        "name": "More chips",
+        "summary": "Adds 10 more chips to your total",
+        "description": "Out of turns for the day? You can instantly add 10 more chips to continue playing instead of waiting until the next day",
         "smallIconUri": "http://garrettvargas.com/img/coins108.png",
         "largeIconUri": "http://garrettvargas.com/img/coins512.png",
         "examplePhrases": [
-          "Alexa, buy more points",
-          "Alexa, get more points",
-          "Alexa, purchase more points"
+          "Alexa, buy more chips",
+          "Alexa, get more chips",
+          "Alexa, purchase more chips"
         ],
         "keywords": [
           "poker",
@@ -21,7 +21,7 @@
           "casino games"
         ],
         "customProductPrompts": {
-          "purchasePromptDescription": "You can immediately add 10 more points to continue your game.",
+          "purchasePromptDescription": "You can immediately add 10 more chips to continue your game.",
           "boughtCardDescription": "Congratulations! You can continue playing Three Card Poker."
         }
       }

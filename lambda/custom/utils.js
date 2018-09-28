@@ -201,9 +201,9 @@ module.exports = {
     });
   },
   deal: function(handlerInput, callback) {
-    const res = require('./resources')(handlerInput);
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
+    const hash = userHash(handlerInput);
 
     // First load an opponent hand based on other player's play!
     if (game.listOfHands && game.listOfHands.length) {
@@ -212,11 +212,7 @@ module.exports = {
       done();
     } else if (attributes.temp.computerHands) {
       // Generate a hand
-      game.opponent = {
-        name: res.getString('COMPUTER_NAME'),
-        cards: createHand(handlerInput),
-      };
-      game.opponent.hold = playHand(game.opponent.cards);
+      generateComputerHand(handlerInput);
       done();
     } else {
       let playerURL = process.env.SERVICEURL + 'threecard/playerHand';
@@ -232,8 +228,17 @@ module.exports = {
         if (!err) {
           const playerData = JSON.parse(body);
           if (playerData.hands && playerData.hands.length) {
-            game.listOfHands = playerData.hands;
-            game.opponent = game.listOfHands.pop();
+            game.listOfHands = playerData.hands.filter((x) => {
+              return (x.hash !== hash);
+            });
+            game.listOfHands.sort((a, b) => (a.name - b.name));
+            if (game.listOfHands.length) {
+              game.opponent = game.listOfHands.pop();
+            } else {
+              // We got all of our own hands - computer generate
+              // and we'll get a new list next time
+              generateComputerHand(handlerInput);
+            }
           }
           attributes.lastToken = playerData.token;
         } else {
@@ -244,11 +249,7 @@ module.exports = {
         // If we don't have a token, then generate a computer hand
         if (!attributes.lastToken) {
           attributes.temp.computerHands = true;
-          game.opponent = {
-            name: res.getString('COMPUTER_NAME'),
-            cards: createHand(handlerInput),
-          };
-          game.opponent.hold = playHand(game.opponent.cards);
+          generateComputerHand(handlerInput);
         }
         done();
       });
@@ -562,4 +563,16 @@ function userHash(handlerInput) {
 
   // Hash user ID so we can avoid playing against yourself
   return Math.floor(randomValue * 65536).toString(16);
+}
+
+function generateComputerHand(handlerInput) {
+  const res = require('./resources')(handlerInput);
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+  const game = attributes[attributes.currentGame];
+
+  game.opponent = {
+    name: res.getString('COMPUTER_NAME'),
+    cards: createHand(handlerInput),
+  };
+  game.opponent.hold = playHand(game.opponent.cards);
 }

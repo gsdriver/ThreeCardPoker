@@ -23,8 +23,12 @@ module.exports = {
 
     return ((request.type === 'IntentRequest') &&
       (attributes.temp.holding !== undefined) &&
-      ((request.intent.name === 'AMAZON.NoIntent')
-      || (request.intent.name === 'AMAZON.YesIntent')));
+      (((request.intent.name === 'AMAZON.NoIntent')
+      || (request.intent.name === 'AMAZON.YesIntent')
+      || (request.intent.name === 'AMAZON.PreviousIntent')
+      || (request.intent.name === 'AMAZON.NextIntent'))
+      || ((attributes.temp.holding !== 0)
+        && (request.intent.name === 'AMAZON.CancelIntent'))));
   },
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
@@ -37,11 +41,32 @@ module.exports = {
     const willHold = (((event.request.type === 'GameEngine.InputHandlerEvent')
       && (attributes.temp.buttons.hold === attributes.temp.buttonId))
       || ((event.request.type === 'IntentRequest')
-      && (event.request.intent.name === 'AMAZON.YesIntent')));
+      && ((event.request.intent.name === 'AMAZON.YesIntent')
+        || (event.request.intent.name === 'AMAZON.NextIntent'))));
+    const goBack = ((event.request.type === 'IntentRequest') &&
+      ((event.request.intent.name === 'AMAZON.PreviousIntent')
+        || (event.request.intent.name === 'AMAZON.CancelIntent')));
 
     return new Promise((resolve, reject) => {
-      // Are they holding all?
-      if (Array.isArray(attributes.temp.holding)) {
+      // Do they want to go back?
+      if (goBack) {
+        if (Array.isArray(attributes.temp.holding)) {
+          attributes.temp.holding = 0;
+        } else {
+          // Remove this from the hold array
+          if (attributes.temp.holding > 0) {
+            attributes.temp.holding--;
+          }
+          game.player.hold = game.player.hold.filter((x) => {
+            return (x !== attributes.temp.holding);
+          });
+        }
+
+        speech = res.getString('HOLD_PREVIOUS_CARD')
+          .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
+        reprompt = speech;
+        done();
+      } else if (Array.isArray(attributes.temp.holding)) {
         if (willHold) {
           game.player.hold = attributes.temp.holding;
           attributes.temp.holding = undefined;
@@ -53,7 +78,7 @@ module.exports = {
         } else {
           // Ask card by card
           attributes.temp.holding = 0;
-          speech = res.getString('HOLD_NEXTCARD')
+          speech = res.getString('HOLD_NEXT_CARD')
             .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
           reprompt = speech;
           done();
@@ -67,7 +92,7 @@ module.exports = {
         attributes.temp.holding++;
         if (attributes.temp.holding < 3) {
           // Next one
-          speech = res.getString('HOLD_NEXTCARD')
+          speech = res.getString('HOLD_NEXT_CARD')
             .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
           reprompt = speech;
           done();
@@ -173,16 +198,16 @@ function finishHand(handlerInput, callback) {
   // And what's the result?
   const result = utils.determineWinner(game);
   if (result === 'player') {
-    speech += res.getString('HOLD_WIN');
+    speech += res.getString('HOLD_WIN').replace('{0}', (attributes.name ? attributes.name : ''));
     attributes.points++;
   } else if (result === 'opponent') {
-    speech += res.getString('HOLD_LOSE');
+    speech += res.getString('HOLD_LOSE').replace('{0}', (attributes.name ? attributes.name : ''));
     attributes.points--;
   } else {
     speech += res.getString('HOLD_TIE');
     attributes.points--;
   }
-  speech += res.getString('HANDS_LEFT').replace('{0}', attributes.points);
+  speech += res.getString('CHIPS_LEFT').replace('{0}', res.sayChips(attributes.points));
   attributes.temp.holding = undefined;
   game.handOver = true;
 

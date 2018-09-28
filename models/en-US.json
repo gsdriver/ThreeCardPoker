@@ -163,17 +163,17 @@
           "values": [
             {
               "name": {
-                "value": "points"
+                "value": "chips"
               }
             },
             {
               "name": {
-                "value": "more points"
+                "value": "more chips"
               }
             },
             {
               "name": {
-                "value": "extra points"
+                "value": "extra chips"
               }
             }
           ],

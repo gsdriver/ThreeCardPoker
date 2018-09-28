@@ -38,7 +38,7 @@ module.exports = {
             }
 
             // And what is the leader board?
-            const topScores = highScores.top.map((x) => res.getString('LEADER_FORMAT').replace('{0}', x));
+            const topScores = highScores.top.map((x) => res.sayChips(x));
             speech += res.getString('LEADER_TOP_SCORES')
                 .replace('{0}', topScores.length)
                 .replace('{1}', speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'}));

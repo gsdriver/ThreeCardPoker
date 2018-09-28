@@ -32,7 +32,9 @@ module.exports = {
     return new Promise((resolve, reject) => {
       ads.getAd(attributes, 'threecardpoker', event.request.locale, (adText) => {
         const response = handlerInput.responseBuilder
-          .speak(res.getString('EXIT_GAME').replace('{0}', adText))
+          .speak(res.getString('EXIT_GAME')
+            .replace('{0}', adText)
+            .replace('{1}', (attributes.name) ? attributes.name : ''))
           .withShouldEndSession(true)
           .getResponse();
         resolve(response);
