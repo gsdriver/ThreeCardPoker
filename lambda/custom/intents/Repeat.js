@@ -4,8 +4,6 @@
 
 'use strict';
 
-const utils = require('../utils');
-
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;

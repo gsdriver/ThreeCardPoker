@@ -11,7 +11,6 @@ const https = require('https');
 const moment = require('moment-timezone');
 const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
-const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const request = require('request');
 const querystring = require('querystring');
 
@@ -80,7 +79,7 @@ module.exports = {
         const opponent = mapHand(game.opponent);
         const opponentCards = [];
         opponentCards.push(splitCard(opponent[0]));
-        if (game.showOpponent) {
+        if (game.handOver) {
           playerCards = mapHand(game.player).map(splitCard);
           opponentCards.push(splitCard(opponent[1]));
           opponentCards.push(splitCard(opponent[2]));
@@ -131,23 +130,31 @@ module.exports = {
     }
   },
   saveHand: function(handlerInput, callback) {
-    // If there isn't a name, then we need to make one up
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const game = attributes[attributes.currentGame];
-    const hand = JSON.parse(JSON.stringify(game.player));
-    const res = require('./resources')(handlerInput);
+    if (process.env.SERVICEURL) {
+      // If there isn't a name, then we need to make one up
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      const game = attributes[attributes.currentGame];
+      const hand = JSON.parse(JSON.stringify(game.player));
+      const res = require('./resources')(handlerInput);
 
-    hand.name = (attributes.name) ? attributes.name : res.getString('COMPUTER_NAME');
-    hand.hash = userHash(handlerInput);
-    const params = {Body: JSON.stringify(hand),
-      Bucket: 'threecardpokerhands',
-      Key: 'raw/' + Date.now() + '.txt'};
-    s3.putObject(params, (err, data) => {
-      if (err) {
-        console.log('Error writing to S3 ' + err.stack);
-      }
+      hand.name = (attributes.name) ? attributes.name : res.getString('COMPUTER_NAME');
+      hand.hash = userHash(handlerInput);
+      const formData = {
+        hand: JSON.stringify(hand),
+      };
+      const params = {
+        url: process.env.SERVICEURL + 'threecard/playerHand',
+        formData: formData,
+      };
+      request.post(params, (err, res, body) => {
+        if (err) {
+          console.log(err);
+        }
+        callback();
+      });
+    } else {
       callback();
-    });
+    }
   },
   readLeaderBoard: function(handlerInput, callback) {
     const event = handlerInput.requestEnvelope;
@@ -193,22 +200,68 @@ module.exports = {
       }
     });
   },
-  deal: function(handlerInput) {
-    // First get a player hand
-    // For now, we're going to just computer generate it
+  deal: function(handlerInput, callback) {
     const res = require('./resources')(handlerInput);
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
-    game.opponent = {
-      name: res.getString('COMPUTER_NAME'),
-      cards: createHand(handlerInput),
-    };
-    game.opponent.hold = playHand(game.opponent.cards);
-    game.player = {
-      cards: createHand(handlerInput, game.opponent.cards),
-      hold: [],
-    };
-    game.showOpponent = false;
+
+    // First load an opponent hand based on other player's play!
+    if (game.listOfHands && game.listOfHands.length) {
+      // Pop the top hand for the opponent
+      game.opponent = game.listOfHands.pop();
+      done();
+    } else if (attributes.temp.computerHands) {
+      // Generate a hand
+      game.opponent = {
+        name: res.getString('COMPUTER_NAME'),
+        cards: createHand(handlerInput),
+      };
+      game.opponent.hold = playHand(game.opponent.cards);
+      done();
+    } else {
+      let playerURL = process.env.SERVICEURL + 'threecard/playerHand';
+      if (attributes.lastToken) {
+        const params = {token: attributes.lastToken};
+        playerURL += '?' + querystring.stringify(params);
+      }
+      request({
+        uri: playerURL,
+        method: 'GET',
+        timeout: 1000,
+      }, (err, response, body) => {
+        if (!err) {
+          const playerData = JSON.parse(body);
+          if (playerData.hands && playerData.hands.length) {
+            game.listOfHands = playerData.hands;
+            game.opponent = game.listOfHands.pop();
+          }
+          attributes.lastToken = playerData.token;
+        } else {
+          // Nevermind - we're going computer mode
+          attributes.lastToken = undefined;
+        }
+
+        // If we don't have a token, then generate a computer hand
+        if (!attributes.lastToken) {
+          attributes.temp.computerHands = true;
+          game.opponent = {
+            name: res.getString('COMPUTER_NAME'),
+            cards: createHand(handlerInput),
+          };
+          game.opponent.hold = playHand(game.opponent.cards);
+        }
+        done();
+      });
+    }
+
+    function done() {
+      game.player = {
+        cards: createHand(handlerInput, game.opponent.cards),
+        hold: [],
+      };
+      game.handOver = false;
+      callback();
+    }
   },
   determineWinner: function(game) {
     // Get the three card hands the player and opponent are playing

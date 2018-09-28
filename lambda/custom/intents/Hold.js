@@ -184,7 +184,7 @@ function finishHand(handlerInput, callback) {
   }
   speech += res.getString('HANDS_LEFT').replace('{0}', attributes.points);
   attributes.temp.holding = undefined;
-  game.showOpponent = true;
+  game.handOver = true;
 
   // Is it a new high?
   if (attributes.points > attributes.high) {
