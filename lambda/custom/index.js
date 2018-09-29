@@ -71,7 +71,7 @@ const saveResponseInterceptor = {
       const attributes = handlerInput.attributesManager.getSessionAttributes();
 
       if (response) {
-        if (attributes.temp && attributes.temp.newSession) {
+        if (!response.shouldEndSession && attributes.temp && attributes.temp.newSession) {
           // Set up the buttons to all flash, welcoming the user to press a button
           buttons.addLaunchAnimation(handlerInput);
           buttons.buildButtonDownAnimationDirective(handlerInput, []);

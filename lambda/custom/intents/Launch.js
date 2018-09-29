@@ -13,6 +13,7 @@ module.exports = {
       (handlerInput.requestEnvelope.request.type === 'LaunchRequest');
   },
   handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(handlerInput);
     let response;

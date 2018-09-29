@@ -75,16 +75,15 @@ module.exports = {
           return result;
         }
 
-        let playerCards;
-        const opponent = mapHand(game.opponent);
+        const opponent = module.exports.mapHand(game, game.opponent);
+        const playerCards = module.exports.mapHand(game, game.player).map(splitCard);
+
         const opponentCards = [];
         opponentCards.push(splitCard(opponent[0]));
         if (game.handOver) {
-          playerCards = mapHand(game.player).map(splitCard);
           opponentCards.push(splitCard(opponent[1]));
           opponentCards.push(splitCard(opponent[2]));
         } else {
-          playerCards = game.player.cards.slice(0, 3).map(splitCard);
           opponentCards.push({rank: '1', suit: 'N'});
           opponentCards.push({rank: '1', suit: 'N'});
         }
@@ -130,7 +129,7 @@ module.exports = {
     }
   },
   saveHand: function(handlerInput, callback) {
-    if (process.env.SERVICEURL) {
+    if (process.env.SERVICEURL && !process.env.NOSAVEHAND) {
       // If there isn't a name, then we need to make one up
       const attributes = handlerInput.attributesManager.getSessionAttributes();
       const game = attributes[attributes.currentGame];
@@ -266,8 +265,8 @@ module.exports = {
   },
   determineWinner: function(game) {
     // Get the three card hands the player and opponent are playing
-    const player = mapHand(game.player);
-    const opponent = mapHand(game.opponent);
+    const player = module.exports.mapHand(game, game.player);
+    const opponent = module.exports.mapHand(game, game.opponent);
     const playerDetails = poker.evaluateAndFindCards(player,
       {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
     const opponentDetails = poker.evaluateAndFindCards(opponent,
@@ -293,24 +292,49 @@ module.exports = {
       return 'tie';
     }
   },
-  evaluateHand: function(hand) {
-    const cards = mapHand(hand);
+  evaluateHand: function(game, hand) {
+    const cards = module.exports.mapHand(game, hand);
     const details = poker.evaluateAndFindCards(cards,
       {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
     return details;
   },
   readHandRank: function(handlerInput, hand) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
     const res = require('./resources')(handlerInput);
-    const details = module.exports.evaluateHand(hand);
+    const details = module.exports.evaluateHand(game, hand);
     let rank = JSON.parse(res.getString('HAND_NAMES'))[details.match];
 
     if (rank.includes('{0}')) {
       // Need to replace with high card in hand
-      const sorted = sortHand(mapHand(hand), details);
+      const sorted = sortHand(module.exports.mapHand(game, hand), details);
       rank = rank.replace('{0}', res.readRank(sorted[0]));
     }
 
     return rank;
+  },
+  mapHand: function(game, hand) {
+    let cards;
+    let i;
+
+    // If the hand isn't over, then this just returns the first three cards
+    if (!game.handOver) {
+      cards = hand.cards.slice(0, 3);
+    } else {
+      // The hand is over - first add in anything that was held
+      cards = [];
+      for (i = 0; i < 3; i++) {
+        if (hand.hold.indexOf(i) > -1) {
+          cards.push(hand.cards[i]);
+        }
+      }
+      // Then complete the hand up to 3 cards
+      const end = 6 - cards.length;
+      for (i = 3; i < end; i++) {
+        cards.push(hand.cards[i]);
+      }
+    }
+    return cards;
   },
   isNextDay: function(event, attributes, callback) {
     getUserTimezone(event, (timezone) => {
@@ -507,24 +531,6 @@ function playHand(cards) {
   }
 
   return hold;
-}
-
-function mapHand(hand) {
-  const cards = [];
-  let i;
-
-  // First three cards -- see what is held
-  for (i = 0; i < 3; i++) {
-    if (hand.hold.indexOf(i) > -1) {
-      cards.push(hand.cards[i]);
-    }
-  }
-  for (i = 3; i < hand.cards.length; i++) {
-    if (cards.length < 3) {
-      cards.push(hand.cards[i]);
-    }
-  }
-  return cards;
 }
 
 function sortHand(cards, details) {

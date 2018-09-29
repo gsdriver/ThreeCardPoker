@@ -110,11 +110,18 @@ module.exports = {
         if (attributes.points === 0) {
           attributes.busted = Date.now();
           if (attributes.paid && attributes.paid.morehands) {
+            // Strip out breaks and offer to buy more chips
+            speech += res.getString('HOLD_BUY_CHIPS').replace('{0}', utils.PURCHASE_REFRESH_POINTS);
+            speech = speech.replace(/<break[^>]+>/g, ' ');
+            speech = speech.replace(/<\/?[^>]+(>|$)/g, '');
+            speech = speech.replace(/\s+/g, ' ').trim();
+
             response = handlerInput.responseBuilder
               .addDirective(utils.getPurchaseDirective(attributes, 'Upsell', speech))
               .withShouldEndSession(true)
               .getResponse();
           } else {
+            speech += res.getString('HOLD_NO_CHIPS');
             response = handlerInput.responseBuilder
               .speak(speech)
               .withShouldEndSession(true)
@@ -146,6 +153,7 @@ function finishHand(handlerInput, callback) {
   let speech;
   let reprompt;
 
+  game.handOver = true;
   speech = '';
   for (i = 3; i < 6 - game.player.hold.length; i++) {
     drew.push(game.player.cards[i]);
@@ -209,7 +217,6 @@ function finishHand(handlerInput, callback) {
   }
   speech += res.getString('CHIPS_LEFT').replace('{0}', res.sayChips(attributes.points));
   attributes.temp.holding = undefined;
-  game.handOver = true;
 
   // Is it a new high?
   if (attributes.points > attributes.high) {

@@ -31,12 +31,8 @@ module.exports = {
         const cards = game.player.cards.slice(0, 3).map((x) => {
           return res.readCard(x);
         });
-        const firstCards = {
-          cards: game.player.cards,
-          hold: [0, 1, 2],
-        };
-        const handRank = utils.readHandRank(handlerInput, firstCards);
-        const details = utils.evaluateHand(firstCards);
+        const handRank = utils.readHandRank(handlerInput, game.player);
+        const details = utils.evaluateHand(game, game.player);
         let speech = res.getString('PLAY_READ_HAND')
           .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}))
           .replace('{1}', game.opponent.name)
@@ -48,7 +44,7 @@ module.exports = {
           reprompt = res.getString('PLAY_HOLDALL_REPROMPT').replace('{0}', handRank);
           attributes.temp.holding = [];
           details.cards.forEach((card) => {
-            attributes.temp.holding.push(firstCards.cards.indexOf(card));
+            attributes.temp.holding.push(game.player.cards.indexOf(card));
           });
         } else {
           reprompt = res.getString('PLAY_REPRONPT').replace('{0}', res.readCard(game.player.cards[0]));

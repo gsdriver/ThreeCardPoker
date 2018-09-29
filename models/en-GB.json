@@ -1,0 +1,162 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "three card poker",
+      "intents": [
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.MoreIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateSettingsIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NextIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PageUpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PageDownIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PreviousIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollRightIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollDownIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollLeftIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollUpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.RepeatIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "HighScoreIntent",
+          "slots": [],
+          "samples": [
+            "read high scores",
+            "tell me high scores",
+            "what are the high scores",
+            "what is the leader board",
+            "read leader board",
+            "say high scores",
+            "say leader board"
+          ]
+        },
+        {
+          "name": "PlayIntent",
+          "samples": [
+            "Play the game",
+            "Start the game",
+            "play",
+            "let's go"
+          ]
+        },
+        {
+          "name": "ChangeNameIntent",
+          "slots": [
+            {
+              "name": "Name",
+              "type": "AMAZON.GB_FIRST_NAME",
+              "samples": [
+                "My name is {Name}",
+                "{Name}"
+              ]
+            }
+          ],
+          "samples": [
+            "Change my name",
+            "Change my name to {Name}",
+            "Change name",
+            "Change name to {Name}",
+            "My name is {Name}",
+            "{Name}"
+          ]
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "ChangeNameIntent",
+          "confirmationRequired": false,
+          "slots": [
+            {
+              "name": "Name",
+              "type": "AMAZON.GB_FIRST_NAME",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.1142476942671.1417417013686"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.1142476942671.1417417013686",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "And your name?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What's your name?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What is your name?"
+          }
+        ]
+      }
+    ]
+  }
+}

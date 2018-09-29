@@ -38,9 +38,11 @@ const common = {
   'HOLD_LOSE': 'You lost! |Sorry you lost. |Sorry {0} <break time=\'200ms\'/> you lost. ',
   'HOLD_TIE': 'Wow, a tie! Ties go to the opponent, I\'m afraid. <amazon:effect name="whispered">It\'s only fair <break time=\'300ms\'/> they had to show you one of their cards..</amazon:effect> ',
   'HOLD_GAMEOVER_REPROMPT': 'Would you like to play again? |Go again? |Another round? |Try again? |One more time? ',
+  'HOLD_BUY_CHIPS': 'Come back tomorrow for more chips. Or would you like to hear more about buying {0} chips to continue playing now?',
+  'HOLD_NO_CHIPS': 'Come back tomorrow for more chips.',
   // Launch.js
-  'LAUNCH_WELCOME': '{0} Welcome to Three Card Poker. |{0} Let\'s play Three Card Poker. ',
-  'LAUNCH_WELCOME_BACK': '{0} {1} <break time=\'300ms\'/> Welcome back to Three Card Poker. |{0} {1} Good to have you back for Three Card Poker. |{0} {1} Ready to play some Three Card Poker? ',
+  'LAUNCH_WELCOME': '{0} <break time=\'300ms\'/> Welcome to Three Card Poker. |{0} <break time=\'300ms\'/> Let\'s play Three Card Poker. ',
+  'LAUNCH_WELCOME_BACK': '{0} {1} <break time=\'300ms\'/> Welcome back to Three Card Poker. |{0} {1} <break time=\'300ms\'/> Good to have you back for Three Card Poker. |{0} {1} <break time=\'300ms\'/> Ready to play some Three Card Poker? ',
   'LAUNCH_REPROMPT': 'Please say your name to get started ',
   'LAUNCH_RETURNING_REPRONPT': 'Say play to get started ',
   'LAUNCH_BUSTED': 'You are out of chips. Come back to Three Card Poker tomorrow for {0} more chips. ',
@@ -55,6 +57,11 @@ const common = {
   'PURCHASE_MOREHANDS': 'We have a product available for purchase to give you 10 extra chips. Would you like to buy it? ',
   'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy more chips',
   'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
+  // Repeat.js
+  'REPEAT_READ_HAND': 'You have {0} giving you {1} <break time=\'300ms\'/> |You have {0} making {1} <break time=\'300ms\'/> ',
+  'REPEAT_PLAYER_HOLDING': 'You are holding {0} <break time=\'300ms\'/> |You chose to hold {0} <break time=\'300ms\'/>',
+  'REPEAT_READ_OPPONENT_HAND': '{0} has {1} making {2} <break time=\'300ms\'/> ',
+  'REPEAT_UPCARD': 'I see that {0} is showing {1} <break time=\'300ms\'/> ',
   // StartGame.js
   'STARTGAME_PRESS_DISCARD': 'Thanks {0} <break time=\'300ms\'/> this green button will be used to hold cards <break time=\'300ms\'/> Press another button to use for discarding cards.',
   'STARTGAME_START': 'Great. This button will be used to discard cards. ',
@@ -64,9 +71,9 @@ const common = {
   'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Help.',
   'UNKNOWN_INTENT_REPROMPT': 'Try saying Help.',
   // utils.js
-  'GOOD_MORNING': 'Good morning <break time=\"200ms\"/> ',
-  'GOOD_AFTERNOON': 'Good afternoon <break time=\"200ms\"/> ',
-  'GOOD_EVENING': 'Good evening <break time=\"200ms\"/> ',
+  'GOOD_MORNING': 'Good morning ',
+  'GOOD_AFTERNOON': 'Good afternoon ',
+  'GOOD_EVENING': 'Good evening ',
   'GAME_TITLE': '3 Card Poker',
   'COMPUTER_NAME': 'Bob|Fred|Lori|Lynn|Sam|William|Mary|Ryan|Sandy|Tina|Diane|Norm',
   'CHIPS_LEFT': 'You have {0} remaining. ',
