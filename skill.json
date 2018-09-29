@@ -7,7 +7,7 @@
           "examplePhrases": [
             "Alexa, open three card poker",
             "Change my name",
-            "Deal"
+            "Play"
           ],
           "keywords": [
             "poker",
@@ -23,7 +23,7 @@
           "examplePhrases": [
             "Alexa, open three card poker",
             "Change my name",
-            "Deal"
+            "Play"
           ],
           "keywords": [
             "poker",
@@ -39,7 +39,7 @@
           "examplePhrases": [
             "Alexa, open three card poker",
             "Change my name",
-            "Deal"
+            "Play"
           ],
           "keywords": [
             "poker",
@@ -55,7 +55,7 @@
           "examplePhrases": [
             "Alexa, open three card poker",
             "Change my name",
-            "Deal"
+            "Play"
           ],
           "keywords": [
             "poker",
@@ -100,6 +100,13 @@
         ]
       }
     },
-    "manifestVersion": "1.0"
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "isChildDirected": false,
+      "usesPersonalInfo": false
+    }
   }
 }

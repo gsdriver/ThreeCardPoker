@@ -16,29 +16,40 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "33ca5539626d14c14787870b3160b8fa"
+          "eTag": "70a107cd3c24d304263b3180e8d9b007"
         },
         "interactionModel": {
           "en-US": {
-            "eTag": "0303b28f2462d00912c796d669a8737e"
+            "eTag": "e16a362ad00c45ec4401f15d70fc9503"
           },
           "en-CA": {
-            "eTag": "0303b28f2462d00912c796d669a8737e"
+            "eTag": "1a0e1ee68b3612bf674029a527df0dca"
           },
           "en-AU": {
-            "eTag": "0303b28f2462d00912c796d669a8737e"
+            "eTag": "1a0e1ee68b3612bf674029a527df0dca"
           },
           "en-GB": {
-            "eTag": "0303b28f2462d00912c796d669a8737e"
+            "eTag": "c3d746d0e990560665596c9dae260355"
           }
-        }
+        },
+        "lambda": [
+          {
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
+            "awsRegion": "us-east-1",
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "revisionId": "2babd1c2-b9d8-48e2-beff-04f8c2449fdb"
+          }
+        ]
       },
       "in_skill_products": [
         {
           "deploy_status": "Update",
           "filePath": "isps\\consumable\\morehands.json",
           "productId": "amzn1.adg.product.4e760229-10aa-4fc7-bdf3-d7f0bc31ee7c",
-          "eTag": "a7e6552af9b67f67f29418c4a6e2b6b9"
+          "eTag": "499a4cb9c4cf8bc9257572a1b6d23db1"
         }
       ]
     }
