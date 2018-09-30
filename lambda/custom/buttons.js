@@ -37,7 +37,7 @@ module.exports = {
       // We'll allow them to press the button again if we haven't already
       const inputDirective = {
         'type': 'GameEngine.StartInputHandler',
-        'timeout': 90000,
+        'timeout': 40000,
         'recognizers': {
           'button_down_recognizer': {
             'type': 'match',
@@ -61,10 +61,10 @@ module.exports = {
   },
   secondButtonInputHandler: function(handlerInput) {
     if (module.exports.supportButtons(handlerInput)) {
-      // 10 seconds to press the second button - and we'd like a timeout
+      // 15 seconds to press the second button - and we'd like a timeout
       const inputDirective = {
         'type': 'GameEngine.StartInputHandler',
-        'timeout': 10000,
+        'timeout': 15000,
         'recognizers': {
           'button_down_recognizer': {
             'type': 'match',
@@ -178,47 +178,49 @@ module.exports = {
   lightPlayer: function(handlerInput) {
     if (module.exports.supportButtons(handlerInput)) {
       const attributes = handlerInput.attributesManager.getSessionAttributes();
-      if (attributes.temp.buttons.hold) {
-        const holdDirective = {
-          'type': 'GadgetController.SetLight',
-          'version': 1,
-          'targetGadgets': [attributes.temp.buttons.hold],
-          'parameters': {
-            'animations': [{
-              'repeat': 1,
-              'targetLights': ['1'],
-              'sequence': [{
-                'durationMs': 60000,
-                'color': '00FF00',
-                'blend': false,
+      if (attributes.temp.buttons) {
+        if (attributes.temp.buttons.hold) {
+          const holdDirective = {
+            'type': 'GadgetController.SetLight',
+            'version': 1,
+            'targetGadgets': [attributes.temp.buttons.hold],
+            'parameters': {
+              'animations': [{
+                'repeat': 1,
+                'targetLights': ['1'],
+                'sequence': [{
+                  'durationMs': 60000,
+                  'color': '00FF00',
+                  'blend': false,
+                }],
               }],
-            }],
-            'triggerEvent': 'none',
-            'triggerEventTimeMs': 0,
-          },
-        };
-        handlerInput.responseBuilder.addDirective(holdDirective);
-      }
-      if (attributes.temp.buttons.discard) {
-        const discardDirective = {
-          'type': 'GadgetController.SetLight',
-          'version': 1,
-          'targetGadgets': [attributes.temp.buttons.discard],
-          'parameters': {
-            'animations': [{
-              'repeat': 1,
-              'targetLights': ['1'],
-              'sequence': [{
-                'durationMs': 60000,
-                'color': '0000FF',
-                'blend': false,
+              'triggerEvent': 'none',
+              'triggerEventTimeMs': 0,
+            },
+          };
+          handlerInput.responseBuilder.addDirective(holdDirective);
+        }
+        if (attributes.temp.buttons.discard) {
+          const discardDirective = {
+            'type': 'GadgetController.SetLight',
+            'version': 1,
+            'targetGadgets': [attributes.temp.buttons.discard],
+            'parameters': {
+              'animations': [{
+                'repeat': 1,
+                'targetLights': ['1'],
+                'sequence': [{
+                  'durationMs': 60000,
+                  'color': '0000FF',
+                  'blend': false,
+                }],
               }],
-            }],
-            'triggerEvent': 'none',
-            'triggerEventTimeMs': 0,
-          },
-        };
-        handlerInput.responseBuilder.addDirective(discardDirective);
+              'triggerEvent': 'none',
+              'triggerEventTimeMs': 0,
+            },
+          };
+          handlerInput.responseBuilder.addDirective(discardDirective);
+        }
       }
     }
   },

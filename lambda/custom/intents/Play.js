@@ -53,7 +53,8 @@ module.exports = {
         speech += ('<break time=\'300ms\'/> ' + reprompt);
 
         // Now we are going into holding mode
-        buttons.startInputHandler(handlerInput);
+        buttons.playInputHandler(handlerInput);
+        buttons.lightPlayer(handlerInput);
         attributes.temp.newGame = undefined;
         resolve(handlerInput.responseBuilder
           .speak(speech)

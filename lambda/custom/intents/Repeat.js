@@ -62,10 +62,11 @@ module.exports = {
         .replace('{1}', res.readCard(game.opponent.cards[0]));
     }
 
-    speech += attributes.temp.lastReprompt;
+    const reprompt = res.getString('REPEAT_REPROMPT');
+    speech += reprompt;
     return handlerInput.responseBuilder
       .speak(speech)
-      .reprompt(attributes.temp.lastReprompt)
+      .reprompt(reprompt)
       .getResponse();
   },
 };

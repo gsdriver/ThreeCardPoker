@@ -35,7 +35,7 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
     const res = require('../resources')(handlerInput);
-    let speech;
+    let speech = '';
     let reprompt;
     let response;
     const willHold = (((event.request.type === 'GameEngine.InputHandlerEvent')
@@ -48,6 +48,28 @@ module.exports = {
         || (event.request.intent.name === 'AMAZON.CancelIntent')));
 
     return new Promise((resolve, reject) => {
+      // If they pressed a button, give a verbal indication of what they did
+      if (event.request.type === 'GameEngine.InputHandlerEvent') {
+        const cards = [];
+        if (Array.isArray(attributes.temp.holding)) {
+          attributes.temp.holding.forEach((held) => {
+            cards.push(res.readCard(game.player.cards[held]));
+          });
+        } else {
+          cards.push(res.readCard(game.player.cards[attributes.temp.holding]));
+        }
+
+        if (willHold) {
+          speech = '<audio src="soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_01"/> ';
+          speech += res.getString('HOLD_BUTTON_HELD')
+            .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}));
+        } else {
+          speech += '<audio src="soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_player1_01"/> ';
+          speech += res.getString('HOLD_BUTTON_DISCARD')
+            .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}));
+        }
+      }
+
       // Do they want to go back?
       if (goBack) {
         if (Array.isArray(attributes.temp.holding)) {
@@ -71,14 +93,14 @@ module.exports = {
           game.player.hold = attributes.temp.holding;
           attributes.temp.holding = undefined;
           finishHand(handlerInput, (endSpeech, endReprompt) => {
-            speech = endSpeech;
+            speech += endSpeech;
             reprompt = endReprompt;
             done();
           });
         } else {
           // Ask card by card
           attributes.temp.holding = 0;
-          speech = res.getString('HOLD_NEXT_CARD')
+          speech += res.getString('HOLD_NEXT_CARD')
             .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
           reprompt = speech;
           done();
@@ -92,13 +114,13 @@ module.exports = {
         attributes.temp.holding++;
         if (attributes.temp.holding < 3) {
           // Next one
-          speech = res.getString('HOLD_NEXT_CARD')
+          speech += res.getString('HOLD_NEXT_CARD')
             .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
           reprompt = speech;
           done();
         } else {
           finishHand(handlerInput, (endSpeech, endReprompt) => {
-            speech = endSpeech;
+            speech += endSpeech;
             reprompt = endReprompt;
             done();
           });

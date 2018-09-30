@@ -29,7 +29,7 @@ module.exports = {
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(handlerInput);
-    let speech;
+    let speech = '<audio src="soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01"/> ';
     let reprompt;
 
     // Save this button
@@ -39,7 +39,7 @@ module.exports = {
     }
     if (!attributes.temp.buttons.hold) {
       attributes.temp.buttons.hold = attributes.temp.buttonId;
-      speech = res.getString('STARTGAME_PRESS_DISCARD')
+      speech += res.getString('STARTGAME_PRESS_DISCARD')
         .replace('{0}', (attributes.name) ? attributes.name : '');
 
       // Turn off the microphone until they press the second button
@@ -49,7 +49,7 @@ module.exports = {
         .withShouldEndSession(undefined);
     } else {
       attributes.temp.buttons.discard = attributes.temp.buttonId;
-      speech = res.getString('STARTGAME_START');
+      speech += res.getString('STARTGAME_START');
       reprompt = res.getString((attributes.name) ? 'STARTGAME_START_REPROMPT' : 'STARTGAME_START_REPROMPT_NONAME');
       speech += reprompt;
       buttons.turnOffButtons(handlerInput);

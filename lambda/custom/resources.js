@@ -13,8 +13,10 @@ const common = {
   // Exit.js
   'EXIT_GAME': '{0} Goodbye {1}.',
   // Help.js
-  'HELP_TEXT': 'You have {0}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {1} more, or buy more chips to keep playing. For full rules of play, check the Alexa companion application. ',
+  'HELP_TEXT': 'You have {0}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {1} more, or buy more chips to keep playing. ',
   'HELP_FALLBACK': 'Sorry, I didn\'t get that. <break time=\"200ms\"/> ',
+  'HELP_USE_BUTTONS': 'You can press the green button to hold cards or the blue button to discard cards. ',
+  'HELP_CHECK_APP': 'For full rules of play, check the Alexa companion application. ',
   'HELP_REPROMPT': 'What else can I help you with?',
   'HELP_CARD_TEXT': 'The rankings of hands from high to low are Straight Flush (three consecutive cards of the same suit - Ace can be high or low), Three of a Kind, Straight, Flush (three cards of the same suit), Pair, and High Card. If both players have the same type of hand, the ranking of cards in the hands are used to break ties.  In the event that both players have the same hand, the game ends in a tie which is awarded to the opponent.',
   'HELP_CARD_TITLE': 'Three Card Poker',
@@ -40,6 +42,8 @@ const common = {
   'HOLD_GAMEOVER_REPROMPT': 'Would you like to play again? |Go again? |Another round? |Try again? |One more time? ',
   'HOLD_BUY_CHIPS': 'Come back tomorrow for more chips. Or would you like to hear more about buying {0} chips to continue playing now?',
   'HOLD_NO_CHIPS': 'Come back tomorrow for more chips.',
+  'HOLD_BUTTON_HELD': 'You held {0}. |OK, let\'s hold {0}. |Holding {0}. ',
+  'HOLD_BUTTON_DISCARD': 'You discarded {0}. |OK, let\'s get rid of {0}. |Discarding {0}. ',
   // Launch.js
   'LAUNCH_WELCOME': '{0} <break time=\'300ms\'/> Welcome to Three Card Poker. |{0} <break time=\'300ms\'/> Let\'s play Three Card Poker. ',
   'LAUNCH_WELCOME_BACK': '{0} {1} <break time=\'300ms\'/> Welcome back to Three Card Poker. |{0} {1} <break time=\'300ms\'/> Good to have you back for Three Card Poker. |{0} {1} <break time=\'300ms\'/> Ready to play some Three Card Poker? ',
@@ -62,9 +66,10 @@ const common = {
   'REPEAT_PLAYER_HOLDING': 'You are holding {0} <break time=\'300ms\'/> |You chose to hold {0} <break time=\'300ms\'/>',
   'REPEAT_READ_OPPONENT_HAND': '{0} has {1} making {2} <break time=\'300ms\'/> ',
   'REPEAT_UPCARD': 'I see that {0} is showing {1} <break time=\'300ms\'/> ',
+  'REPEAT_REPROMPT': 'What else can I help you with?',
   // StartGame.js
   'STARTGAME_PRESS_DISCARD': 'Thanks {0} <break time=\'300ms\'/> this green button will be used to hold cards <break time=\'300ms\'/> Press another button to use for discarding cards.',
-  'STARTGAME_START': 'Great. This button will be used to discard cards. ',
+  'STARTGAME_START': 'Great. This blue button will be used to discard cards. ',
   'STARTGAME_START_REPROMPT': 'Say play to get started.',
   'STARTGAME_START_REPROMPT_NONAME': 'Please say your name to get started.',
   // Unhandled.js

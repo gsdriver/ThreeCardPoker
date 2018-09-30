@@ -29,6 +29,13 @@ module.exports = {
     speech += res.getString('HELP_TEXT')
       .replace('{0}', res.sayChips(attributes.points))
       .replace('{1}', utils.DAILY_REFRESH_POINTS);
+
+    if (attributes.temp.buttons && attributes.temp.buttons.hold
+      && attributes.temp.buttons.discard) {
+      speech += res.getString('HELP_USE_BUTTONS');
+    }
+    speech += res.getString('HELP_CHECK_APP');
+
     const reprompt = res.getString('HELP_REPROMPT');
     speech += reprompt;
     return handlerInput.responseBuilder

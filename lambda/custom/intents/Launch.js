@@ -18,7 +18,7 @@ module.exports = {
     const res = require('../resources')(handlerInput);
     let response;
     let speech;
-    let reprompt;
+    let reprompt = '';
 
     return new Promise((resolve, reject) => {
       // First off - are they out of money?
@@ -43,7 +43,7 @@ module.exports = {
             resolve(response);
             return;
           } else {
-            speech = res.getString('LAUNCH_BUSTED_REPLENLISH')
+            speech = res.getString('LAUNCH_BUSTED_REPLENISH')
               .replace('{0}', utils.DAILY_REFRESH_POINTS)
               .replace('{1}', (attributes.name ? attributes.name: ''));
             attributes.points += utils.DAILY_REFRESH_POINTS;
@@ -63,11 +63,11 @@ module.exports = {
               speech = res.getString('LAUNCH_WELCOME_BACK')
                 .replace('{0}', greeting)
                 .replace('{1}', attributes.name);
-              reprompt = res.getString('LAUNCH_RETURNING_REPRONPT');
+              reprompt += res.getString('LAUNCH_RETURNING_REPRONPT');
             } else {
               speech = res.getString('LAUNCH_WELCOME')
                 .replace('{0}', greeting);
-              reprompt = res.getString('LAUNCH_REPROMPT');
+              reprompt += res.getString('LAUNCH_REPROMPT');
             }
           }
           if (buttons.supportButtons(handlerInput)) {
