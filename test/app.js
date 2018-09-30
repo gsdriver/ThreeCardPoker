@@ -184,6 +184,49 @@ function BuildEvent(argv)
      },
   };
 
+  const canFulfill = {
+   "session":{
+     "new": true,
+     "sessionId":"SessionId.12",
+     "application":{
+       "applicationId": APPID
+     },
+     "attributes":{
+       "key": "string value"
+     }
+   },
+   "request":{
+     "type":"CanFulfillIntentRequest",
+     "requestId":"EdwRequestId.12",
+     "intent":{
+       "name":"ChangeNameIntent",
+       "slots":{
+         "Name":{
+           "name":"Name",
+           "value":"Barney"
+         },
+       }
+     },
+     "locale":LOCALE,
+     "timestamp":"2017-10-03T22:02:29Z"
+   },
+   "context":{
+     "AudioPlayer":{
+       "playerActivity":"IDLE"
+     },
+     "System":{
+       "application":{
+         "applicationId": APPID
+       },
+       "device":{
+         "supportedInterfaces":{
+         }
+       }
+     }
+   },
+   "version":"1.0"
+  };
+
   // If there is an attributes.txt file, read the attributes from there
   if (fs.existsSync(attributeFile)) {
     data = fs.readFileSync(attributeFile, 'utf8');
@@ -237,6 +280,8 @@ function BuildEvent(argv)
     lambda.request.intent = yes;
   } else if (argv[2] == 'no') {
     lambda.request.intent = no;
+  } else if (argv[2] == 'canfulfill') {
+    return canFulfill;
   }
   else {
     console.log(argv[2] + ' was not valid');
