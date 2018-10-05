@@ -15,7 +15,7 @@
           ],
           "name": "Three Card Poker",
           "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/bd98/27cc21042a564257b922c9646680f728/APP_ICON?versionId=vtAvZgPciUy6ANHg5_lb9_ZJftTTysJB&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1537850632&Signature=vRg7g5jJujmr3BbvbKI2nb%2BgGmE%3D",
-          "description": "Play three card draw poker against other players worldwide including optional support for Echo Buttons. When using Echo Buttons, you'll use two buttons - one to hold cards and another to discard. Each turn you'll be pitted against another player and try to add to your chip total by beating them. Run out of chips for the day? Come back the next day for additional chips, or you can buy more chips to continue playing immediately. \n\nHave feedback or want to share your thoughts on this skill?  Connect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "description": "Play three card draw poker against other players worldwide including optional support for Echo Buttons. When using Echo Buttons, you'll use two buttons - one to hold cards and another to discard. Each turn you'll be pitted against another player and try to add to your chip total by beating them. Run out of chips for the day? Come back the next day for additional chips. \n\nHave feedback or want to share your thoughts on this skill?  Connect with us on Facebook at https://www.facebook.com/alexacasinogames!",
           "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5cd6/ea6b9dc287d0424992c67f41367a4008/APP_ICON_LARGE?versionId=pVoMB22g456_DLXUdaXFMQqnUNGu.Ac0&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1537850632&Signature=ZcK90RerjjcY%2BWeh6UN6PAWjLOo%3D"
         },
         "en-CA": {

@@ -78,7 +78,7 @@ const saveResponseInterceptor = {
           buttons.startInputHandler(handlerInput);
           attributes.temp.newSession = undefined;
         }
-        utils.drawTable(handlerInput, () => {
+        utils.drawTable(handlerInput).then(() => {
           if (response.shouldEndSession) {
             // We are meant to end the session
             SessionEnd.handle(handlerInput);
@@ -156,7 +156,7 @@ function runGame(event, context, callback) {
     .addResponseInterceptors(saveResponseInterceptor)
     .withTableName('ThreeCardPoker')
     .withAutoCreateTable(true)
-    .withSkillId('amzn1.ask.skill.f29f69e5-a675-4965-bdda-8aaa3bdbbd1d')
+    .withSkillId('amzn1.ask.skill.115099ae-4d44-4d1c-aa99-634f34acf802')
     .lambda();
   skillFunction(event, context, (err, response) => {
     callback(err, response);

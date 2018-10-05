@@ -13,7 +13,8 @@ const common = {
   // Exit.js
   'EXIT_GAME': '{0} Goodbye {1}.',
   // Help.js
-  'HELP_TEXT': 'You have {0}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {1} more, or buy more chips to keep playing. ',
+  'HELP_TEXT_BUY_CHIPS': 'You have {0}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {1} more, or buy more chips to keep playing. ',
+  'HELP_TEXT': 'You have {0}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {1} more. ',
   'HELP_FALLBACK': 'Sorry, I didn\'t get that. <break time=\"200ms\"/> ',
   'HELP_USE_BUTTONS': 'You can press the green button to hold cards or the blue button to discard cards. ',
   'HELP_CHECK_APP': 'For full rules of play, check the Alexa companion application. ',

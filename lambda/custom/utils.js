@@ -39,94 +39,100 @@ module.exports = {
       }
     });
   },
-  drawTable: function(handlerInput, callback) {
+  drawTable: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
     const res = require('./resources')(handlerInput);
 
-    if (event.context && event.context.System &&
-      event.context.System.device &&
-      event.context.System.device.supportedInterfaces &&
-      event.context.System.device.supportedInterfaces.Display) {
-      attributes.display = true;
-      let imageUrl;
+    return new Promise((resolve, reject) => {
+      const response = handlerInput.responseBuilder.getResponse();
 
-      // Do we have hands?
-      if (!game.player || !game.opponent) {
-        // Use the background image
-        imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
-        done();
-      } else {
-        const start = Date.now();
-        let end;
+      if (response.directives && (response.directives[0].type === 'Dialog.Delegate')) {
+        resolve();
+      } else if (event.context && event.context.System &&
+        event.context.System.device &&
+        event.context.System.device.supportedInterfaces &&
+        event.context.System.device.supportedInterfaces.Display) {
+        attributes.display = true;
+        let imageUrl;
 
-        function splitCard(card) {
-          const result = {};
-          const rank = card.charAt(0);
-          const faceCards = '1JQKA';
-
-          if (faceCards.indexOf(rank) > -1) {
-            result.rank = 10 + faceCards.indexOf(rank);
-          } else {
-            result.rank = rank;
-          }
-          result.suit = card.charAt(card.length - 1);
-          return result;
-        }
-
-        const opponent = module.exports.mapHand(game, game.opponent);
-        const playerCards = module.exports.mapHand(game, game.player).map(splitCard);
-
-        const opponentCards = [];
-        opponentCards.push(splitCard(opponent[0]));
-        if (game.handOver) {
-          opponentCards.push(splitCard(opponent[1]));
-          opponentCards.push(splitCard(opponent[2]));
-        } else {
-          opponentCards.push({rank: '1', suit: 'N'});
-          opponentCards.push({rank: '1', suit: 'N'});
-        }
-        const formData = {
-          player: JSON.stringify(playerCards),
-          opponent: JSON.stringify(opponentCards),
-        };
-
-        const params = {
-          url: process.env.SERVICEURL + 'threecard/drawImage',
-          formData: formData,
-          timeout: 3000,
-        };
-
-        request.post(params, (err, res, body) => {
-          if (err) {
-            console.log(err);
-            imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
-          } else {
-            imageUrl = JSON.parse(body).file;
-            end = Date.now();
-          }
-          console.log('Drawing table took ' + (end - start) + ' ms');
+        // Do we have hands?
+        if (!game.player || !game.opponent) {
+          // Use the background image
+          imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
           done();
-        });
-      }
+        } else {
+          const start = Date.now();
+          let end;
 
-      function done() {
-        const image = new Alexa.ImageHelper()
-          .addImageInstance(imageUrl)
-          .getImage();
-        handlerInput.responseBuilder.addRenderTemplateDirective({
-          type: 'BodyTemplate6',
-          title: res.getString('GAME_TITLE'),
-          backButton: 'HIDDEN',
-          backgroundImage: image,
-        });
-        callback();
+          function splitCard(card) {
+            const result = {};
+            const rank = card.charAt(0);
+            const faceCards = '1JQKA';
+
+            if (faceCards.indexOf(rank) > -1) {
+              result.rank = 10 + faceCards.indexOf(rank);
+            } else {
+              result.rank = rank;
+            }
+            result.suit = card.charAt(card.length - 1);
+            return result;
+          }
+
+          const opponent = module.exports.mapHand(game, game.opponent);
+          const playerCards = module.exports.mapHand(game, game.player).map(splitCard);
+
+          const opponentCards = [];
+          opponentCards.push(splitCard(opponent[0]));
+          if (game.handOver) {
+            opponentCards.push(splitCard(opponent[1]));
+            opponentCards.push(splitCard(opponent[2]));
+          } else {
+            opponentCards.push({rank: '1', suit: 'N'});
+            opponentCards.push({rank: '1', suit: 'N'});
+          }
+          const formData = {
+            player: JSON.stringify(playerCards),
+            opponent: JSON.stringify(opponentCards),
+          };
+
+          const params = {
+            url: process.env.SERVICEURL + 'threecard/drawImage',
+            formData: formData,
+            timeout: 3000,
+          };
+
+          request.post(params, (err, res, body) => {
+            if (err) {
+              console.log(err);
+              imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
+            } else {
+              imageUrl = JSON.parse(body).file;
+              end = Date.now();
+            }
+            console.log('Drawing table took ' + (end - start) + ' ms');
+            done();
+          });
+        }
+
+        function done() {
+          const image = new Alexa.ImageHelper()
+            .addImageInstance(imageUrl)
+            .getImage();
+          handlerInput.responseBuilder.addRenderTemplateDirective({
+            type: 'BodyTemplate6',
+            title: res.getString('GAME_TITLE'),
+            backButton: 'HIDDEN',
+            backgroundImage: image,
+          });
+          resolve();
+        }
+      } else {
+        // Not a display device
+        resolve();
       }
-    } else {
-      // Not a display device
-      callback();
-    }
+    });
   },
   saveHand: function(handlerInput, callback) {
     if (process.env.SERVICEURL && !process.env.NOSAVEHAND) {

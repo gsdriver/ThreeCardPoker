@@ -22,7 +22,8 @@ module.exports = {
       || !event.request.intent.slots.Name
       || !event.request.intent.slots.Name.value) {
       // Delegate this
-      return handlerInput.addDelegateDirective(event.request.intent)
+      return handlerInput.responseBuilder
+        .addDelegateDirective(event.request.intent)
         .getResponse();
     }
 
