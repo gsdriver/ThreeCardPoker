@@ -4,6 +4,8 @@
 
 'use strict';
 
+const buttons = require('../buttons');
+
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -36,7 +38,8 @@ module.exports = {
     }
 
     reprompt = res.getString('CHANGE_REPROMPT');
-    if (attributes.temp.newGame && !(attributes.temp.buttons && attributes.temp.buttons.discard)) {
+    if (attributes.temp.newGame && buttons.supportButtons(handlerInput)
+      && !(attributes.temp.buttons && attributes.temp.buttons.discard)) {
       reprompt += res.getString('CHANGE_REPROMPT_BUTTON');
     }
     speech += reprompt;

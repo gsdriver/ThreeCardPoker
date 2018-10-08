@@ -4,7 +4,7 @@ const seedrandom = require('seedrandom');
 
 const common = {
   // ChangeName.js
-  'CHANGE_CONFIRM': 'Welcome {0}. |Hello {0}. |Nice to meet you {0} ',
+  'CHANGE_CONFIRM': 'Welcome {0}. |Hello {0}. |Nice to meet you {0}. ',
   'CHANGE_PROMPT_CHANGE': 'You can change your name at any time by saying change name. |Say change name if you want to change your player name in the future. ',
   'CHANGE_REPROMPT': 'Say play to start the game ',
   'CHANGE_REPROMPT_BUTTON': 'or press your Echo Button ',
