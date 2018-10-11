@@ -31,18 +31,7 @@
           "en-GB": {
             "eTag": "c3d746d0e990560665596c9dae260355"
           }
-        },
-        "lambda": [
-          {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
-            "awsRegion": "us-east-1",
-            "alexaUsage": [
-              "custom/default"
-            ],
-            "revisionId": "9cfe4f8c-7e4c-4d42-ad51-2680c909f065"
-          }
-        ]
+        }
       },
       "in_skill_products": []
     }

@@ -144,6 +144,7 @@ module.exports = {
 
       hand.name = (attributes.name) ? attributes.name : res.getString('COMPUTER_NAME');
       hand.hash = userHash(handlerInput);
+      hand.timestamp = Date.now();
       const formData = {
         hand: JSON.stringify(hand),
       };
@@ -209,6 +210,7 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
     const hash = userHash(handlerInput);
+    const event = handlerInput.requestEnvelope;
 
     // First load an opponent hand based on other player's play!
     if (game.listOfHands && game.listOfHands.length) {
@@ -236,7 +238,21 @@ module.exports = {
             game.listOfHands = playerData.hands.filter((x) => {
               return (x.hash !== hash);
             });
-            game.listOfHands.sort((a, b) => (a.name - b.name));
+
+            // Shuffle remaining hands using the Fisher-Yates algorithm
+            let i;
+            for (i = 0; i < game.listOfHands.length - 1; i++) {
+              const randomValue = seedrandom(i + event.session.user.userID + (game.timestamp ? game.timestamp : ''))();
+              let j = Math.floor(randomValue * (game.listOfHands.length - i));
+              if (j == (game.listOfHands.length - i)) {
+                j--;
+              }
+              j += i;
+              const tempHand = game.listOfHands[i];
+              game.listOfHands[i] = game.listOfHands[j];
+              game.listOfHands[j] = tempHand;
+            }
+
             if (game.listOfHands.length) {
               game.opponent = game.listOfHands.pop();
             } else {
