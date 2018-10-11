@@ -31,7 +31,18 @@
           "en-GB": {
             "eTag": "c3d746d0e990560665596c9dae260355"
           }
-        }
+        },
+        "lambda": [
+          {
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
+            "awsRegion": "us-east-1",
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "revisionId": "32ecb0fb-f7b4-40cb-852a-42cccafb65b6"
+          }
+        ]
       },
       "in_skill_products": []
     }

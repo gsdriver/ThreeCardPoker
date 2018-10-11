@@ -14,7 +14,9 @@ module.exports = {
       (localeList.indexOf(locale) >= 0) &&
       (attributes.platform !== 'google') && !attributes.bot);
   },
-  getPressedButton: function(request, attributes) {
+  getPressedButton: function(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     const gameEngineEvents = request.events || [];
     let buttonId;
 
@@ -30,6 +32,19 @@ module.exports = {
       }
     });
 
+    // If they pressed the same button within 500 ms, ignore it
+    if (buttonId) {
+      const now = Date.now();
+
+      if (attributes.temp.lastButton && (attributes.temp.lastButton.id === buttonId)
+        && ((now - attributes.temp.lastButton.timestamp) < 500)) {
+        console.log('Received duplicate button press - ignoring');
+        buttonId = undefined;
+      } else {
+        // Save this to check next time
+        attributes.temp.lastButton = {id: buttonId, timestamp: now};
+      }
+    }
     return buttonId;
   },
   startInputHandler: function(handlerInput) {

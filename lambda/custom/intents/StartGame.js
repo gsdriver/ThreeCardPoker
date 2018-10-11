@@ -19,7 +19,7 @@ module.exports = {
         && attributes.temp.buttons.discard) {
         return false;
       }
-      attributes.temp.buttonId = buttons.getPressedButton(request);
+      attributes.temp.buttonId = buttons.getPressedButton(handlerInput);
       return (attributes.temp.buttonId && (!attributes.temp.buttons
         || (attributes.temp.buttons.hold !== attributes.temp.buttonId)));
     }
