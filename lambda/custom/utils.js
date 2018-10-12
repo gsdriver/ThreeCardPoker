@@ -143,6 +143,7 @@ module.exports = {
       const res = require('./resources')(handlerInput);
 
       hand.name = (attributes.name) ? attributes.name : res.getString('COMPUTER_NAME');
+      hand.isNamed = (attributes.name) ? true : false;
       hand.hash = userHash(handlerInput);
       hand.timestamp = Date.now();
       const formData = {
