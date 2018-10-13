@@ -13,6 +13,7 @@ const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
 const request = require('request');
 const querystring = require('querystring');
+const cardRanks = require('./cardRanks');
 
 module.exports = {
   STARTING_POINTS: 10,
@@ -290,29 +291,18 @@ module.exports = {
     // Get the three card hands the player and opponent are playing
     const player = module.exports.mapHand(game, game.player);
     const opponent = module.exports.mapHand(game, game.opponent);
-    const playerDetails = poker.evaluateAndFindCards(player,
-      {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
-    const opponentDetails = poker.evaluateAndFindCards(opponent,
-      {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
-    const order = ['nothing', 'pair', 'flush', 'straight', '3ofakind', 'straightflush'];
 
-    if (playerDetails.match !== opponentDetails.match) {
-      return (order.indexOf(playerDetails.match) > order.indexOf(opponentDetails.match)) ? 'player' : 'opponent';
-    } else {
-      const playerSorted = sortHand(player, playerDetails);
-      const opponentSorted = sortHand(opponent, opponentDetails);
-      let i;
-
-      for (i = 0; i < playerSorted.length; i++) {
-        if (getRank(playerSorted[i]) > getRank(opponentSorted[i])) {
-          return 'player';
-        } else if (getRank(opponentSorted[i]) > getRank(playerSorted[i])) {
-          return 'opponent';
-        }
-      }
-
-      // Wow!  A tie?!
+    // Just lookup in the list of all hands
+    player.sort();
+    opponent.sort();
+    const playerRank = cardRanks[player[0] + '-' + player[1] + '-' + player[2]];
+    const opponentRank = cardRanks[opponent[0] + '-' + opponent[1] + '-' + opponent[2]];
+    if (playerRank === opponentRank) {
       return 'tie';
+    } else if (playerRank < opponentRank) {
+      return 'player';
+    } else {
+      return 'opponent';
     }
   },
   evaluateHand: function(game, hand) {
@@ -326,12 +316,28 @@ module.exports = {
     const game = attributes[attributes.currentGame];
     const res = require('./resources')(handlerInput);
     const details = module.exports.evaluateHand(game, hand);
+    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '1', 'J', 'Q', 'K', 'A'];
     let rank = JSON.parse(res.getString('HAND_NAMES'))[details.match];
 
     if (rank.includes('{0}')) {
       // Need to replace with high card in hand
-      const sorted = sortHand(module.exports.mapHand(game, hand), details);
-      rank = rank.replace('{0}', res.readRank(sorted[0]));
+      let high = 0;
+
+      module.exports.mapHand(game, hand).forEach((card) => {
+        if (ranks.indexOf(card.charAt(0)) > high) {
+          high = ranks.indexOf(card.charAt(0));
+        }
+      });
+      rank = rank.replace('{0}', res.readRank(ranks[high] + 'C'));
+    } else if (rank.includes('{1}')) {
+      // Pair of what?
+      const playedHand = module.exports.mapHand(game, hand);
+      let match = ranks.indexOf(playedHand[0].charAt(0));
+
+      if (playedHand[1].charAt(0) === playedHand[2].charAt(0)) {
+        match = ranks.indexOf(playedHand[1].charAt(0));
+      }
+      rank = rank.replace('{1}', res.readRankPlural(ranks[match] + 'C'));
     }
 
     return rank;
@@ -554,36 +560,6 @@ function playHand(cards) {
   }
 
   return hold;
-}
-
-function sortHand(cards, details) {
-  const sorted = [];
-  const nonMatched = [];
-
-  // Same hand - so look at order of cards within the hands
-  details.cards.sort((a, b) => (getRank(b) - getRank(a)));
-  details.cards.forEach((card) => {
-    sorted.push(card);
-  });
-  cards.forEach((card) => {
-    if (sorted.indexOf(card) === -1) {
-      nonMatched.push(card);
-    }
-  });
-
-  // OK, now sort the nonmatched cards and insert
-  nonMatched.sort((a, b) => (getRank(b) - getRank(a)));
-  nonMatched.forEach((card) => {
-    sorted.push(card);
-  });
-  return sorted;
-}
-
-function getRank(card) {
-  // Ranksing of cards
-  const cardRanks = ['2', '3', '4', '5', '6', '7', '8', '9', '1', 'J', 'Q', 'K', 'A'];
-
-  return cardRanks.indexOf(card.charAt(0));
 }
 
 function userHash(handlerInput) {

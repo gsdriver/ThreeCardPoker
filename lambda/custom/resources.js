@@ -83,7 +83,7 @@ const common = {
   'GAME_TITLE': '3 Card Poker',
   'COMPUTER_NAME': 'Bob|Fred|Lori|Lynn|Sam|William|Mary|Ryan|Sandy|Tina|Diane|Norm',
   'CHIPS_LEFT': 'You have {0} remaining. ',
-  'HAND_NAMES': '{"nothing": "a {0} high", "pair": "a pair", "flush": "a flush", "straight": "a straight", "3ofakind": "three of a kind", "straightflush": "a straight flush"}',
+  'HAND_NAMES': '{"nothing": "a {0} high", "pair": "a pair of {1}", "flush": "a flush", "straight": "a straight", "3ofakind": "three of a kind", "straightflush": "a straight flush"}',
   // This file
   'FORMAT_CARD': '{0} of {1}',
 };
@@ -119,6 +119,12 @@ const utils = (handlerInput) => {
     readRank: function(card) {
       const ranks = {'A': 'ace', '2': 'two', '3': 'three', '4': 'four', '5': 'five', '6': 'six',
         '7': 'seven', '8': 'eight', '9': 'nine', '1': 'ten', 'J': 'jack', 'Q': 'queen', 'K': 'king'};
+      const rank = card.charAt(card);
+      return ranks[rank];
+    },
+    readRankPlural: function(card) {
+      const ranks = {'A': 'aces', '2': 'twos', '3': 'threes', '4': 'fours', '5': 'fives', '6': 'sixes',
+        '7': 'sevens', '8': 'eights', '9': 'nines', '1': 'tens', 'J': 'jacks', 'Q': 'queens', 'K': 'kings'};
       const rank = card.charAt(card);
       return ranks[rank];
     },
