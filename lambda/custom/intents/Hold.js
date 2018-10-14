@@ -60,11 +60,11 @@ module.exports = {
         }
 
         if (willHold) {
-          speech = '<audio src="soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_01"/> ';
+          speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/hold.mp3\"/>';
           speech += res.getString('HOLD_BUTTON_HELD')
             .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}));
         } else {
-          speech += '<audio src="soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_player1_01"/> ';
+          speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/discard.mp3\"/>';
           speech += res.getString('HOLD_BUTTON_DISCARD')
             .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}));
         }
