@@ -46,13 +46,21 @@ module.exports = {
     const goBack = ((event.request.type === 'IntentRequest') &&
       ((event.request.intent.name === 'AMAZON.PreviousIntent')
         || (event.request.intent.name === 'AMAZON.CancelIntent')));
+    let holdArray;
+
+    if (attributes.temp.suggestion) {
+      holdArray = attributes.temp.suggestion;
+      attributes.temp.suggestion = undefined;
+    } else if (Array.isArray(attributes.temp.holding)) {
+      holdARray = attributes.temp.holding;
+    }
 
     return new Promise((resolve, reject) => {
       // If they pressed a button, give a verbal indication of what they did
       if (event.request.type === 'GameEngine.InputHandlerEvent') {
         const cards = [];
-        if (Array.isArray(attributes.temp.holding)) {
-          attributes.temp.holding.forEach((held) => {
+        if (holdArray) {
+          holdArray.forEach((held) => {
             cards.push(res.readCard(game.player.cards[held]));
           });
         } else {
@@ -88,9 +96,9 @@ module.exports = {
           .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
         reprompt = speech;
         done();
-      } else if (Array.isArray(attributes.temp.holding)) {
+      } else if (holdArray) {
         if (willHold) {
-          game.player.hold = attributes.temp.holding;
+          game.player.hold = holdArray;
           attributes.temp.holding = undefined;
           finishHand(handlerInput, (endSpeech, endReprompt) => {
             speech += endSpeech;

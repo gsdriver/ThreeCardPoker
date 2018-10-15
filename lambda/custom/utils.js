@@ -14,6 +14,7 @@ const poker = require('poker-ranking');
 const request = require('request');
 const querystring = require('querystring');
 const cardRanks = require('./cardRanks');
+const suggestion = require('./suggestion');
 
 module.exports = {
   STARTING_POINTS: 10,
@@ -434,6 +435,20 @@ module.exports = {
       callback(err);
     });
   },
+  suggestedPlay: function(cards) {
+    const newCards = JSON.parse(JSON.stringify(cards.slice(0, 3)));
+    newCards.sort();
+    const newHold = suggestion[newCards[0] + '-' + newCards[1] + '-' + newCards[2]];
+
+    // Now we have to "unsort"
+    const hold = [];
+    newHold.forEach((value) => {
+      hold.push(cards.indexOf(newCards[value]));
+    });
+    hold.sort();
+
+    return hold;
+  },
 };
 
 function getUserTimezone(event, callback) {
@@ -517,51 +532,6 @@ function createHand(handlerInput, excludeCards) {
   return deck.slice(0, 6);
 }
 
-function playHand(cards) {
-  let hold;
-
-  // Our strategy - if we have anything, we'll draw
-  // We keep two cards to a straight or flush
-  // We keep highest card if Jack or higher
-  // Otherwise, through them all in
-
-  // Look at the first three cards, and figure out what you want to hold
-  const currentHand = cards.slice(0, 3);
-  const details = poker.evaluateAndFindCards(currentHand,
-    {aceCanBeLow: true, cardsToEvaluate: 3, dontAllow: ['royalflush']});
-  if (details.match === 'nothing') {
-    // OK, do we have two cards to a straight or flush?
-    const twocard = poker.evaluateAndFindCards(currentHand,
-      {aceCanBeLow: true, cardsToEvaluate: 2, dontAllow: ['royalflush']});
-    if ((twocard.match === 'flush') || (twocard.match === 'straight')) {
-      hold = [cards.indexOf(twocard.cards[0]), cards.indexOf(twocard.cards[1])];
-    } else {
-      // If there is a face card hold the highest
-      const faces = cards[0].charAt(0) + cards[1].charAt(0) + cards[2].charAt(0);
-      if (faces.indexOf('A') > -1) {
-        hold = [faces.indexOf('A')];
-      } else if (faces.indexOf('K') > -1) {
-        hold = [faces.indexOf('K')];
-      } else if (faces.indexOf('Q') > -1) {
-        hold = [faces.indexOf('Q')];
-      } else if (faces.indexOf('J') > -1) {
-        hold = [faces.indexOf('J')];
-      } else {
-        // Throw all cards in
-        hold = [];
-      }
-    }
-  } else if (details.match === 'pair') {
-    // We're going to hold the pair and try for one more card
-    hold = [cards.indexOf(details.cards[0]), cards.indexOf(details.cards[1])];
-  } else {
-    // Better than pair means hold all
-    hold = [0, 1, 2];
-  }
-
-  return hold;
-}
-
 function userHash(handlerInput) {
   const event = handlerInput.requestEnvelope;
   const randomValue = seedrandom(event.session.user.userId)();
@@ -579,5 +549,5 @@ function generateComputerHand(handlerInput) {
     name: res.getString('COMPUTER_NAME'),
     cards: createHand(handlerInput),
   };
-  game.opponent.hold = playHand(game.opponent.cards);
+  game.opponent.hold = module.exports.suggestedPlay(game.opponent.cards);
 }

@@ -73,6 +73,10 @@ const common = {
   'STARTGAME_START': 'Great. This blue button will be used to discard cards. ',
   'STARTGAME_START_REPROMPT': 'Say play to get started.',
   'STARTGAME_START_REPROMPT_NONAME': 'Please say your name to get started.',
+  // Suggest.js
+  'SUGGEST_CARDS': 'You should hold {0}. |I think holding {0} would be good. |Maybe you should hold {0}. ',
+  'SUGGEST_DISCARD_ALL': 'You should discard all your cards. |That hand is trash - throw all the cards away. |I think you should draw three new cards. ',
+  'SUGGEST_REPROMPT': 'Say yes to follow this suggestion.|Would you like to do that?|So <break time=\'300ms\'/> what do you say, yes or no?',
   // Unhandled.js
   'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Help.',
   'UNKNOWN_INTENT_REPROMPT': 'Try saying Help.',

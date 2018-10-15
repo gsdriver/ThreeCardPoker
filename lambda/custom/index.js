@@ -11,6 +11,7 @@ const ChangeName = require('./intents/ChangeName');
 const Purchase = require('./intents/Purchase');
 const Refund = require('./intents/Refund');
 const ProductResponse = require('./intents/ProductResponse');
+const Suggest = require('./intents/Suggest');
 const Help = require('./intents/Help');
 const HighScore = require('./intents/HighScore');
 const Play = require('./intents/Play');
@@ -143,6 +144,7 @@ function runGame(event, context, callback) {
       Purchase,
       Refund,
       Play,
+      Suggest,
       Hold,
       Help,
       HighScore,

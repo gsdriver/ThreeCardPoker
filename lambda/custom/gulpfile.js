@@ -9,7 +9,7 @@ gulp.task('clean', () => {
 
 // task to run es lint.
 gulp.task('lint', () =>
-  gulp.src(['*.js', '*/**/*.js', '!cardRanks.js', '!test/**', '!build/**', '!node_modules/**', '!ext/**'])
+  gulp.src(['*.js', '*/**/*.js', '!suggestion.js', '!cardRanks.js', '!test/**', '!build/**', '!node_modules/**', '!ext/**'])
     .pipe(eslint())
     .pipe(eslint.format())
 );

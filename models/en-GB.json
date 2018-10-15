@@ -99,6 +99,23 @@
           ]
         },
         {
+          "name": "SuggestIntent",
+          "samples": [
+            "what should I do",
+            "give suggestion",
+            "give me suggestion",
+            "give me a suggestion",
+            "for suggestion",
+            "for a suggestion",
+            "suggest action",
+            "suggest play",
+            "suggest move",
+            "suggest a move",
+            "suggest an action",
+            "suggest a play"
+          ]
+        },
+        {
           "name": "ChangeNameIntent",
           "slots": [
             {
