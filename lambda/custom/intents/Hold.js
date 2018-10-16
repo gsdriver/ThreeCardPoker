@@ -52,7 +52,7 @@ module.exports = {
       holdArray = attributes.temp.suggestion;
       attributes.temp.suggestion = undefined;
     } else if (Array.isArray(attributes.temp.holding)) {
-      holdARray = attributes.temp.holding;
+      holdArray = attributes.temp.holding;
     }
 
     return new Promise((resolve, reject) => {
