@@ -317,31 +317,50 @@ module.exports = {
     const game = attributes[attributes.currentGame];
     const res = require('./resources')(handlerInput);
     const details = module.exports.evaluateHand(game, hand);
-    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '1', 'J', 'Q', 'K', 'A'];
-    let rank = JSON.parse(res.getString('HAND_NAMES'))[details.match];
+    const ranks = {
+      '2': 'TWO', '3': 'THREE', '4': 'FOUR', '5': 'FIVE', '6': 'SIX', '7': 'SEVEN', '8': 'EIGHT',
+      '9': 'NINE', '1': 'TEN', 'J': 'JACK', 'Q': 'QUEEN', 'K': 'KING', 'A': 'ACE',
+    }
+    const order = '234567891JQKA';
+    let rank;
 
-    if (rank.includes('{0}')) {
-      // Need to replace with high card in hand
-      let high = 0;
-
-      module.exports.mapHand(game, hand).forEach((card) => {
-        if (ranks.indexOf(card.charAt(0)) > high) {
-          high = ranks.indexOf(card.charAt(0));
-        }
-      });
-      rank = rank.replace('{0}', res.readRank(ranks[high] + 'C'));
-    } else if (rank.includes('{1}')) {
+    switch (details.match) {
+      case 'pair':
       // Pair of what?
-      const playedHand = module.exports.mapHand(game, hand);
-      let match = ranks.indexOf(playedHand[0].charAt(0));
+        const playedHand = module.exports.mapHand(game, hand);
+        let match = ranks[playedHand[0].charAt(0)];
 
-      if (playedHand[1].charAt(0) === playedHand[2].charAt(0)) {
-        match = ranks.indexOf(playedHand[1].charAt(0));
-      }
-      rank = rank.replace('{1}', res.readRankPlural(ranks[match] + 'C'));
+        if (playedHand[1].charAt(0) === playedHand[2].charAt(0)) {
+          match = ranks[playedHand[1].charAt(0)];
+        }
+        rank = 'POKER_HAND_PAIR_' + match;
+        break;
+      case 'flush':
+        rank = 'POKER_HAND_FLUSH';
+        break;
+      case 'straight':
+        rank = 'POKER_HAND_STRAIGHT';
+        break;
+      case '3ofakind':
+        rank = 'POKER_HAND_3OFAKIND';
+        break;
+      case 'straightflush':
+        rank = 'POKER_HAND_STRAIGHTFLUSH';
+        break;
+      default:
+        // Need to replace with high card in hand
+        let high = 0;
+
+        module.exports.mapHand(game, hand).forEach((card) => {
+          if (order.indexOf(card.charAt(0)) > high) {
+            high = order.indexOf(card.charAt(0));
+          }
+        });
+        rank = 'POKER_HAND_NOTHING_' + ranks[order[high]];
+        break;
     }
 
-    return rank;
+    return res.getString(rank);
   },
   mapHand: function(game, hand) {
     let cards;
@@ -448,6 +467,38 @@ module.exports = {
     hold.sort();
 
     return hold;
+  },
+  sayCard: function(handlerInput, card) {
+    const res = require('./resources')(handlerInput);
+    const suits = {'C': res.getString('SAY_CARD_CLUB'),
+      'D': res.getString('SAY_CARD_DIAMONDS'),
+      'H': res.getString('SAY_CARD_HEARTS'),
+      'S': res.getString('SAY_CARD_SPADES')};
+    let rank;
+    const cardSuit = card.charAt(card.length - 1);
+    const cardRank = card.charAt(card);
+
+    switch (cardRank) {
+      case 'A':
+        rank = res.getString('SAY_CARD_ACE');
+        break;
+      case 'J':
+        rank = res.getString('SAY_CARD_JACK');
+        break;
+      case 'Q':
+        rank = res.getString('SAY_CARD_QUEEN');
+        break;
+      case 'K':
+        rank = res.getString('SAY_CARD_KING');
+        break;
+      case '1':
+        rank = 10;
+        break;
+      default:
+        rank = cardRank;
+        break;
+    }
+    return res.getString('SAY_CARD_WITH_SUIT').replace('{Rank}', rank).replace('{Suit}', suits[cardSuit]);
   },
 };
 

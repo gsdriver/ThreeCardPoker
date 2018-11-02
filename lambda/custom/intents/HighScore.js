@@ -32,16 +32,16 @@ module.exports = {
           } else {
             if (highScores.rank) {
               speech += res.getString('LEADER_RANKING')
-                 .replace('{0}', attributes.high)
-                 .replace('{1}', highScores.rank)
-                 .replace('{2}', highScores.count);
+                 .replace('{Chips}', attributes.high)
+                 .replace('{Position}', highScores.rank)
+                 .replace('{Players}', highScores.count);
             }
 
             // And what is the leader board?
             const topScores = highScores.top.map((x) => res.sayChips(x));
             speech += res.getString('LEADER_TOP_SCORES')
-                .replace('{0}', topScores.length)
-                .replace('{1}', speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'}));
+                .replace('{Players}', topScores.length)
+                .replace('{ChipTotals}', speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'}));
           }
         }
 

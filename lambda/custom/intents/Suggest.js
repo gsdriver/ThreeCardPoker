@@ -29,9 +29,9 @@ module.exports = {
     if (attributes.temp.suggestion.length) {
       const cardText = [];
       attributes.temp.suggestion.forEach((card) => {
-        cardText.push(res.readCard(game.player.cards[card]));
+        cardText.push(utils.sayCard(handlerInput, game.player.cards[card]));
       });
-      speech = res.getString('SUGGEST_CARDS').replace('{0}', speechUtils.and(cardText, {locale: event.request.locale}));
+      speech = res.getString('SUGGEST_CARDS').replace('{Cards}', speechUtils.and(cardText, {locale: event.request.locale}));
     } else {
       speech = res.getString('SUGGEST_DISCARD_ALL');
     }

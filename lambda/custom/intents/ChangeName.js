@@ -31,7 +31,7 @@ module.exports = {
 
     // OK, we have a name - repeat it back and remind them they can change at any time
     attributes.name = event.request.intent.slots.Name.value;
-    speech = res.getString('CHANGE_CONFIRM').replace('{0}', attributes.name);
+    speech = res.getString('CHANGE_CONFIRM').replace('{Name}', attributes.name);
     if (!attributes.temp.namePrompt) {
       speech += res.getString('CHANGE_PROMPT_CHANGE');
       attributes.temp.namePrompt = true;

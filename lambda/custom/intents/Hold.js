@@ -61,20 +61,20 @@ module.exports = {
         const cards = [];
         if (holdArray) {
           holdArray.forEach((held) => {
-            cards.push(res.readCard(game.player.cards[held]));
+            cards.push(utils.sayCard(handlerInput, game.player.cards[held]));
           });
         } else {
-          cards.push(res.readCard(game.player.cards[attributes.temp.holding]));
+          cards.push(utils.sayCard(handlerInput, game.player.cards[attributes.temp.holding]));
         }
 
         if (willHold) {
           speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/hold.mp3\"/>';
           speech += res.getString('HOLD_BUTTON_HELD')
-            .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}));
+            .replace('{Card}', speechUtils.and(cards, {locale: event.request.locale}));
         } else {
           speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/discard.mp3\"/>';
           speech += res.getString('HOLD_BUTTON_DISCARD')
-            .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}));
+            .replace('{Card}', speechUtils.and(cards, {locale: event.request.locale}));
         }
       }
 
@@ -93,7 +93,7 @@ module.exports = {
         }
 
         speech = res.getString('HOLD_PREVIOUS_CARD')
-          .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
+          .replace('{Card}', utils.sayCard(handlerInput, game.player.cards[attributes.temp.holding]));
         reprompt = speech;
         done();
       } else if (holdArray) {
@@ -109,7 +109,7 @@ module.exports = {
           // Ask card by card
           attributes.temp.holding = 0;
           speech += res.getString('HOLD_NEXT_CARD')
-            .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
+            .replace('{Card}', utils.sayCard(handlerInput, game.player.cards[attributes.temp.holding]));
           reprompt = speech;
           done();
         }
@@ -123,7 +123,7 @@ module.exports = {
         if (attributes.temp.holding < 3) {
           // Next one
           speech += res.getString('HOLD_NEXT_CARD')
-            .replace('{0}', res.readCard(game.player.cards[attributes.temp.holding]));
+            .replace('{Card}', utils.sayCard(handlerInput, game.player.cards[attributes.temp.holding]));
           reprompt = speech;
           done();
         } else {
@@ -141,7 +141,7 @@ module.exports = {
           attributes.busted = Date.now();
           if (attributes.paid && attributes.paid.morehands) {
             // Strip out breaks and offer to buy more chips
-            speech += res.getString('HOLD_BUY_CHIPS').replace('{0}', utils.PURCHASE_REFRESH_POINTS);
+            speech += res.getString('HOLD_BUY_CHIPS').replace('{Chips}', utils.PURCHASE_REFRESH_POINTS);
             speech = speech.replace(/<break[^>]+>/g, ' ');
             speech = speech.replace(/<\/?[^>]+(>|$)/g, '');
             speech = speech.replace(/\s+/g, ' ').trim();
@@ -190,15 +190,15 @@ function finishHand(handlerInput, callback) {
   }
   if (drew.length) {
     const cards = drew.map((x) => {
-      return res.readCard(x);
+      return utils.sayCard(handlerInput, x);
     });
-    speech += res.getString('HOLD_DREW').replace('{0}', speechUtils.and(cards, {locale: event.request.locale}));
+    speech += res.getString('HOLD_DREW').replace('{Card}', speechUtils.and(cards, {locale: event.request.locale}));
   }
   speech += res.getString('HOLD_PLAYER_RESULT')
-    .replace('{0}', utils.readHandRank(handlerInput, game.player));
+    .replace('{Hand}', utils.readHandRank(handlerInput, game.player));
 
   const opponent = game.opponent.cards.slice(0, 3).map((x) => {
-    return res.readCard(x);
+    return utils.sayCard(handlerInput, x);
   });
   for (i = 3; i < 6 - game.opponent.hold.length; i++) {
     opponentDrew.push(game.opponent.cards[i]);
@@ -208,44 +208,44 @@ function finishHand(handlerInput, callback) {
   });
 
   speech += res.getString('HOLD_OPPONENT')
-    .replace('{0}', speechUtils.and(opponent, {locale: event.request.locale}))
-    .replace('{1}', game.opponent.name);
+    .replace('{Hand}', speechUtils.and(opponent, {locale: event.request.locale}))
+    .replace('{Name}', game.opponent.name);
   if (opponentHeld.length === 3) {
-    speech += res.getString('HOLD_OPPONENT_HOLDALL').replace('{1}', game.opponent.name);
+    speech += res.getString('HOLD_OPPONENT_HOLDALL').replace('{Name}', game.opponent.name);
   } else if (opponentHeld.length > 0) {
     const cards = opponentHeld.map((x) => {
-      return res.readCard(x);
+      return utils.sayCard(handlerInput, x);
     });
     speech += res.getString('HOLD_OPPONENT_HELD')
-      .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}))
-      .replace('{1}', game.opponent.name);
+      .replace('{Cards}', speechUtils.and(cards, {locale: event.request.locale}))
+      .replace('{Name}', game.opponent.name);
   } else {
-    speech += res.getString('HOLD_OPPONENT_DISCARDALL').replace('{1}', game.opponent.name);
+    speech += res.getString('HOLD_OPPONENT_DISCARDALL').replace('{Name}', game.opponent.name);
   }
   if (opponentDrew.length) {
     const cards = opponentDrew.map((x) => {
-      return res.readCard(x);
+      return utils.sayCard(handlerInput, x);
     });
     speech += res.getString('HOLD_OPPONENT_DREW')
-      .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}))
-      .replace('{1}', game.opponent.name);
+      .replace('{Card}', speechUtils.and(cards, {locale: event.request.locale}))
+      .replace('{Name}', game.opponent.name);
   }
   speech += res.getString('HOLD_OPPONENT_RESULT')
-    .replace('{0}', utils.readHandRank(handlerInput, game.opponent));
+    .replace('{Hand}', utils.readHandRank(handlerInput, game.opponent));
 
   // And what's the result?
   const result = utils.determineWinner(game);
   if (result === 'player') {
-    speech += res.getString('HOLD_WIN').replace('{0}', (attributes.name ? attributes.name : ''));
+    speech += res.getString('HOLD_WIN').replace('{Name}', (attributes.name ? attributes.name : ''));
     attributes.points++;
   } else if (result === 'opponent') {
-    speech += res.getString('HOLD_LOSE').replace('{0}', (attributes.name ? attributes.name : ''));
+    speech += res.getString('HOLD_LOSE').replace('{Name}', (attributes.name ? attributes.name : ''));
     attributes.points--;
   } else {
     speech += res.getString('HOLD_TIE');
     attributes.points--;
   }
-  speech += res.getString('CHIPS_LEFT').replace('{0}', res.sayChips(attributes.points));
+  speech += res.getString('CHIPS_LEFT').replace('{Chips}', res.sayChips(attributes.points));
   attributes.temp.holding = undefined;
 
   // Is it a new high?

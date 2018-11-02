@@ -33,8 +33,8 @@ module.exports = {
       ads.getAd(attributes, 'threecardpoker', event.request.locale, (adText) => {
         const response = handlerInput.responseBuilder
           .speak(res.getString('EXIT_GAME')
-            .replace('{0}', adText)
-            .replace('{1}', (attributes.name) ? attributes.name : ''))
+            .replace('{Ad}', adText)
+            .replace('{Name}', (attributes.name) ? attributes.name : ''))
           .withShouldEndSession(true)
           .getResponse();
         resolve(response);

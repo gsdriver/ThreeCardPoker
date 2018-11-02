@@ -40,7 +40,7 @@ module.exports = {
     if (!attributes.temp.buttons.hold) {
       attributes.temp.buttons.hold = attributes.temp.buttonId;
       speech += res.getString('STARTGAME_PRESS_DISCARD')
-        .replace('{0}', (attributes.name) ? attributes.name : '');
+        .replace('{Name}', (attributes.name) ? attributes.name : '');
 
       // Turn off the microphone until they press the second button
       buttons.secondButtonInputHandler(handlerInput);

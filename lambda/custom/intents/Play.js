@@ -29,25 +29,25 @@ module.exports = {
         game.timestamp = Date.now();
         // Read what you have, and the other player's first card
         const cards = game.player.cards.slice(0, 3).map((x) => {
-          return res.readCard(x);
+          return utils.sayCard(handlerInput, x);
         });
         const handRank = utils.readHandRank(handlerInput, game.player);
         const details = utils.evaluateHand(game, game.player);
         let speech = res.getString('PLAY_READ_HAND')
-          .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}))
-          .replace('{1}', game.opponent.name)
-          .replace('{2}', res.readCard(game.opponent.cards[0]))
-          .replace('{3}', handRank);
+          .replace('{Cards}', speechUtils.and(cards, {locale: event.request.locale}))
+          .replace('{OpponentName}', game.opponent.name)
+          .replace('{OpponentHand}', utils.sayCard(handlerInput, game.opponent.cards[0]))
+          .replace('{Hand}', handRank);
         let reprompt;
 
         if (details.cards.length > 0) {
-          reprompt = res.getString('PLAY_HOLDALL_REPROMPT').replace('{0}', handRank);
+          reprompt = res.getString('PLAY_HOLDALL_REPROMPT').replace('{Hand}', handRank);
           attributes.temp.holding = [];
           details.cards.forEach((card) => {
             attributes.temp.holding.push(game.player.cards.indexOf(card));
           });
         } else {
-          reprompt = res.getString('PLAY_REPRONPT').replace('{0}', res.readCard(game.player.cards[0]));
+          reprompt = res.getString('PLAY_REPROMPT').replace('{Card}', utils.sayCard(handlerInput, game.player.cards[0]));
           attributes.temp.holding = 0;
         }
         speech += ('<break time=\'300ms\'/> ' + reprompt);

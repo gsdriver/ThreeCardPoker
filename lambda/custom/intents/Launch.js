@@ -31,11 +31,11 @@ module.exports = {
               handlerInput.responseBuilder
                 .addDirective(utils.getPurchaseDirective(attributes, 'Upsell',
                   res.getString('LAUNCH_BUSTED_UPSELL')
-                    .replace('{0}', utils.DAILY_REFRESH_POINTS)
-                    .replace('{1}', utils.PURCHASE_REFRESH_POINTS)));
+                    .replace('{Chips}', utils.DAILY_REFRESH_POINTS)
+                    .replace('{ExtraChips}', utils.PURCHASE_REFRESH_POINTS)));
             } else {
               handlerInput.responseBuilder
-                .speak(res.getString('LAUNCH_BUSTED').replace('{0}', utils.DAILY_REFRESH_POINTS));
+                .speak(res.getString('LAUNCH_BUSTED').replace('{Chips}', utils.DAILY_REFRESH_POINTS));
             }
             response = handlerInput.responseBuilder
               .withShouldEndSession(true)
@@ -44,8 +44,8 @@ module.exports = {
             return;
           } else {
             speech = res.getString('LAUNCH_BUSTED_REPLENISH')
-              .replace('{0}', utils.DAILY_REFRESH_POINTS)
-              .replace('{1}', (attributes.name ? attributes.name: ''));
+              .replace('{Chips}', utils.DAILY_REFRESH_POINTS)
+              .replace('{Name}', (attributes.name ? attributes.name: ''));
             attributes.points += utils.DAILY_REFRESH_POINTS;
             attributes.busted = undefined;
             finishResponse();
@@ -61,12 +61,12 @@ module.exports = {
           if (!speech) {
             if (attributes.name) {
               speech = res.getString('LAUNCH_WELCOME_BACK')
-                .replace('{0}', greeting)
-                .replace('{1}', attributes.name);
+                .replace('{Greeting}', greeting)
+                .replace('{Name}', attributes.name);
               reprompt += res.getString('LAUNCH_RETURNING_REPRONPT');
             } else {
               speech = res.getString('LAUNCH_WELCOME')
-                .replace('{0}', greeting);
+                .replace('{Greeting}', greeting);
               reprompt += res.getString('LAUNCH_REPROMPT');
             }
           }

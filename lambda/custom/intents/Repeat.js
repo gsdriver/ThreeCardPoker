@@ -24,42 +24,42 @@ module.exports = {
     let handRank;
 
     // Tell them their chip balance
-    speech += res.getString('CHIPS_LEFT').replace('{0}', res.sayChips(attributes.points));
+    speech += res.getString('CHIPS_LEFT').replace('{Chips}', res.sayChips(attributes.points));
     // Start with what the player has
     cards = utils.mapHand(game, game.player).map((x) => {
-      return res.readCard(x);
+      return utils.sayCard(handlerInput, x);
     });
     handRank = utils.readHandRank(handlerInput, game.player);
     speech += res.getString('REPEAT_READ_HAND')
-      .replace('{0}', speechUtils.and(cards, {locale: event.request.locale}))
-      .replace('{1}', handRank);
+      .replace('{Cards}', speechUtils.and(cards, {locale: event.request.locale}))
+      .replace('{Hand}', handRank);
 
     // If the hand isn't over, tell them what they are holding
     if (!game.handOver && game.player.hold && game.player.hold.length) {
       const heldCards = [];
       game.player.hold.forEach((x) => {
-        heldCards.push(res.readCard(game.player.cards[x]));
+        heldCards.push(utils.sayCard(handlerInput, game.player.cards[x]));
       });
       speech += res.getString('REPEAT_PLAYER_HOLDING')
-        .replace('{0}', speechUtils.and(heldCards, {locale: event.request.locale}));
+        .replace('{Card}', speechUtils.and(heldCards, {locale: event.request.locale}));
     }
 
     // Now read the opponent hand - either one card or the whole hand
     if (game.handOver) {
       // Whole hand
       cards = utils.mapHand(game, game.opponent).map((x) => {
-        return res.readCard(x);
+        return utils.sayCard(handlerInput, x);
       });
       handRank = utils.readHandRank(handlerInput, game.opponent);
       speech += res.getString('REPEAT_READ_OPPONENT_HAND')
-        .replace('{0}', game.opponent.name)
-        .replace('{1}', speechUtils.and(cards, {locale: event.request.locale}))
-        .replace('{2}', handRank);
+        .replace('{Name}', game.opponent.name)
+        .replace('{Cards}', speechUtils.and(cards, {locale: event.request.locale}))
+        .replace('{Hand}', handRank);
     } else {
       // Just read the opponent up card
       speech += res.getString('REPEAT_UPCARD')
-        .replace('{0}', game.opponent.name)
-        .replace('{1}', res.readCard(game.opponent.cards[0]));
+        .replace('{Name}', game.opponent.name)
+        .replace('{Card}', utils.sayCard(handlerInput, game.opponent.cards[0]));
     }
 
     const reprompt = res.getString('REPEAT_REPROMPT');

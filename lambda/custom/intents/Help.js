@@ -29,12 +29,12 @@ module.exports = {
     // Don't let them know about buying chips if we don't support it
     if (attributes.paid && attributes.paid.morehands) {
       speech += res.getString('HELP_TEXT_BUY_CHIPS')
-        .replace('{0}', res.sayChips(attributes.points))
-        .replace('{1}', utils.DAILY_REFRESH_POINTS);
+        .replace('{Chips}', res.sayChips(attributes.points))
+        .replace('{ExtraChips}', utils.DAILY_REFRESH_POINTS);
     } else {
       speech += res.getString('HELP_TEXT')
-        .replace('{0}', res.sayChips(attributes.points))
-        .replace('{1}', utils.DAILY_REFRESH_POINTS);
+        .replace('{Chips}', res.sayChips(attributes.points))
+        .replace('{ExtraChips}', utils.DAILY_REFRESH_POINTS);
     }
 
     if (attributes.temp.buttons && attributes.temp.buttons.hold
