@@ -38,6 +38,9 @@ module.exports = {
       speech = 'SUGGEST_DISCARD_ALL';
     }
 
+    // Note that they did take a suggestion
+    attributes.prompts.suggestion = Date.now();
+
     return handlerInput.jrb
       .speak(ri(speech, speechParams))
       .reprompt(ri('SUGGEST_REPROMPT'))

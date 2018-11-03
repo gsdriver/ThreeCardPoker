@@ -10,7 +10,7 @@ AWS.config.update({region: 'us-east-1'});
 const moment = require('moment-timezone');
 const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
-const request = require('request');
+const request = require('request-promise');
 const querystring = require('querystring');
 const cardRanks = require('./cardRanks');
 const suggestion = require('./suggestion');
@@ -44,124 +44,101 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
-    const res = require('./resources')(handlerInput);
+    const response = handlerInput.jrb.getResponse();
 
-    return new Promise((resolve, reject) => {
-      const response = handlerInput.responseBuilder.getResponse();
+    if ((response.directives && (response.directives[0].type === 'Dialog.Delegate'))
+      || !(event.context && event.context.System &&
+          event.context.System.device &&
+          event.context.System.device.supportedInterfaces &&
+          event.context.System.device.supportedInterfaces.Display)) {
+      return Promise.resolve();
+    } else {
+      attributes.display = true;
+      let image;
+      let promise;
 
-      if (response.directives && (response.directives[0].type === 'Dialog.Delegate')) {
-        resolve();
-      } else if (event.context && event.context.System &&
-        event.context.System.device &&
-        event.context.System.device.supportedInterfaces &&
-        event.context.System.device.supportedInterfaces.Display) {
-        attributes.display = true;
-        let imageUrl;
-
-        // Do we have hands?
-        if (!game.player || !game.opponent) {
-          // Use the background image
-          imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
-          done();
-        } else {
-          const start = Date.now();
-          let end;
-
-          function splitCard(card) {
-            const result = {};
-            const rank = card.charAt(0);
-            const faceCards = '1JQKA';
-
-            if (faceCards.indexOf(rank) > -1) {
-              result.rank = 10 + faceCards.indexOf(rank);
-            } else {
-              result.rank = rank;
-            }
-            result.suit = card.charAt(card.length - 1);
-            return result;
-          }
-
-          const opponent = module.exports.mapHand(game, game.opponent);
-          const playerCards = module.exports.mapHand(game, game.player).map(splitCard);
-
-          const opponentCards = [];
-          opponentCards.push(splitCard(opponent[0]));
-          if (game.handOver) {
-            opponentCards.push(splitCard(opponent[1]));
-            opponentCards.push(splitCard(opponent[2]));
-          } else {
-            opponentCards.push({rank: '1', suit: 'N'});
-            opponentCards.push({rank: '1', suit: 'N'});
-          }
-          const formData = {
-            player: JSON.stringify(playerCards),
-            opponent: JSON.stringify(opponentCards),
-          };
-
-          const params = {
-            url: process.env.SERVICEURL + 'threecard/drawImage',
-            formData: formData,
-            timeout: 3000,
-          };
-
-          request.post(params, (err, res, body) => {
-            if (err) {
-              console.log(err);
-              imageUrl = 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
-            } else {
-              imageUrl = JSON.parse(body).file;
-              end = Date.now();
-            }
-            console.log('Drawing table took ' + (end - start) + ' ms');
-            done();
-          });
-        }
-
-        function done() {
-          const image = new Alexa.ImageHelper()
-            .addImageInstance(imageUrl)
-            .getImage();
-          handlerInput.responseBuilder.addRenderTemplateDirective({
-            type: 'BodyTemplate6',
-            title: res.getString('GAME_TITLE'),
-            backButton: 'HIDDEN',
-            backgroundImage: image,
-          });
-          resolve();
-        }
+      // Do we have hands?
+      if (!game.player || !game.opponent) {
+        // Use the background image
+        promise = Promise.resolve();
       } else {
-        // Not a display device
-        resolve();
+        const opponent = module.exports.mapHand(game, game.opponent);
+        const playerCards = module.exports.mapHand(game, game.player).map(splitCard);
+
+        const opponentCards = [];
+        opponentCards.push(splitCard(opponent[0]));
+        if (game.handOver) {
+          opponentCards.push(splitCard(opponent[1]));
+          opponentCards.push(splitCard(opponent[2]));
+        } else {
+          opponentCards.push({rank: '1', suit: 'N'});
+          opponentCards.push({rank: '1', suit: 'N'});
+        }
+        const formData = {
+          player: JSON.stringify(playerCards),
+          opponent: JSON.stringify(opponentCards),
+        };
+
+        const params = {
+          url: process.env.SERVICEURL + 'threecard/drawImage',
+          formData: formData,
+          timeout: 3000,
+        };
+
+        promise = request.post(params);
       }
-    });
+
+      return promise.then((body) => {
+        return (body) ? JSON.parse(body).file
+          : 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
+      }).then((imageUrl) => {
+        image = new Alexa.ImageHelper()
+          .addImageInstance(imageUrl)
+          .getImage();
+        return handlerInput.jrm.render((ri('GAME_TITLE')));
+      }).then((title) => {
+        return handlerInput.jrb.addRenderTemplateDirective({
+          type: 'BodyTemplate6',
+          title: title,
+          backButton: 'HIDDEN',
+          backgroundImage: image,
+        });
+      }).catch((err) => {
+        // Just fail silently
+        console.log('Problem drawing table');
+      });
+    }
   },
-  saveHand: function(handlerInput, callback) {
+  saveHand: function(handlerInput) {
     if (process.env.SERVICEURL && !process.env.NOSAVEHAND) {
       // If there isn't a name, then we need to make one up
       const attributes = handlerInput.attributesManager.getSessionAttributes();
       const game = attributes[attributes.currentGame];
       const hand = JSON.parse(JSON.stringify(game.player));
-      const res = require('./resources')(handlerInput);
+      let promise;
 
-      hand.name = (attributes.name) ? attributes.name : res.getString('COMPUTER_NAME');
-      hand.isNamed = (attributes.name) ? true : false;
-      hand.hash = userHash(handlerInput);
-      hand.timestamp = Date.now();
-      const formData = {
-        hand: JSON.stringify(hand),
-      };
-      const params = {
-        url: process.env.SERVICEURL + 'threecard/playerHand',
-        formData: formData,
-      };
-      request.post(params, (err, res, body) => {
-        if (err) {
-          console.log(err);
-        }
-        callback();
+      if (attributes.name) {
+        promise = Promise.resolve(attributes.name);
+      } else {
+        promise = handlerInput.jrb.render(ri('COMPUTER_NAME'));
+      }
+
+      return promise.then((name) => {
+        hand.name = name;
+        hand.isNamed = (attributes.name) ? true : false;
+        hand.hash = userHash(handlerInput);
+        hand.timestamp = Date.now();
+        const formData = {
+          hand: JSON.stringify(hand),
+        };
+        const params = {
+          url: process.env.SERVICEURL + 'threecard/playerHand',
+          formData: formData,
+        };
+        return request.post(params);
       });
     } else {
-      callback();
+      return Promise.resolve();
     }
   },
   readLeaderBoard: function(handlerInput) {
@@ -204,90 +181,90 @@ module.exports = {
       url: process.env.SERVICEURL + 'threecard/updateLeaderBoard',
       formData: formData,
     };
-    request.post(params, (err, res, body) => {
-      if (err) {
-        console.log(err);
-      }
+    request.post(params).then((body) => {
     });
   },
-  deal: function(handlerInput, callback) {
+  deal: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
     const hash = userHash(handlerInput);
     const event = handlerInput.requestEnvelope;
+    let promise;
 
     // First load an opponent hand based on other player's play!
     if (game.listOfHands && game.listOfHands.length) {
       // Pop the top hand for the opponent
       game.opponent = game.listOfHands.pop();
-      done();
+      promise = Promise.resolve();
     } else if (attributes.temp.computerHands) {
       // Generate a hand
-      generateComputerHand(handlerInput);
-      done();
+      promise = generateComputerHand(handlerInput);
     } else {
       let playerURL = process.env.SERVICEURL + 'threecard/playerHand';
       if (attributes.lastToken) {
         const params = {token: attributes.lastToken};
         playerURL += '?' + querystring.stringify(params);
       }
-      request({
-        uri: playerURL,
-        method: 'GET',
-        timeout: 1000,
-      }, (err, response, body) => {
-        if (!err) {
-          const playerData = JSON.parse(body);
-          if (playerData.hands && playerData.hands.length) {
-            game.listOfHands = playerData.hands.filter((x) => {
-              return (x.hash !== hash);
-            });
+      promise = request({uri: playerURL, method: 'GET', timeout: 1000});
+    }
 
-            // Shuffle remaining hands using the Fisher-Yates algorithm
-            let i;
-            for (i = 0; i < game.listOfHands.length - 1; i++) {
-              const randomValue = seedrandom(i + event.session.user.userID + (game.timestamp ? game.timestamp : ''))();
-              let j = Math.floor(randomValue * (game.listOfHands.length - i));
-              if (j == (game.listOfHands.length - i)) {
-                j--;
-              }
-              j += i;
-              const tempHand = game.listOfHands[i];
-              game.listOfHands[i] = game.listOfHands[j];
-              game.listOfHands[j] = tempHand;
-            }
+    return promise.then((body) => {
+      if (body) {
+        const playerData = JSON.parse(body);
+        attributes.lastToken = playerData.token;
+        if (playerData.hands && playerData.hands.length) {
+          game.listOfHands = playerData.hands.filter((x) => {
+            return (x.hash !== hash);
+          });
 
-            if (game.listOfHands.length) {
-              game.opponent = game.listOfHands.pop();
-            } else {
-              // We got all of our own hands - computer generate
-              // and we'll get a new list next time
-              generateComputerHand(handlerInput);
+          // Shuffle remaining hands using the Fisher-Yates algorithm
+          let i;
+          for (i = 0; i < game.listOfHands.length - 1; i++) {
+            const randomValue = seedrandom(i + event.session.user.userID + (game.timestamp ? game.timestamp : ''))();
+            let j = Math.floor(randomValue * (game.listOfHands.length - i));
+            if (j == (game.listOfHands.length - i)) {
+              j--;
             }
+            j += i;
+            const tempHand = game.listOfHands[i];
+            game.listOfHands[i] = game.listOfHands[j];
+            game.listOfHands[j] = tempHand;
           }
-          attributes.lastToken = playerData.token;
-        } else {
-          // Nevermind - we're going computer mode
-          attributes.lastToken = undefined;
+
+          if (game.listOfHands.length) {
+            game.opponent = game.listOfHands.pop();
+          } else {
+            // We got all of our own hands - computer generate
+            // and we'll get a new list next time
+            return generateComputerHand(handlerInput);
+          }
         }
 
         // If we don't have a token, then generate a computer hand
         if (!attributes.lastToken) {
           attributes.temp.computerHands = true;
-          generateComputerHand(handlerInput);
+          return generateComputerHand(handlerInput);
         }
-        done();
-      });
-    }
-
-    function done() {
+      }
+    }).then(() => {
       game.player = {
         cards: createHand(handlerInput, game.opponent.cards),
         hold: [],
       };
       game.handOver = false;
-      callback();
-    }
+    }).catch(() => {
+      // Nevermind - we're going computer mode
+      console.log('Error - generating hand');
+      attributes.lastToken = undefined;
+      attributes.temp.computerHands = true;
+      return generateComputerHand(handlerInput).then(() => {
+        game.player = {
+          cards: createHand(handlerInput, game.opponent.cards),
+          hold: [],
+        };
+        game.handOver = false;
+      });
+    });
   },
   determineWinner: function(game) {
     // Get the three card hands the player and opponent are playing
@@ -316,7 +293,6 @@ module.exports = {
   readHandRank: function(handlerInput, hand) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
-    const res = require('./resources')(handlerInput);
     const details = module.exports.evaluateHand(game, hand);
     const ranks = {
       '2': 'TWO', '3': 'THREE', '4': 'FOUR', '5': 'FIVE', '6': 'SIX', '7': 'SEVEN', '8': 'EIGHT',
@@ -361,7 +337,7 @@ module.exports = {
         break;
     }
 
-    return res.getString(rank);
+    return handlerInput.jrm.render(ri(rank));
   },
   mapHand: function(game, hand) {
     let cards;
@@ -396,19 +372,6 @@ module.exports = {
       return (busted !== now);
     });
   },
-  getPurchaseDirective: function(attributes, action, message) {
-    return {
-      'type': 'Connections.SendRequest',
-      'name': action,
-      'payload': {
-        'InSkillProduct': {
-          'productId': attributes.paid.morehands.productId,
-        },
-        'upsellMessage': message,
-      },
-      'token': action,
-    };
-  },
   suggestedPlay: function(cards) {
     const newCards = JSON.parse(JSON.stringify(cards.slice(0, 3)));
     newCards.sort();
@@ -424,28 +387,8 @@ module.exports = {
     return hold;
   },
   sayCard: function(handlerInput, card) {
-    let rank;
-    const cardSuit = card.charAt(card.length - 1);
-    const cardRank = card.charAt(card);
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    switch (cardRank) {
-      case 'A':
-      case 'J':
-      case 'Q':
-      case 'K':
-        rank = attributes.temp.sayCard[cardRank];
-        break;
-      case '1':
-        rank = 10;
-        break;
-      default:
-        rank = cardRank;
-        break;
-    }
-
-    return attributes.temp.sayCard.format
-      .replace('[Rank]', rank).replace('[Suit]', attributes.temp.sayCard[cardSuit]);
+    return attributes.temp.playingCards[card];
   },
 };
 
@@ -509,13 +452,31 @@ function userHash(handlerInput) {
 }
 
 function generateComputerHand(handlerInput) {
-  const res = require('./resources')(handlerInput);
   const attributes = handlerInput.attributesManager.getSessionAttributes();
   const game = attributes[attributes.currentGame];
 
-  game.opponent = {
-    name: res.getString('COMPUTER_NAME'),
-    cards: createHand(handlerInput),
-  };
-  game.opponent.hold = module.exports.suggestedPlay(game.opponent.cards);
+  return handlerInput.jrm.render('COMPUTER_NAME')
+  .then((name) => {
+    game.opponent = {
+      name: name,
+      cards: createHand(handlerInput),
+    };
+    game.opponent.hold = module.exports.suggestedPlay(game.opponent.cards);
+    return;
+  });
 }
+
+function splitCard(card) {
+  const result = {};
+  const rank = card.charAt(0);
+  const faceCards = '1JQKA';
+
+  if (faceCards.indexOf(rank) > -1) {
+    result.rank = 10 + faceCards.indexOf(rank);
+  } else {
+    result.rank = rank;
+  }
+  result.suit = card.charAt(card.length - 1);
+  return result;
+}
+

@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v2"
               }
             }
           }
@@ -16,31 +16,31 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "70a107cd3c24d304263b3180e8d9b007"
+          "eTag": "3c6b4c0e2522cf817d871b0473dea91e"
         },
         "interactionModel": {
           "en-US": {
-            "eTag": "e16a362ad00c45ec4401f15d70fc9503"
+            "eTag": "77f3367fe1cf29f551dc9ddedb001b7d"
           },
           "en-CA": {
-            "eTag": "1a0e1ee68b3612bf674029a527df0dca"
+            "eTag": "77f3367fe1cf29f551dc9ddedb001b7d"
           },
           "en-AU": {
-            "eTag": "1a0e1ee68b3612bf674029a527df0dca"
+            "eTag": "77f3367fe1cf29f551dc9ddedb001b7d"
           },
           "en-GB": {
-            "eTag": "c3d746d0e990560665596c9dae260355"
+            "eTag": "c68669e51b4369f17079d0e4c4139657"
           }
         },
         "lambda": [
           {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v2",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v2",
             "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "5fd311a1-84cf-4642-b0bd-a74676e3e317"
+            "revisionId": "58ec8bd4-d19d-42cc-8633-4f6490b7174f"
           }
         ]
       },

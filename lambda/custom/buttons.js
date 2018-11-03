@@ -71,7 +71,7 @@ module.exports = {
           },
         },
       };
-      handlerInput.responseBuilder.addDirective(inputDirective);
+      handlerInput.jrb.addDirective(inputDirective);
     }
   },
   secondButtonInputHandler: function(handlerInput) {
@@ -103,7 +103,7 @@ module.exports = {
           },
         },
       };
-      handlerInput.responseBuilder.addDirective(inputDirective);
+      handlerInput.jrb.addDirective(inputDirective);
     }
   },
   playInputHandler: function(handlerInput) {
@@ -135,7 +135,7 @@ module.exports = {
             },
           },
         };
-        handlerInput.responseBuilder.addDirective(inputDirective);
+        handlerInput.jrb.addDirective(inputDirective);
       }
     }
   },
@@ -160,7 +160,7 @@ module.exports = {
           'triggerEventTimeMs': 0,
         },
       };
-      handlerInput.responseBuilder.addDirective(buttonDownDirective);
+      handlerInput.jrb.addDirective(buttonDownDirective);
     }
   },
   turnOffButtons: function(handlerInput) {
@@ -186,8 +186,7 @@ module.exports = {
         },
       };
 
-      handlerInput.responseBuilder
-        .addDirective(turnOffButtonDirective);
+      handlerInput.jrb.addDirective(turnOffButtonDirective);
     }
   },
   lightPlayer: function(handlerInput) {
@@ -213,7 +212,7 @@ module.exports = {
               'triggerEventTimeMs': 0,
             },
           };
-          handlerInput.responseBuilder.addDirective(holdDirective);
+          handlerInput.jrb.addDirective(holdDirective);
         }
         if (attributes.temp.buttons.discard) {
           const discardDirective = {
@@ -234,7 +233,7 @@ module.exports = {
               'triggerEventTimeMs': 0,
             },
           };
-          handlerInput.responseBuilder.addDirective(discardDirective);
+          handlerInput.jrb.addDirective(discardDirective);
         }
       }
     }
@@ -277,7 +276,7 @@ module.exports = {
           'blend': true,
         });
       });
-      handlerInput.responseBuilder.addDirective(buttonIdleDirective);
+      handlerInput.jrb.addDirective(buttonIdleDirective);
     }
   },
 };

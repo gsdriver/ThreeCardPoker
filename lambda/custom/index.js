@@ -41,9 +41,9 @@ const requestInterceptor = {
           attributes.playerLocale = event.request.locale;
 
           // Load strings to resolve cards
-          return handlerInput.jrm.renderObject(ri('SAY_CARD'));
-        }).then((sayCard) => {
-          attributes.temp.sayCard = sayCard;
+          return handlerInput.jrm.renderObject(ri('PLAYING_CARDS'));
+        }).then((playingCards) => {
+          attributes.temp.playingCards = playingCards;
           if (!attributes.currentGame) {
             attributes.currentGame = 'standard';
             attributes.points = utils.STARTING_POINTS;
@@ -93,7 +93,7 @@ const requestInterceptor = {
 const saveResponseInterceptor = {
   process(handlerInput) {
     return new Promise((resolve, reject) => {
-      const response = handlerInput.responseBuilder.getResponse();
+      const response = handlerInput.jrb.getResponse();
       const attributes = handlerInput.attributesManager.getSessionAttributes();
 
       if (response) {
@@ -135,8 +135,8 @@ const ErrorHandler = {
   },
   handle(handlerInput, error) {
     console.log(error.stack);
-    return handlerInput.responseBuilder
-      .speak('An error was encountered while handling your request. Try again later')
+    return handlerInput.jrb
+      .speak(ri('GENERIC_ERROR'))
       .getResponse();
   },
 };

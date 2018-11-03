@@ -4,7 +4,7 @@
 
 'use strict';
 
-const utils = require('../utils');
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -25,13 +25,12 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(handlerInput);
 
     if (attributes.temp.purchasing && (event.request.intent.name === 'AMAZON.NoIntent')) {
       attributes.temp.purchasing = undefined;
-      return handlerInput.responseBuilder
-        .speak(res.getString('PURCHASE_NO_PURCHASE'))
-        .reprompt(res.getString('PURCHASE_NO_PURCHASE'))
+      return handlerInput.jrb
+        .speak(ri('PURCHASE_NO_PURCHASE'))
+        .reprompt(ri('PURCHASE_NO_PURCHASE'))
         .getResponse();
     } else {
       if ((event.request.intent.name === 'AMAZON.YesIntent') ||
@@ -39,16 +38,27 @@ module.exports = {
           && event.request.intent.slots.Product.value)) {
         // They specified a product so let's go with that one
         // Since we only support morehands, that's the one we'll offer
-        return handlerInput.responseBuilder
-          .addDirective(utils.getPurchaseDirective(attributes, 'Buy'))
+        const directive = {
+          'type': 'Connections.SendRequest',
+          'name': 'Buy',
+          'payload': {
+            'InSkillProduct': {
+              'productId': attributes.paid.morehands.productId,
+            },
+          },
+          'token': 'Buy',
+        };
+
+        return handlerInput.jrb
+          .addDirective(directive)
           .withShouldEndSession(true)
           .getResponse();
       } else {
         // Tell them about more hands
         attributes.temp.purchasing = true;
-        return handlerInput.responseBuilder
-          .speak(res.getString('PURCHASE_MOREHANDS'))
-          .reprompt(res.getString('PURCHASE_CONFIRM_REPROMPT'))
+        return handlerInput.jrb
+          .speak(ri('PURCHASE_MOREHANDS'))
+          .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
           .getResponse();
       }
     }
