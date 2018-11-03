@@ -15,29 +15,29 @@ const request = require('request');
 const querystring = require('querystring');
 const cardRanks = require('./cardRanks');
 const suggestion = require('./suggestion');
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   STARTING_POINTS: 10,
   DAILY_REFRESH_POINTS: 5,
   PURCHASE_REFRESH_POINTS: 10,
-  getGreeting: function(handlerInput, callback) {
-    const event = handlerInput.requestEnvelope;
-    const res = require('./resources')(handlerInput);
-
-    getUserTimezone(event, (timezone) => {
+  getGreeting: function(handlerInput) {
+    return getUserTimezone(handlerInput)
+    .then((timezone) => {
       if (timezone) {
         const hour = moment.tz(Date.now(), timezone).format('H');
         let greeting;
         if ((hour > 5) && (hour < 12)) {
-          greeting = res.getString('GOOD_MORNING');
+          greeting = 'GOOD_MORNING';
         } else if ((hour >= 12) && (hour < 18)) {
-          greeting = res.getString('GOOD_AFTERNOON');
+          greeting = 'GOOD_AFTERNOON';
         } else {
-          greeting = res.getString('GOOD_EVENING');
+          greeting = 'GOOD_EVENING';
         }
-        callback(greeting);
+
+        return handlerInput.jrm.render(ri(greeting));
       } else {
-        callback('');
+        return '';
       }
     });
   },
@@ -385,13 +385,14 @@ module.exports = {
     }
     return cards;
   },
-  isNextDay: function(event, attributes, callback) {
-    getUserTimezone(event, (timezone) => {
+  isNextDay: function(event, attributes) {
+    return getUserTimezone(event)
+    .then((timezone) => {
       const tz = (timezone) ? timezone : 'America/Los_Angeles';
       const busted = moment.tz(attributes.busted, tz).format('YYYY-MM-DD');
       const now = moment.tz(Date.now(), tz).format('YYYY-MM-DD');
 
-      callback(busted !== now);
+      return (busted !== now);
     });
   },
   getPurchaseDirective: function(attributes, action, message) {
@@ -502,48 +503,18 @@ module.exports = {
   },
 };
 
-function getUserTimezone(event, callback) {
-  if (event.context.System.apiAccessToken) {
-    // Invoke the entitlement API to load timezone
-    const options = {
-      host: 'api.amazonalexa.com',
-      path: '/v2/devices/' + event.context.System.device.deviceId + '/settings/System.timeZone',
-      method: 'GET',
-      timeout: 1000,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept-Language': event.request.locale,
-        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
-      },
-    };
+function getUserTimezone(handlerInput) {
+  const event = handlerInput.requestEnvelope;
+  const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
 
-    const req = https.get(options, (res) => {
-      let returnData = '';
-      res.setEncoding('utf8');
-      if (res.statusCode != 200) {
-        console.log('deviceTimezone returned status code ' + res.statusCode);
-        callback();
-      } else {
-        res.on('data', (chunk) => {
-          returnData += chunk;
-        });
-
-        res.on('end', () => {
-          // Strip quotes
-          const timezone = returnData.replace(/['"]+/g, '');
-          callback(moment.tz.zone(timezone) ? timezone : undefined);
-        });
-      }
-    });
-
-    req.on('error', (err) => {
-      console.log('Error calling user settings API: ' + err.message);
-      callback();
-    });
-  } else {
-    // No API token - no user timezone
-    callback();
-  }
+  return usc.getSystemTimeZone(event.context.System.device.deviceId)
+  .then((timezone) => {
+    return timezone;
+  })
+  .catch((error) => {
+    // OK if the call fails, return gracefully
+    return;
+  });
 }
 
 function createHand(handlerInput, excludeCards) {
