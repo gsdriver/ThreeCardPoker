@@ -147,7 +147,7 @@ module.exports = {
           speech += '_UPSELL';
           directive = handlerInput.jrm.renderItem(ri(speech, speechParams));
         } else {
-          speech += '_NO_CHIPS';
+          speech += '_NOCHIPS';
           reprompt = undefined;
         }
       }
@@ -189,11 +189,11 @@ function finishHand(handlerInput) {
   const speechParams = {};
   let result;
 
+  game.handOver = true;
   return utils.readHandRank(handlerInput, game.player)
   .then((hand) => {
     const playerParams = {};
     playerParams.Hand = hand;
-    game.handOver = true;
     speech = 'HOLD_RESULT_PLAYER';
     for (i = 3; i < 6 - game.player.hold.length; i++) {
       drew.push(game.player.cards[i]);

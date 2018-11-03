@@ -92,11 +92,11 @@ const requestInterceptor = {
 
 const saveResponseInterceptor = {
   process(handlerInput) {
-    return new Promise((resolve, reject) => {
-      const response = handlerInput.jrb.getResponse();
-      const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const response = handlerInput.responseBuilder.getResponse();
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-      if (response) {
+    if (response) {
+      return utils.drawTable(handlerInput).then(() => {
         if (!response.shouldEndSession && attributes.temp && attributes.temp.newSession) {
           // Set up the buttons to all flash, welcoming the user to press a button
           buttons.addLaunchAnimation(handlerInput);
@@ -104,27 +104,26 @@ const saveResponseInterceptor = {
           buttons.startInputHandler(handlerInput);
           attributes.temp.newSession = undefined;
         }
-        utils.drawTable(handlerInput).then(() => {
-          if (response.shouldEndSession) {
-            // We are meant to end the session
-            SessionEnd.handle(handlerInput);
-          } else if (attributes.temp) {
-            // Save the response and reprompt for repeat
-            if (response.outputSpeech && response.outputSpeech.ssml) {
-              attributes.temp.lastResponse = response.outputSpeech.ssml;
-            }
-            if (response.reprompt && response.reprompt.outputSpeech
-              && response.reprompt.outputSpeech.ssml) {
-              attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
-            }
+        if (response.shouldEndSession) {
+          // We are meant to end the session
+          SessionEnd.handle(handlerInput);
+        } else if (attributes.temp) {
+          // Save the response and reprompt for repeat
+          if (response.outputSpeech && response.outputSpeech.ssml) {
+            attributes.temp.lastResponse = response.outputSpeech.ssml;
           }
-          if (!process.env.NOLOG) {
-            console.log(JSON.stringify(response));
+          if (response.reprompt && response.reprompt.outputSpeech
+            && response.reprompt.outputSpeech.ssml) {
+            attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
           }
-          resolve();
-        });
-      }
-    });
+        }
+        if (!process.env.NOLOG) {
+          console.log(JSON.stringify(response));
+        }
+      });
+    } else {
+      return Promise.resolve();
+    }
   },
 };
 

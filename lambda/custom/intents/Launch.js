@@ -45,7 +45,7 @@ module.exports = {
           speech += '_BUSTED';
           speechParams.Chips = utils.DAILY_REFRESH_POINTS;
           response = handlerInput.jrb
-            .speak(ri(speech, attributes.temp.speechParams))
+            .speak(ri(speech, speechParams))
             .withShouldEndSession(true)
             .getResponse();
           return 'exit';
@@ -72,13 +72,15 @@ module.exports = {
     }).then((action) => {
       if (action === 'continue') {
         attributes.temp.newGame = true;
-        if (attributes.name) {
-          speech += '_WELCOME_BACK';
-          speechParams.Name = attributes.name;
-          reprompt = 'LAUNCH_RETURNING_REPRONPT';
-        } else {
-          speech += '_WELCOME';
-          reprompt = 'LAUNCH_REPROMPT';
+        if (speech === 'LAUNCH') {
+          if (attributes.name) {
+            speech += '_WELCOME_BACK';
+            speechParams.Name = attributes.name;
+            reprompt = 'LAUNCH_RETURNING_REPRONPT';
+          } else {
+            speech += '_WELCOME';
+            reprompt = 'LAUNCH_REPROMPT';
+          }
         }
         if (buttons.supportButtons(handlerInput)) {
           reprompt += '_BUTTON';

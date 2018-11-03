@@ -120,7 +120,7 @@ module.exports = {
       if (attributes.name) {
         promise = Promise.resolve(attributes.name);
       } else {
-        promise = handlerInput.jrb.render(ri('COMPUTER_NAME'));
+        promise = handlerInput.jrm.render(ri('COMPUTER_NAME'));
       }
 
       return promise.then((name) => {
@@ -354,6 +354,7 @@ module.exports = {
           cards.push(hand.cards[i]);
         }
       }
+
       // Then complete the hand up to 3 cards
       const end = 6 - cards.length;
       for (i = 3; i < end; i++) {
@@ -393,17 +394,21 @@ module.exports = {
 };
 
 function getUserTimezone(handlerInput) {
-  const event = handlerInput.requestEnvelope;
-  const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
+  if (handlerInput.serviceClientFactory) {
+    const event = handlerInput.requestEnvelope;
+    const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
 
-  return usc.getSystemTimeZone(event.context.System.device.deviceId)
-  .then((timezone) => {
-    return timezone;
-  })
-  .catch((error) => {
-    // OK if the call fails, return gracefully
-    return;
-  });
+    return usc.getSystemTimeZone(event.context.System.device.deviceId)
+    .then((timezone) => {
+      return timezone;
+    })
+    .catch((error) => {
+      // OK if the call fails, return gracefully
+      return;
+    });
+  } else {
+    return Promise.resolve();
+  }
 }
 
 function createHand(handlerInput, excludeCards) {

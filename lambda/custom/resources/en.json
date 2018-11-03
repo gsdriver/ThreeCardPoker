@@ -22,7 +22,7 @@
   "CHANGE_REPROMPT": "Say play to start the game ",
   "CHANGE_REPROMPT_BUTTON": "Say play or press your Echo Button ",
   "ENDROLLCALL_TWOBUTTONS": "To use buttons with Three Card Poker, you need two buttons. Try playing this game again with no or two buttons. Goodbye.",
-  "EXIT_GAME": "{Ad} Goodbye {Name}.",
+  "EXIT_GAME": "{Ad} Goodbye {Name}",
   "GENERIC_ERROR": "An error was encountered while handling your request. Try again later",
   "HELP_TEXT_BUY_CHIPS": "You have {Chips, plural, =1 {one chip} other {# chips}}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more, or buy more chips to keep playing. <break time=\"200ms\"/> For full rules of play, check the Alexa companion application. <break time=\"200ms\"/> What else can I help you with?",
   "HELP_TEXT": "You have {Chips, plural, =1 {one chip} other {# chips}}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more. <break time=\"200ms\"/> For full rules of play, check the Alexa companion application. <break time=\"200ms\"/> What else can I help you with?",
@@ -100,9 +100,9 @@
     "v3": "Congratulations {Name} <break time='200ms'/> you won! You have {Chips, plural, =1 {one chip} other {# chips}} remaining. "
   },
   "HOLD_RESULT_WIN_OPPONENT": {
-    "v1": "You lost! You have {Chips, plural, =1 {one chip} other {# chips}} remaining. ",
-    "v2": "Sorry you lost. You have {Chips, plural, =1 {one chip} other {# chips}} remaining. ",
-    "v3": "Sorry {Name} <break time='200ms'/> you lost. You have {Chips, plural, =1 {one chip} other {# chips}} remaining. "
+    "v1": "You lost! You {Chips, plural, =0 {are out of chips} =1 {are down to your last chip} other {have # chips remaining}}. ",
+    "v2": "Sorry you lost. You have {Chips, plural, =0 {are out of chips} =1 {are down to your last chip} other {have # chips remaining}}. ",
+    "v3": "Sorry {Name} <break time='200ms'/> you lost. You {Chips, plural, =0 {are out of chips} =1 {are down to your last chip} other {have # chips remaining}}. "
   },
   "HOLD_RESULT_WIN_TIE": "Wow, a tie! Ties go to the opponent, I'm afraid. <amazon:effect name=\"whispered\">It's only fair <break time=\"300ms\"/> they had to show you one of their cards.</amazon:effect> You have {Chips, plural, =1 {one chip} other {# chips}} remaining. ",
   "HOLD_GAMEOVER_REPROMPT": {
@@ -144,7 +144,7 @@
   "LAUNCH_RETURNING_REPRONPT": "Say play to get started ",
   "LAUNCH_RETURNING_REPRONPT_BUTTON": "Say play or press an Echo Button to get started ",
   "LAUNCH_REPROMPT_BUTTON": "Please say your name or press an Echo Button to start playing. ",
-  "LAUNCH_BUSTED": "You are out of chips. Come back to Three Card Poker tomorrow for {Chips} more chips. ",
+  "LAUNCH_BUSTED": "You are out of chips. Come back to Three Card Poker tomorrow for {Chips, plural, =1 {one more chip} other {# more chips}}. ",
   "LAUNCH_BUSTED_UPSELL": {
     "type": "Connections.SendRequest",
     "name": "Upsell",
@@ -152,14 +152,19 @@
       "InSkillProduct": {
         "productId": ""
       },
-      "upsellMessage": "You are out of chips and can come back to Three Card Poker tomorrow for {Chips} more chips or would you like to hear about buying {ExtraChips} more chips to continue playing now? "
+      "upsellMessage": "You are out of chips and can come back to Three Card Poker tomorrow for {Chips, plural, =1 {one more chip} other {# more chips}} or would you like to hear about buying {ExtraChips, plural, =1 {one more chip} other {# more chips}} more chips to continue playing now? "
     },
     "token": "Upsell"
   },
   "LAUNCH_BUSTED_REPLENISH": {
-    "v1": "Thanks for coming back {Name}! Here are {Chips} chips to get you back in the game. ",
-    "v2": "Good to see you again {Name}! Here are {Chips} chips to keep playing. ",
-    "v3": "Hey {Name}! Here are {Chips} chips to get you back in the game. "
+    "v1": "Thanks for coming back {Name} <break time='300ms'/> Here {Chips, plural, =1 {is one more chip} other {are # more chips}} to get you back in the game. Say play to get started.",
+    "v2": "Good to see you again {Name} <break time='300ms'/> Here {Chips, plural, =1 {is one more chip} other {are # more chips}} to keep playing. Say play to get started.",
+    "v3": "Hey {Name} <break time='300ms'/> Here {Chips, plural, =1 {is one more chip} other {are # more chips}} to get you back in the game. Say play to get started."
+  },
+  "LAUNCH_BUSTED_REPLENISH_BUTTON": {
+    "v1": "Thanks for coming back {Name} <break time='300ms'/> Here {Chips, plural, =1 {is one more chip} other {are # more chips}} to get you back in the game. Say play or press an Echo Button to get started.",
+    "v2": "Good to see you again {Name} <break time='300ms'/> Here {Chips, plural, =1 {is one more chip} other {are # more chips}} to keep playing. Ready to play? Say play or press an Echo Button.",
+    "v3": "Hey {Name} <break time='300ms'/> Here {Chips, plural, =1 {is one more chip} other {are # more chips}} to get you back in the game. Ready to play? Say play or press an Echo Button."
   },
   "PLAY_READ_HAND": {
     "v1": "You have {Cards} giving you {Hand} <break time='300ms'/> {OpponentName} is showing {OpponentHand}. <break time='300ms'/> Would you like to hold {FirstCard}?",
@@ -231,7 +236,6 @@
     "v11": "Diane",
     "v12": "Norm"
   },
-  "CHIPS_LEFT": "You have {Chips} remaining. ",
   "POKER_HAND_NOTHING_TWO": "a two high",
   "POKER_HAND_NOTHING_THREE": "a three high",
   "POKER_HAND_NOTHING_FOUR": "a four high",
@@ -257,7 +261,7 @@
   "POKER_HAND_PAIR_JACK": "a pair of Jacks",
   "POKER_HAND_PAIR_QUEEN": "a pair of Queens",
   "POKER_HAND_PAIR_KING": "a pair of Kings",
-  "POKER_HAND_PAIR_ACE": "a pair of  Aces",
+  "POKER_HAND_PAIR_ACE": "a pair of Aces",
   "POKER_HAND_FLUSH": "a flush",
   "POKER_HAND_STRAIGHT": "a straight",
   "POKER_HAND_3OFAKIND": "three of a kind",
