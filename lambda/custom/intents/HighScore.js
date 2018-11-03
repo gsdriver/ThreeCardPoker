@@ -5,7 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
-const speechUtils = require('alexa-speech-utils')();
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -14,44 +14,42 @@ module.exports = {
     return ((request.type === 'IntentRequest') && (request.intent.name === 'HighScoreIntent'));
   },
   handle: function(handlerInput) {
-    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(handlerInput);
 
-    return new Promise((resolve, reject) => {
-      utils.readLeaderBoard(handlerInput, (err, highScores) => {
-        let speech = '';
-        const reprompt = res.getString('HIGHSCORE_REPROMPT');
+    return utils.readLeaderBoard(handlerInput)
+    .then((highScores) => {
+      let speech;
+      const speechParams = {};
 
-        if (!highScores) {
-          speech = res.getString('LEADER_NO_SCORES');
+      if (!highScores) {
+        speech = 'LEADER_NO_SCORES';
+      } else {
+        if (!highScores.count || !highScores.top) {
+          // Something went wrong
+          speech = 'LEADER_NO_SCORES';
         } else {
-          if (!highScores.count || !highScores.top) {
-            // Something went wrong
-            speech = res.getString('LEADER_NO_SCORES');
-          } else {
-            if (highScores.rank) {
-              speech += res.getString('LEADER_RANKING')
-                 .replace('{Chips}', attributes.high)
-                 .replace('{Position}', highScores.rank)
-                 .replace('{Players}', highScores.count);
-            }
-
-            // And what is the leader board?
-            const topScores = highScores.top.map((x) => res.sayChips(x));
-            speech += res.getString('LEADER_TOP_SCORES')
-                .replace('{Players}', topScores.length)
-                .replace('{ChipTotals}', speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'}));
+          speech = 'LEADER_TOP_SCORES';
+          if (highScores.rank) {
+            speech += '_RANKING';
+            speechParams.Chips = attributes.high;
+            speechParams.Position = highScores.rank;
+            speechParams.Players = highScores.count;
           }
-        }
 
-        speech += reprompt;
-        const response = handlerInput.responseBuilder
-          .speak(speech)
-          .reprompt(reprompt)
-          .getResponse();
-        resolve(response);
-      });
+          // And what is the leader board?
+          let i;
+          for (i = 0; i < 5; i++) {
+            speechParams['HighScore' + (i + 1)] = (highScores.top.length > i)
+              ? highScores.top[i] : 0;
+          }
+          speechParams.NumberOfLeaders = highScores.top.length;
+        }
+      }
+
+      return handlerInput.jrb
+        .speak(ri(speech, speechParams))
+        .reprompt(ri('HIGHSCORE_REPROMPT'))
+        .getResponse();
     });
   },
 };

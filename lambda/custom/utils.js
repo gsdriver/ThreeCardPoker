@@ -7,7 +7,6 @@
 const Alexa = require('ask-sdk');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
-const https = require('https');
 const moment = require('moment-timezone');
 const seedrandom = require('seedrandom');
 const poker = require('poker-ranking');
@@ -165,7 +164,7 @@ module.exports = {
       callback();
     }
   },
-  readLeaderBoard: function(handlerInput, callback) {
+  readLeaderBoard: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let leaderURL = process.env.SERVICEURL + 'threecard/leaders';
@@ -176,18 +175,20 @@ module.exports = {
     const paramText = querystring.stringify(params);
     leaderURL += '?' + paramText;
 
-    request(
-      {
-        uri: leaderURL,
-        method: 'GET',
-        timeout: 1000,
-      }, (err, response, body) => {
-        let leaders;
+    return new Promise((resolve, reject) => {
+      request(
+        {
+          uri: leaderURL,
+          method: 'GET',
+          timeout: 1000,
+        }, (err, response, body) => {
+          let leaders;
 
-        if (!err) {
-          leaders = JSON.parse(body);
-        }
-        callback(err, leaders);
+          if (!err) {
+            leaders = JSON.parse(body);
+          }
+          resolve(leaders);
+      });
     });
   },
   updateLeaderBoard: function(handlerInput) {
@@ -320,7 +321,7 @@ module.exports = {
     const ranks = {
       '2': 'TWO', '3': 'THREE', '4': 'FOUR', '5': 'FIVE', '6': 'SIX', '7': 'SEVEN', '8': 'EIGHT',
       '9': 'NINE', '1': 'TEN', 'J': 'JACK', 'Q': 'QUEEN', 'K': 'KING', 'A': 'ACE',
-    }
+    };
     const order = '234567891JQKA';
     let rank;
 
@@ -408,53 +409,6 @@ module.exports = {
       'token': action,
     };
   },
-  getPurchasedProducts: function(event, attributes, callback) {
-    // Invoke the entitlement API to load products
-    const options = {
-      host: 'api.amazonalexa.com',
-      path: '/v1/users/~current/skills/~current/inSkillProducts',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept-Language': event.request.locale,
-        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
-      },
-    };
-    const req = https.get(options, (res) => {
-      let returnData = '';
-      res.setEncoding('utf8');
-      if (res.statusCode != 200) {
-        console.log('inSkillProducts returned status code ' + res.statusCode);
-        callback(res.statusCode);
-      } else {
-        res.on('data', (chunk) => {
-          returnData += chunk;
-        });
-
-        res.on('end', () => {
-          const inSkillProductInfo = JSON.parse(returnData);
-          if (Array.isArray(inSkillProductInfo.inSkillProducts)) {
-            // Let's see what they paid for
-            if (!attributes.paid) {
-              attributes.paid = {};
-            }
-            inSkillProductInfo.inSkillProducts.forEach((product) => {
-              attributes.paid[product.referenceName] = {
-                productId: product.productId,
-                state: (product.entitled == 'ENTITLED') ? 'PURCHASED' : 'AVAILABLE',
-              };
-            });
-          }
-          callback();
-        });
-      }
-    });
-
-    req.on('error', (err) => {
-      console.log('Error calling inSkillProducts API: ' + err.message);
-      callback(err);
-    });
-  },
   suggestedPlay: function(cards) {
     const newCards = JSON.parse(JSON.stringify(cards.slice(0, 3)));
     newCards.sort();
@@ -470,27 +424,17 @@ module.exports = {
     return hold;
   },
   sayCard: function(handlerInput, card) {
-    const res = require('./resources')(handlerInput);
-    const suits = {'C': res.getString('SAY_CARD_CLUB'),
-      'D': res.getString('SAY_CARD_DIAMONDS'),
-      'H': res.getString('SAY_CARD_HEARTS'),
-      'S': res.getString('SAY_CARD_SPADES')};
     let rank;
     const cardSuit = card.charAt(card.length - 1);
     const cardRank = card.charAt(card);
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     switch (cardRank) {
       case 'A':
-        rank = res.getString('SAY_CARD_ACE');
-        break;
       case 'J':
-        rank = res.getString('SAY_CARD_JACK');
-        break;
       case 'Q':
-        rank = res.getString('SAY_CARD_QUEEN');
-        break;
       case 'K':
-        rank = res.getString('SAY_CARD_KING');
+        rank = attributes.temp.sayCard[cardRank];
         break;
       case '1':
         rank = 10;
@@ -499,7 +443,9 @@ module.exports = {
         rank = cardRank;
         break;
     }
-    return res.getString('SAY_CARD_WITH_SUIT').replace('{Rank}', rank).replace('{Suit}', suits[cardSuit]);
+
+    return attributes.temp.sayCard.format
+      .replace('[Rank]', rank).replace('[Suit]', attributes.temp.sayCard[cardSuit]);
   },
 };
 

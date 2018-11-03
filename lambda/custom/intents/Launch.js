@@ -16,7 +16,6 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(handlerInput);
     let response;
     let speech = 'LAUNCH';
     let reprompt;

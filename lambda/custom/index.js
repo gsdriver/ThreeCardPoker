@@ -20,49 +20,73 @@ const Exit = require('./intents/Exit');
 const Hold = require('./intents/Hold');
 const utils = require('./utils');
 const buttons = require('./buttons');
-const {JargonSkillBuilder} = require('@jargon/alexa-skill-sdk');
+const {ri, JargonSkillBuilder} = require('@jargon/alexa-skill-sdk');
 
 const requestInterceptor = {
   process(handlerInput) {
-    return new Promise((resolve, reject) => {
-      const attributesManager = handlerInput.attributesManager;
-      const sessionAttributes = attributesManager.getSessionAttributes();
-      const event = handlerInput.requestEnvelope;
+    const attributesManager = handlerInput.attributesManager;
+    const sessionAttributes = attributesManager.getSessionAttributes();
+    const event = handlerInput.requestEnvelope;
+    let attributes;
 
-      if (Object.keys(sessionAttributes).length === 0) {
-        // No session attributes - so get the persistent ones
-        attributesManager.getPersistentAttributes()
-          .then((attributes) => {
-            // If no persistent attributes, it's a new player
-            attributes.temp = {};
-            attributes.temp.newSession = true;
-            attributes.sessions = (attributes.sessions + 1) || 1;
-            attributes.playerLocale = event.request.locale;
+    if (Object.keys(sessionAttributes).length === 0) {
+      // No session attributes - so get the persistent ones
+      return attributesManager.getPersistentAttributes()
+        .then((attr) => {
+          // If no persistent attributes, it's a new player
+          attributes = attr;
+          attributes.temp = {};
+          attributes.temp.newSession = true;
+          attributes.sessions = (attributes.sessions + 1) || 1;
+          attributes.playerLocale = event.request.locale;
 
-            if (!attributes.currentGame) {
-              attributes.currentGame = 'standard';
-              attributes.points = utils.STARTING_POINTS;
-              attributes.high = utils.STARTING_POINTS;
-              attributes.prompts = {};
-              attributes.standard = {
-              };
-            }
+          // Load strings to resolve cards
+          return handlerInput.jrm.renderObject(ri('SAY_CARD'));
+        }).then((sayCard) => {
+          attributes.temp.sayCard = sayCard;
+          if (!attributes.currentGame) {
+            attributes.currentGame = 'standard';
+            attributes.points = utils.STARTING_POINTS;
+            attributes.high = utils.STARTING_POINTS;
+            attributes.prompts = {};
+            attributes.standard = {};
+          }
 
-            // Now get the product ID of any purchasable products
-            utils.getPurchasedProducts(event, attributes, () => {
-              // Since there were no session attributes, this is the first
-              // round of the session - set the temp attributes
-              attributesManager.setSessionAttributes(attributes);
-              resolve();
-            });
+          // Now get the product ID of any purchasable products
+          const ms = handlerInput.serviceClientFactory.getMonetizationServiceClient();
+          return ms.getInSkillProducts(event.request.locale)
+          .then((inSkillProductInfo) => {
+            attributes.temp.inSkillProductInfo = inSkillProductInfo;
           })
           .catch((error) => {
-            reject(error);
+            // Ignore errors
           });
-      } else {
-        resolve();
-      }
-    });
+        }).then(() => {
+          if (attributes.temp.inSkillProductInfo) {
+            let state;
+            attributes.paid = {};
+            attributes.temp.inSkillProductInfo.inSkillProducts.forEach((product) => {
+              if (product.entitled === 'ENTITLED') {
+                state = 'PURCHASED';
+              } else if (product.purchasable == 'PURCHASABLE') {
+                state = 'AVAILABLE';
+              }
+
+              if (state) {
+                attributes.paid[product.referenceName] = {
+                  productId: product.productId,
+                  state: state,
+                };
+              }
+            });
+            attributes.temp.inSkillProductInfo = undefined;
+          }
+          attributesManager.setSessionAttributes(attributes);
+          return;
+        });
+    } else {
+      return Promise.resolve();
+    }
   },
 };
 
@@ -106,6 +130,7 @@ const saveResponseInterceptor = {
 
 const ErrorHandler = {
   canHandle(handlerInput, error) {
+    console.log(error.stack);
     return error.name.startsWith('AskSdk');
   },
   handle(handlerInput, error) {

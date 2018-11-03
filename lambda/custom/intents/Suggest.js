@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const speechUtils = require('alexa-speech-utils')();
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -21,8 +22,8 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
-    const res = require('../resources')(handlerInput);
     let speech;
+    const speechParams = {};
 
     // Get a suggestion for this hand
     attributes.temp.suggestion = utils.suggestedPlay(game.player.cards);
@@ -31,16 +32,15 @@ module.exports = {
       attributes.temp.suggestion.forEach((card) => {
         cardText.push(utils.sayCard(handlerInput, game.player.cards[card]));
       });
-      speech = res.getString('SUGGEST_CARDS').replace('{Cards}', speechUtils.and(cardText, {locale: event.request.locale}));
+      speech = 'SUGGEST_CARDS';
+      speechParams.Cards = speechUtils.and(cardText, {locale: event.request.locale});
     } else {
-      speech = res.getString('SUGGEST_DISCARD_ALL');
+      speech = 'SUGGEST_DISCARD_ALL';
     }
 
-    const reprompt = res.getString('SUGGEST_REPROMPT');
-    speech += reprompt;
-    return handlerInput.responseBuilder
-      .speak(speech)
-      .reprompt(reprompt)
+    return handlerInput.jrb
+      .speak(ri(speech, speechParams))
+      .reprompt(ri('SUGGEST_REPROMPT'))
       .getResponse();
   },
 };

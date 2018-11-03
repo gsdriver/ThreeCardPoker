@@ -5,6 +5,8 @@
 
 'use strict';
 
+const {ri} = require('@jargon/alexa-skill-sdk');
+
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -30,11 +32,9 @@ module.exports = {
     return timedOut;
   },
   handle: function(handlerInput) {
-    const res = require('../resources')(handlerInput);
-
     // Let them know we need two buttons and end the session
-    return handlerInput.responseBuilder
-      .speak(res.getString('ENDROLLCALL_TWOBUTTONS'))
+    return handlerInput.jrb
+      .speak(ri('ENDROLLCALL_TWOBUTTONS'))
       .withShouldEndSession(true)
       .getResponse();
   },

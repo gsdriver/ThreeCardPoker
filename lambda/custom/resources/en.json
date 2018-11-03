@@ -1,28 +1,40 @@
 {
   "CHANGE_CONFIRM": {
-    "v1": "Welcome {Name}. ",
-    "v2": "Hello {Name}. ",
-    "v3": "Nice to meet you {Name}. "
+    "v1": "Welcome {Name}. Say play to start the game.",
+    "v2": "Hello {Name}. To start playing, say play.",
+    "v3": "Nice to meet you {Name}. Say play to start the game."
   },
-  "CHANGE_PROMPT_CHANGE": {
-    "v1": "You can change your name at any time by saying change name. ",
-    "v2": "Say change name if you want to change your player name in the future. "
+  "CHANGE_CONFIRM_PROMPT_CHANGE": {
+    "v1": "Welcome {Name}. You can change your name at any time by saying change name. <break time=\"200ms\"/> Say play to start the game.",
+    "v2": "Hello {Name}. Say change name if you want to change your player name in the future. <break time=\"200ms\"/> To start playing, say play.",
+    "v3": "Nice to meet you {Name}. Say change name if you'd like to change your player name in the future. Say start the game to start playing."
+  },
+  "CHANGE_CONFIRM_BUTTON": {
+    "v1": "Welcome {Name}. Say play or press your Echo Button to start the game.",
+    "v2": "Hello {Name}. To start playing, say play or press an Echo Button.",
+    "v3": "Nice to meet you {Name}. Say play to start the game or press an Echo Button."
+  },
+  "CHANGE_CONFIRM_PROMPT_CHANGE_BUTTON": {
+    "v1": "Welcome {Name}. You can change your name at any time by saying change name. <break time=\"200ms\"/> Say play or press your Echo Button to start the game.",
+    "v2": "Hello {Name}. Say change name if you want to change your player name in the future. <break time=\"200ms\"/> To start playing, say play or press your Echo Button.",
+    "v3": "Nice to meet you {Name}. Say change name if you'd like to change your player name in the future. Say start the game or press an Echo Button to start playing."
   },
   "CHANGE_REPROMPT": "Say play to start the game ",
-  "CHANGE_REPROMPT_BUTTON": "or press your Echo Button ",
-  "ENDROLLCALL_TWOBUTTONS": "To use buttons with Three Card Poker, you need two buttons. Try playing this game again with no or two buttons.",
+  "CHANGE_REPROMPT_BUTTON": "Say play or press your Echo Button ",
+  "ENDROLLCALL_TWOBUTTONS": "To use buttons with Three Card Poker, you need two buttons. Try playing this game again with no or two buttons. Goodbye.",
   "EXIT_GAME": "{Ad} Goodbye {Name}.",
-  "HELP_TEXT_BUY_CHIPS": "You have {Chips}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more, or buy more chips to keep playing. ",
-  "HELP_TEXT": "You have {Chips}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more. ",
-  "HELP_FALLBACK": "Sorry, I didn't get that. <break time=\"200ms\"/> ",
-  "HELP_USE_BUTTONS": "You can press the green button to hold cards or the blue button to discard cards. ",
-  "HELP_CHECK_APP": "For full rules of play, check the Alexa companion application. ",
+  "HELP_TEXT_BUY_CHIPS": "You have {Chips, plural, =1 {one chip} other {# chips}}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more, or buy more chips to keep playing. <break time=\"200ms\"/> For full rules of play, check the Alexa companion application. <break time=\"200ms\"/> What else can I help you with?",
+  "HELP_TEXT": "You have {Chips, plural, =1 {one chip} other {# chips}}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more. <break time=\"200ms\"/> For full rules of play, check the Alexa companion application. <break time=\"200ms\"/> What else can I help you with?",
+  "HELP_TEXT_BUY_CHIPS_BUTTON": "You have {Chips, plural, =1 {one chip} other {# chips}}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more, or buy more chips to keep playing. <break time=\"200ms\"/> You can press the green button to hold cards or the blue button to discard cards. <break time=\"200ms\"/> For full rules of play, check the Alexa companion application. <break time=\"200ms\"/> What else can I help you with?",
+  "HELP_TEXT_BUTTON": "You have {Chips, plural, =1 {one chip} other {# chips}}. Each win adds one chip to your total and each loss takes a chip away <break time=\"200ms\"/> Once you run out of chips, you can come back the following day for {ExtraChips} more. <break time=\"200ms\"/> You can press the green button to hold cards or the blue button to discard cards. <break time=\"200ms\"/> For full rules of play, check the Alexa companion application. <break time=\"200ms\"/> What else can I help you with?",
+  "HELP_FALLBACK": "Sorry, I didn't get that <break time=\"200ms\"/> ",
   "HELP_REPROMPT": "What else can I help you with?",
   "HELP_CARD_TEXT": "The rankings of hands from high to low are Straight Flush (three consecutive cards of the same suit - Ace can be high or low), Three of a Kind, Straight, Flush (three cards of the same suit), Pair, and High Card. If both players have the same type of hand, the ranking of cards in the hands are used to break ties.  In the event that both players have the same hand, the game ends in a tie which is awarded to the opponent.",
   "HELP_CARD_TITLE": "Three Card Poker",
-  "LEADER_RANKING": "Your peak balance of {Chips} chips ranks you as <say-as interpret-as=\"ordinal\">{Position}</say-as> of {Players} players. ",
-  "LEADER_NO_SCORES": "Sorry, I'm unable to read the current leader board. ",
-  "LEADER_TOP_SCORES": "The top {Players} players have peak chip totals of {ChipTotals}. ",
+  "LEADER_RANKING": "Your peak balance of {Chips, plural, =1 {one chip} other {# chips}} ranks you as <say-as interpret-as=\"ordinal\">{Position}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# chips <break time=\"200ms\"/>}}. What else can I help you with?",
+  "LEADER_TOP_SCORES_RANKING": "The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# chips <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# chips <break time=\"200ms\"/>}}. What else can I help you with?",
+  "LEADER_NO_SCORES": "Sorry, I'm unable to read the current leader board. What else can I help you with?",
+  "LEADER_TOP_SCORES": "The top {Players} players have peak chip totals of {ChipTotals}. What else can I help you with?",
   "HIGHSCORE_REPROMPT": "What else can I help you with?",
   "HOLD_NEXT_CARD": {
     "v1": "Would you like to hold the {Card}?",
@@ -94,16 +106,27 @@
     "v3": "Discarding {Card}. "
   },
   "LAUNCH_WELCOME": {
-    "v1": "{Greeting} <break time='300ms'/> Welcome to Three Card Poker. ",
-    "v2": "{Greeting} <break time='300ms'/> Let's play Three Card Poker. "
+    "v1": "{Greeting} <break time='300ms'/> Welcome to Three Card Poker. Please say your name to get started.",
+    "v2": "{Greeting} <break time='300ms'/> Let's play Three Card Poker. What's your name?"
   },
   "LAUNCH_WELCOME_BACK": {
-    "v1": "{Greeting} {Name} <break time='300ms'/> Welcome back to Three Card Poker. ",
-    "v2": "{Greeting} {Name} <break time='300ms'/> Good to have you back for Three Card Poker. ",
-    "v3": "{Greeting} {Name} <break time='300ms'/> Ready to play some Three Card Poker? "
+    "v1": "{Greeting} {Name} <break time='300ms'/> Welcome back to Three Card Poker. Say play to get started.",
+    "v2": "{Greeting} {Name} <break time='300ms'/> Good to have you back for Three Card Poker. Ready to play?",
+    "v3": "{Greeting} {Name} <break time='300ms'/> Ready to play some Three Card Poker?"
+  },
+  "LAUNCH_WELCOME_BUTTON": {
+    "v1": "{Greeting} <break time='300ms'/> Welcome to Three Card Poker. Please say your name or press an Echo Button to get started.",
+    "v2": "{Greeting} <break time='300ms'/> Let's play Three Card Poker. Please say your name or press an Echo Button to get started."
+  },
+  "LAUNCH_WELCOME_BACK_BUTTON": {
+    "v1": "{Greeting} {Name} <break time='300ms'/> Welcome back to Three Card Poker. Say play or press an Echo Button to get started.",
+    "v2": "{Greeting} {Name} <break time='300ms'/> Good to have you back for Three Card Poker. Ready to play? Just say play or press an Echo Button to get started.",
+    "v3": "{Greeting} {Name} <break time='300ms'/> Ready to play some Three Card Poker? Say play to get started or press an Echo Button."
   },
   "LAUNCH_REPROMPT": "Please say your name to get started ",
   "LAUNCH_RETURNING_REPRONPT": "Say play to get started ",
+  "LAUNCH_RETURNING_REPRONPT_BUTTON": "Say play or press an Echo Button to get started ",
+  "LAUNCH_REPROMPT_BUTTON": "Please say your name or press an Echo Button to start playing. ",
   "LAUNCH_BUSTED": "You are out of chips. Come back to Three Card Poker tomorrow for {Chips} more chips. ",
   "LAUNCH_BUSTED_UPSELL": {
     "type": "Connections.SendRequest",
@@ -121,7 +144,6 @@
     "v2": "Good to see you again {Name}! Here are {Chips} chips to keep playing. ",
     "v3": "Hey {Name}! Here are {Chips} chips to get you back in the game. "
   },
-  "LAUNCH_REPROMPT_BUTTON": "Or press an Echo Button to start playing. ",
   "PLAY_READ_HAND": {
     "v1": "You have {Cards} giving you {Hand} <break time='300ms'/> {OpponentName} is showing {OpponentHand}. ",
     "v2": "You have {Cards} making {Hand} <break time='300ms'/> and I see {OpponentHand} in {OpponentName}'s hand. "
@@ -147,14 +169,14 @@
   "STARTGAME_START_REPROMPT": "Say play to get started.",
   "STARTGAME_START_REPROMPT_NONAME": "Please say your name to get started.",
   "SUGGEST_CARDS": {
-    "v1": "You should hold {Cards}. ",
-    "v2": "I think holding {Cards} would be good. ",
-    "v3": "Maybe you should hold {Cards}. "
+    "v1": "You should hold {Cards}. Would you like to do that?",
+    "v2": "I think holding {Cards} would be good. Sound good?",
+    "v3": "Maybe you should hold {Cards}. Say yes to follow this suggestion."
   },
   "SUGGEST_DISCARD_ALL": {
-    "v1": "You should discard all your cards. ",
-    "v2": "That hand is trash - throw all the cards away. ",
-    "v3": "I think you should draw three new cards. "
+    "v1": "You should discard all your cards. Would you like to do that?",
+    "v2": "That hand is trash <break time='300ms'/> throw all the cards away. Sound good?",
+    "v3": "I think you should draw three new cards. Would you like to do that?"
   },
   "SUGGEST_REPROMPT": {
     "v1": "Say yes to follow this suggestion.",
@@ -212,13 +234,15 @@
   "POKER_HAND_STRAIGHT": "a straight",
   "POKER_HAND_3OFAKIND": "three of a kind",
   "POKER_HAND_STRAIGHTFLUSH": "a straight flush",
-  "SAY_CARD_ACE": "ace",
-  "SAY_CARD_JACK": "jack",
-  "SAY_CARD_QUEEN": "queen",
-  "SAY_CARD_KING": "king",
-  "SAY_CARD_CLUB": "clubs",
-  "SAY_CARD_DIAMONDS": "diamonds",
-  "SAY_CARD_HEARTS": "hearts",
-  "SAY_CARD_SPADES": "spades",
-  "SAY_CARD_WITH_SUIT": "{Rank} of {Suit}"
+  "SAY_CARD": {
+    "C": "clubs",
+    "D": "diamonds",
+    "H": "hearts",
+    "S": "spades",
+    "A": "ace",
+    "J": "jack",
+    "Q": "queen",
+    "K": "king",
+    "Format": "[Rank] of [Suit]"
+  }
 }
