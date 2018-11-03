@@ -14,7 +14,8 @@ module.exports = {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    if ((request.type === 'GameEngine.InputHandlerEvent') && !attributes.temp.newGame) {
+    if ((request.type === 'GameEngine.InputHandlerEvent') && !attributes.temp.newGame
+      && (attributes.temp.holding !== undefined)) {
       attributes.temp.buttonId = buttons.getPressedButton(handlerInput);
       return (attributes.temp.buttons && attributes.temp.buttons.hold
         && attributes.temp.buttons.discard
@@ -70,8 +71,9 @@ module.exports = {
 
       const params = {};
       params.Card = speechUtils.and(cards, {locale: event.request.locale});
-      const buttonSpeech = (willHold) ? 'HOLD_BUTTON_HELD' : 'HOLD_BUTTON_DISCARD';
-      return handlerInput.jrm.render(ri(buttonSpeech, params));
+      const buttonSpeech = (willHold) ? 'HOLD_BUTTON_HELD' :
+        (holdArray ? 'HOLD_BUTTON_SOUNDONLY' : 'HOLD_BUTTON_DISCARD');
+      promise = handlerInput.jrm.render(ri(buttonSpeech, params));
     } else {
       promise = Promise.resolve('');
     }

@@ -29,7 +29,7 @@ module.exports = {
   },
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    let speech = '<audio src="soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01"/> ';
+    let speech;
     let reprompt;
     const speechParams = {};
 

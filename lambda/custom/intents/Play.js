@@ -16,7 +16,7 @@ module.exports = {
 
     return ((request.type === 'IntentRequest') &&
       ((request.intent.name === 'PlayIntent')
-        || ((request.intent.name === 'AMAZON.YesIntent') && !attributes.temp.newGame))
+        || (request.intent.name === 'AMAZON.YesIntent'))
       && (attributes.temp.holding === undefined));
   },
   handle: function(handlerInput) {
