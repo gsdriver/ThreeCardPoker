@@ -91,7 +91,9 @@ module.exports = {
 
       return promise.then((body) => {
         return (body) ? JSON.parse(body).file
-          : 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png';
+          : ((event.request.locale === 'de-DE')
+            ? 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background-de.png'
+            : 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png');
       }).then((imageUrl) => {
         image = new Alexa.ImageHelper()
           .addImageInstance(imageUrl)
