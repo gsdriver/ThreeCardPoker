@@ -44,7 +44,7 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
-    const response = handlerInput.jrb.getResponse();
+    const response = handlerInput.responseBuilder.getResponse();
 
     if ((response.directives && (response.directives[0].type === 'Dialog.Delegate'))
       || !(event.context && event.context.System &&
@@ -77,6 +77,7 @@ module.exports = {
         const formData = {
           player: JSON.stringify(playerCards),
           opponent: JSON.stringify(opponentCards),
+          locale: event.request.locale,
         };
 
         const params = {

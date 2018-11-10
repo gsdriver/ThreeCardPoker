@@ -1,0 +1,324 @@
+{
+  "CHANGE_CONFIRM": {
+    "v1": "Willkommen, {Name}. Sage 'spielen', um das Spiel zu beginnen.",
+    "v2": "Hallo, {Name}. Um mit dem Spielen zu beginnen, sage 'spielen'.",
+    "v3": "Schön, dich kennenzulernen, {Name}. Sage 'spielen', um das Spiel zu starten."
+  },
+  "CHANGE_CONFIRM_BUTTON": {
+    "v1": "Willkommen, {Name}. Sage 'spielen' oder drücke deinen Echo-Button, um das Spiel zu starten.",
+    "v2": "Hallo, {Name}. Sage 'spielen' oder drücke einen Echo-Button, um das Spiel zu beginnen.",
+    "v3": "Schön, dich kennenzulernen, {Name}. Sage 'spielen', um das Spiel zu starten, oder drücke einen Echo-Button."
+  },
+  "CHANGE_CONFIRM_PROMPT_CHANGE": {
+    "v1": "Willkommen, {Name}. Du kannst deinen Namen jederzeit ändern, indem du 'Namen ändern' sagst. <break time=\"200ms\"/> Sage 'spielen', um das Spiel zu starten.",
+    "v2": "Hallo, {Name}. Sage 'Namen ändern', wenn du in Zukunft deinen Spielernamen ändern möchtest. <break time=\"200ms\"/> Um mit dem Spielen zu beginnen, sage 'spielen'.",
+    "v3": "Schön, dich kennenzulernen, {Name}. Sage 'Namen ändern', wenn du in Zukunft deinen Spielernamen ändern möchtest. Sage 'Spiel starten', um mit dem Spielen zu beginnen."
+  },
+  "CHANGE_CONFIRM_PROMPT_CHANGE_BUTTON": {
+    "v1": "Willkommen, {Name}. Du kannst deinen Namen jederzeit ändern, indem du 'Namen ändern' sagst. <break time=\"200ms\"/> Sage 'spielen' oder drücke deinen Echo-Button, um das Spiel zu starten.",
+    "v2": "Hallo, {Name}. Sage 'Namen ändern', wenn du künftig deinen Spielernamen ändern möchtest. <break time=\"200ms\"/> Um mit dem Spielen zu beginnen, sage 'spielen' oder drücke deinen Echo-Button.",
+    "v3": "Schön, dich kennenzulernen, {Name}. Sage 'Namen ändern', wenn du in Zukunft deinen Spielernamen ändern möchtest. Sage 'Spiel starten' oder drücke einen Echo-Button, um mit dem Spielen zu beginnen."
+  },
+  "CHANGE_REPROMPT": "Sage 'spielen', um das Spiel zu beginnen",
+  "CHANGE_REPROMPT_BUTTON": "Sage 'spielen' oder drücke deinen Echo-Button",
+  "COMPUTER_NAME": {
+    "v1": "Heiko",
+    "v10": "Tina",
+    "v11": "Diana",
+    "v12": "Jörg",
+    "v2": "Fritz",
+    "v3": "Melanie",
+    "v4": "Susanne",
+    "v5": "Heinz",
+    "v6": "Wilhelm",
+    "v7": "Maria",
+    "v8": "Horst",
+    "v9": "Salome"
+  },
+  "ENDROLLCALL_TWOBUTTONS": "Um beim 3-Karten-Poker Buttons zu verwenden, benötigst du zwei Buttons. Versuche, dieses Spiel ohne oder mit zwei Buttons erneut zu spielen. Auf Wiedersehen.",
+  "EXIT_GAME": "{Ad} Auf Wiedersehen, {Name}",
+  "GAME_TITLE": "3-Karten-Poker",
+  "GENERIC_ERROR": "Beim Verarbeiten deiner Anfrage ist ein Fehler aufgetreten. Versuche es später erneut",
+  "GOOD_AFTERNOON": "Guten Tag",
+  "GOOD_EVENING": "Guten Abend",
+  "GOOD_MORNING": "Guten Morgen",
+  "HELP_CARD_TEXT": "Die Rangfolge der Blätter von hoch nach niedrig ist Straight Flush (drei aufeinanderfolgende Karten derselben Farbe - Ass kann hoch oder niedrig sein), Dreier, Straight, Flush (drei Karten derselben Farbe), Paar und High Card. Wenn beide Spieler dieselbe Art von Blatt haben, wird die Rangfolge der Karten in den Blättern verwendet, um den Gleichstand aufzuheben.  Sollten beide Spieler dasselbe Blatt haben, endet das Spiel in einem Gleichstand, der dem Gegner zugutekommt.",
+  "HELP_CARD_TITLE": "3-Karten-Poker",
+  "HELP_FALLBACK": "Das habe ich leider nicht verstanden <break time=\"200ms\"/> ",
+  "HELP_REPROMPT": "Wobei kann ich dir sonst noch behilflich sein?",
+  "HELP_TEXT": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}}. Durch jeden Sieg kommt ein Jeton zu deiner Gesamtmenge hinzu, und für jede Niederlage wird ein Jeton abgezogen <break time=\"200ms\"/> Wenn dir die Jetons ausgehen, kannst du am nächsten Tag zurückkommen, um {ExtraChips} neue zu erhalten. <break time=\"200ms\"/> Die vollständigen Spielregeln erfährst du durch die Alexa-Begleitanwendung. <break time=\"200ms\"/> Wobei kann ich dir sonst noch helfen?",
+  "HELP_TEXT_BUTTON": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}}. Durch jeden Sieg kommt ein Jeton zu deiner Gesamtmenge hinzu, und für jede Niederlage wird ein Jeton abgezogen <break time=\"200ms\"/> Wenn dir die Jetons ausgehen, kannst du am nächsten Tag zurückkommen, um {ExtraChips} neue zu erhalten. <break time=\"200ms\"/> Du kannst den grünen Button drücken, um Karten zu halten, oder den blauen, um Karten abzulegen. <break time=\"200ms\"/> Die vollständigen Spielregeln erfährst du durch die Alexa-Begleitanwendung. <break time=\"200ms\"/> Wobei kann ich dir sonst noch helfen?",
+  "HELP_TEXT_BUY_CHIPS": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}}. Durch jeden Sieg kommt ein Jeton zu deiner Gesamtmenge hinzu, und für jede Niederlage wird ein Jeton abgezogen <break time=\"200ms\"/> Wenn dir die Jetons ausgehen, kannst du am nächsten Tag zurückkommen, um {ExtraChips} neue zu erhalten, oder mehr Jetons kaufen, um weiterzuspielen. <break time=\"200ms\"/> Die vollständigen Spielregeln erfährst du durch die Alexa-Begleitanwendung. <break time=\"200ms\"/> Wobei kann ich dir sonst noch helfen?",
+  "HELP_TEXT_BUY_CHIPS_BUTTON": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}}. Durch jeden Sieg kommt ein Jeton zu deiner Gesamtmenge hinzu, und für jede Niederlage wird ein Jeton abgezogen <break time=\"200ms\"/> Wenn dir die Jetons ausgehen, kannst du am nächsten Tag zurückkommen, um {ExtraChips} neue zu erhalten, oder weitere Jetons kaufen, um weiterzuspielen. <break time=\"200ms\"/> Du kannst den grünen Button drücken, um Karten zu halten, oder den blauen, um Karten abzulegen. <break time=\"200ms\"/> Die vollständigen Spielregeln erfährst du durch die Alexa-Begleitanwendung. <break time=\"200ms\"/> Wobei kann ich dir sonst noch helfen?",
+  "HIGHSCORE_REPROMPT": "Wobei kann ich dir sonst noch helfen?",
+  "HOLD_BUTTON_DISCARD": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/discard.mp3\"/> Du hast {Card} abgelegt. ",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/discard.mp3\"/> Gut, werden wir die {Card}-Karte los. ",
+    "v3": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/discard.mp3\"/> {Card} wird abgelegt."
+  },
+  "HOLD_BUTTON_HELD": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/hold.mp3\"/> Du hast die {Card}-Karte gehalten. ",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/hold.mp3\"/> Gut, halten wir die {Card}-Karte. ",
+    "v3": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/hold.mp3\"/> Die {Card}-Karte wird gehalten. "
+  },
+  "HOLD_BUTTON_SOUNDONLY": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/discard.mp3\"/> ",
+  "HOLD_GAMEOVER": {
+    "v1": "{ButtonText} {Result} <break time='300ms'/> Möchtest du noch einmal spielen? ",
+    "v2": "{ButtonText} {Result} <break time='300ms'/> Weitermachen?",
+    "v3": "{ButtonText} {Result} <break time='300ms'/> Noch eine Runde? ",
+    "v4": "{ButtonText} {Result} <break time='300ms'/> Erneut versuchen? ",
+    "v5": "{ButtonText} {Result} <break time='300ms'/> Nochmal? "
+  },
+  "HOLD_GAMEOVER_NOCHIPS": "{ButtonText} {Result} <break time='300ms'/> Komme morgen wieder, um mehr Jetons zu erhalten.",
+  "HOLD_GAMEOVER_REPROMPT": {
+    "v1": "Möchtest du erneut spielen?",
+    "v2": "Weitermachen?",
+    "v3": "Noch eine Runde?",
+    "v4": "Erneut versuchen?",
+    "v5": "Noch einmal?"
+  },
+  "HOLD_GAMEOVER_UPSELL": {
+    "name": "Hochtreiben",
+    "payload": {
+      "InSkillProduct": {
+        "productId": " "
+      },
+      "upsellMessage": "{Result} Kehre morgen zurück, um mehr Jetons zu erhalten. Oder möchtest du mehr darüber erfahren, wie man {Chips, plural, =1 {einen Jeton} other {# Jetons}} kaufen kann, um gleich weiterzuspielen?"
+    },
+    "token": "Hochtreiben",
+    "type": "Connections.SendRequest"
+  },
+  "HOLD_NEXT_CARD": {
+    "v1": "{ButtonText} Möchtest du die {Card}-Karte halten?",
+    "v2": "{ButtonText} Möchtest du die {Card}-Karte halten?",
+    "v3": "{ButtonText} Möchtest du die {Card}-Karte behalten?"
+  },
+  "HOLD_PREVIOUS_CARD": {
+    "v1": "{ButtonText} Schauen wir uns die {Card}-Karte nochmal an. Möchtest du sie behalten?",
+    "v2": "{ButtonText} Zurück zur {Card}-Karte. Möchtest du sie halten?",
+    "v3": "{ButtonText} Zurück zur {Card}-Karte. Möchtest du sie halten?"
+  },
+  "HOLD_REPROMPT_CARD": {
+    "v1": "Möchtest du die {Card}-Karte halten?",
+    "v2": "Möchtest du die {Card}-Karte halten?",
+    "v3": "Möchtest du die {Card}-Karte behalten?"
+  },
+  "HOLD_RESULT": "{PlayerResult} <break time='300ms'/> {OpponentResult} <break time='300ms'/> {WinText}",
+  "HOLD_RESULT_OPPONENT_DISCARDALL": {
+    "v1": "{OpponentName} hat {OpponentHand} und wirft alle drei Karten fort <break time='300ms'/> {OpponentName} zog {OpponentDrawCards}, die {OpponentResult} ergeben. ",
+    "v2": "{OpponentName} deckt {OpponentHand} auf und wirft alle drei Karten ab <break time='300ms'/> {OpponentName} bekam {OpponentDrawCards} und erzielte {OpponentResult}. ",
+    "v3": "Es scheint, dass {OpponentName} {OpponentHand} hat <break time='300ms'/> Schrott! {OpponentName} wirft diese Karten ab <break time='300ms'/> und ersetzte sie durch {OpponentDrawCards}, die {OpponentResult} erbringen.  "
+  },
+  "HOLD_RESULT_OPPONENT_HELD": {
+    "v1": "{OpponentName} hat {OpponentHand} <break time='300ms'/> Hmm <break time='600ms'/> {OpponentName} wird die {OpponentHoldCards} behalten <break time='300ms'/> und zog {OpponentDrawCards}, was {OpponentResult} ergibt. ",
+    "v2": "{OpponentName} deckt {OpponentHand} auf und hat beschlossen, {OpponentHoldCards} zu halten <break time='300ms'/> {OpponentName} zog {OpponentDrawCards}, die {OpponentResult} erbrachten. ",
+    "v3": "{OpponentName} deckt {OpponentHand} auf <break time='300ms'/> Hmm <break time='600ms'/> {OpponentName} beschließt, die {OpponentHoldCards} zu behalten <break time='300ms'/> and drew {OpponentDrawCards} making {OpponentResult}. "
+  },
+  "HOLD_RESULT_OPPONENT_HOLDALL": {
+    "v1": "{OpponentName} hat {OpponentHand} und behielt alle drei Karten.",
+    "v2": "Es scheint, dass {OpponentName} {OpponentHand} hat und alle drei Karten behält.",
+    "v3": "{OpponentName} deckt {OpponentHand} auf und passt. "
+  },
+  "HOLD_RESULT_PLAYER": "Du hast {Hand}. ",
+  "HOLD_RESULT_PLAYER_DREW": {
+    "v1": "Du hast die {Card}-Karte gezogen, wodurch du {Hand} erhältst. ",
+    "v2": "Du hast die {Card}-Karte bekommen, durch die du {Hand} erhältst. ",
+    "v3": "Hier ist die {Card}-Karte für dich. <break time='300ms'/> Damit hast du {Hand}. "
+  },
+  "HOLD_RESULT_SUGGESTION": "{PlayerResult} <break time='300ms'/> {OpponentResult} <break time='300ms'/> {WinText} <break time='600ms'/> Wusstest du übrigens, {Name}, <break time='300ms'/> dass du mich 'was soll ich tun' fragen kannst, wenn du meine Hilfe bei einem Blatt möchtest?",
+  "HOLD_RESULT_WIN_OPPONENT": {
+    "v1": "Du hast verloren! Du {Chips, plural, =0 {hast keine Jetons mehr} =1 {hast nur noch einen Jeton} other {hast # Jetons übrig}}. ",
+    "v2": "Du hast leider verloren. Du hast {Chips, plural, =0 {keine Jetons mehr} =1 {nur noch einen Jeton} other {# Jetons übrig}}.",
+    "v3": "Es tut mir leid, {Name}, <break time='200ms'/> du hast verloren. Du {Chips, plural, =0 {hast keine Jetons mehr} =1 {hast nur noch einen Jeton} other {hast # Jetons übrig}}. "
+  },
+  "HOLD_RESULT_WIN_PLAYER": {
+    "v1": "Du gewinnst! Du hast noch {Chips, plural, =1 {einen Jeton} other {# Jetons}} übrig. ",
+    "v2": "Du bist der Sieger! Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}} übrig. ",
+    "v3": "Glückwunsch, {Name}, <break time='200ms'/> du hast gewonnen! Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}} übrig. "
+  },
+  "HOLD_RESULT_WIN_TIE": "Oha, Gleichstand! Ein Gleichstand geht leider an den Gegner. <amazon:effect name=\"whispered\">Das ist nur fair, <break time=\"300ms\"/> er musste dir eine seiner Karten zeigen.</amazon:effect> Du hast noch {Chips, plural, =1 {einen Jeton} other {# Jetons}}.",
+  "LAUNCH_BUSTED": "Du hast keine Jetons mehr. Komm morgen zum 3-Karten-Poker zurück, um {Chips, plural, =1 {einen weiteren Jeton} other {# weitere Jetons}} zu bekommen. ",
+  "LAUNCH_BUSTED_REPLENISH": {
+    "v1": "Danke, dass du zurückgekommen bist, {Name} <break time='300ms'/> Hier {Chips, plural, =1 {ist ein neuer Jeton} other {sind # neue Jetons}}, damit du wieder ins Spiel einsteigen kannst. Sage 'spielen', um zu beginnen.",
+    "v2": "Schön, dich wiederzusehen, {Name} <break time='300ms'/> Hier {Chips, plural, =1 {ist ein zusätzlicher Jeton} other {sind # zusätzliche Jetons}} zum Weiterspielen. Sage 'spielen', um anzufangen.",
+    "v3": "Hallo, {Name} <break time='300ms'/> Hier {Chips, plural, =1 {ist ein weiterer Jeton} other {sind # weitere Jetons}}, damit du wieder ins Spiel einsteigen kannst. Sage 'spielen', um anzufangen."
+  },
+  "LAUNCH_BUSTED_REPLENISH_BUTTON": {
+    "v1": "Danke, dass du zurückgekommen bist, {Name} <break time='300ms'/> Hier {Chips, plural, =1 {ist ein neuer Jeton} other {sind # neue Jetons}}, damit du wieder ins Spiel einsteigen kannst. Bereit zum Spielen? Sage 'spielen' oder drücke einen Echo-Button, um zu beginnen.",
+    "v2": "Schön, dich wiederzusehen, {Name} <break time='300ms'/> Hier {Chips, plural, =1 {ist ein zusätzlicher Jeton} other {sind # zusätzliche Jetons}} zum Weiterspielen. Bereit zum Spielen? Sage 'spielen' oder drücke einen Echo-Button.",
+    "v3": "Hallo, {Name} <break time='300ms'/> Hier {Chips, plural, =1 {ist ein neuer Jeton} other {sind # neue Jetons}}, damit du wieder ins Spiel einsteigen kannst. Bereit zum Spielen? Sage 'spielen' oder drücke einen Echo-Button."
+  },
+  "LAUNCH_BUSTED_UPSELL": {
+    "name": "Hochtreiben",
+    "payload": {
+      "InSkillProduct": {
+        "productId": " "
+      },
+      "upsellMessage": "Du hast keine Jetons mehr und kannst morgen wieder zum 3-Karten-Poker kommen, um {Chips, plural, =1 {einen neuen Jeton} other {# neue Jetons}} zu bekommen. Oder möchtest du etwas darüber erfahren, wie du {ExtraChips, plural, =1 {einen zusätzlichen Jeton} other {# zusätzliche Jetons}} kaufen kannst, um gleich weiterzuspielen? "
+    },
+    "token": "Hochtreiben",
+    "type": "Connections.SendRequest"
+  },
+  "LAUNCH_REPROMPT": "Bitte sage deinen Namen, um anzufangen.",
+  "LAUNCH_REPROMPT_BUTTON": "Bitte sage deinen Namen oder drücke einen Echo-Button, um mit dem Spielen anzufangen.",
+  "LAUNCH_RETURNING_REPRONPT": "Sage 'spielen', um anzufangen",
+  "LAUNCH_RETURNING_REPRONPT_BUTTON": "Sage 'spielen' oder drücke einen Echo-Button, um anzufangen",
+  "LAUNCH_WELCOME": {
+    "v1": "{Greeting} <break time='300ms'/> Willkommen bei 3-Karten-Poker. Bitte sage deinen Namen, um anzufangen.",
+    "v2": "{Greeting} <break time='300ms'/> Lass uns 3-Karten-Poker spielen. Wie heißt du?"
+  },
+  "LAUNCH_WELCOME_BACK": {
+    "v1": "{Greeting} {Name} <break time='300ms'/> Willkommen zurück beim 3-Karten-Poker. Sage 'spielen', um zu beginnen.",
+    "v2": "{Greeting} {Name} <break time='300ms'/> Schön, dich wieder beim 3-Karten-Poker zu haben. Bereit zum Spielen?",
+    "v3": "{Greeting} {Name} <break time='300ms'/> Bereit, ein wenig 3-Karten-Poker zu spielen?"
+  },
+  "LAUNCH_WELCOME_BACK_BUTTON": {
+    "v1": "{Greeting} {Name} <break time='300ms'/> Willkommen zurück bei 3-Karten-Poker. Sage 'spielen' oder drücke einen Echo-Button, um anzufangen.",
+    "v2": "{Greeting} {Name} <break time='300ms'/> Schön, dass du wieder zum 3-Karten-Poker gekommen bist. Bereit zum Spielen? Sage einfach 'spielen' oder drücke einen Echo-Button, um anzufangen.",
+    "v3": "{Greeting} {Name} <break time='300ms'/> Bist du bereit, etwas 3-Karten-Poker zu spielen? Sage 'spielen', um anzufangen, oder drücke einen Echo-Button."
+  },
+  "LAUNCH_WELCOME_BUTTON": {
+    "v1": "{Greeting} <break time='300ms'/> Willkommen bei 3-Karten-Poker. Bitte sage deinen Namen oder drücke einen Echo-Button, um anzufangen.",
+    "v2": "{Greeting} <break time='300ms'/> Lass und 3-Karten-Poker spielen. Bitte sage deinen Namen oder drücke einen Echo-Button, um zu beginnen."
+  },
+  "LEADER_NO_SCORES": "Leider kann ich die aktuelle Rangliste nicht lesen. Was kann ich sonst noch für dich tun?",
+  "LEADER_RANKING": "Durch deinen Konto-Höchststand von {Chips, plural, =1 {einem Jeton} other {# Jetons}} hast du den <say-as interpret-as=\"ordinal\">{Position}</say-as> Rang unter {Players} Spielern. Die {NumberOfLeaders} Spitzen-Guthaben sind {HighScore1, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}}. Womit kann ich dir sonst noch behilflich sein?",
+  "LEADER_TOP_SCORES": "Die führenden {Players} Spieler haben Spitzen-Jetongesamtwerte von {ChipTotals}. Womit kann ich dir noch behilflich sein?",
+  "LEADER_TOP_SCORES_RANKING": "Die {NumberOfLeaders} Spitzen-Guthaben sind {HighScore1, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# Jetons <break time=\"200ms\"/>}}. Wie kann ich dir sonst noch behilflich sein?",
+  "PLAYING_CARDS": {
+    "10C": "Kreuz-Zehn",
+    "10D": "Karo-Zehn",
+    "10H": "Herz-Zehn",
+    "10S": "Pik-Zehn",
+    "2C": "Kreuz-Zwei",
+    "2D": "Karo-Zwei",
+    "2H": "Herz-Zwei",
+    "2S": "Pik-Zwei",
+    "3C": "Kreuz-Drei",
+    "3D": "Karo-Drei",
+    "3H": "Herz-Drei",
+    "3S": "Pik-Drei",
+    "4C": "Kreuz-Vier",
+    "4D": "Karo-Vier",
+    "4H": "Herz-Vier",
+    "4S": "Pik-Vier",
+    "5C": "Kreuz-Fünf",
+    "5D": "Karo-Fünf",
+    "5H": "Herz-Fünf",
+    "5S": "Pik-Fünf",
+    "6C": "Kreuz-Sechs",
+    "6D": "Karo-Sechs",
+    "6H": "Herz-Sechs",
+    "6S": "Pik-Sechs",
+    "7C": "Kreuz-Sieben",
+    "7D": "Karo-Sieben",
+    "7H": "Herz-Sieben",
+    "7S": "Pik-Sieben",
+    "8C": "Kreuz-Acht",
+    "8D": "Karo-Acht",
+    "8H": "Herz-Acht",
+    "8S": "Pik-Acht",
+    "9C": "Kreuz-Neun",
+    "9D": "Karo-Neun",
+    "9H": "Herz-Neun",
+    "9S": "Pik-Neun",
+    "AC": "Kreuz-Ass",
+    "AD": "Karo-Ass",
+    "AH": "Herz-Ass",
+    "AS": "Pik-Ass",
+    "JC": "Kreuz-Bube",
+    "JD": "Karo-Bube",
+    "JH": "Herz-Bube",
+    "JS": "Pik-Bube",
+    "KC": "Kreuz-König",
+    "KD": "Karo-König",
+    "KH": "Herz-König",
+    "KS": "Pik-König",
+    "QC": "Kreuz-Königin",
+    "QD": "Karo-Königin",
+    "QH": "Herz-Königin",
+    "QS": "Pik-Königin"
+  },
+  "PLAY_HOLDALL_REPROMPT": "<break time='300ms'/> Möchtest du {Hand} halten?",
+  "PLAY_READ_HAND": {
+    "v1": "Du hast {Cards}, durch die du {Hand} hast <break time='300ms'/> {OpponentName} zeigt {OpponentHand}. <break time='300ms'/> Möchtest du {FirstCard} halten?",
+    "v2": "Du hast {Cards}, die {Hand} ergeben, <break time='300ms'/> und ich sehe {OpponentHand} in der Hand von {OpponentName}. <break time='300ms'/> Möchtest du {FirstCard} halten?"
+  },
+  "PLAY_READ_HAND_HOLDALL": {
+    "v1": "Du hast {Cards}, die {Hand} ergeben, <break time='300ms'/> und ich sehe {OpponentHand} in der Hand von {OpponentName}. <break time='300ms'/> Möchtest du {Hand} halten?",
+    "v2": "Du hast {Cards}, die {Hand} ergeben, <break time='300ms'/> und ich sehe {OpponentHand} in der Hand von {OpponentName}. <break time='300ms'/> Möchtest du {Hand} halten?"
+  },
+  "PLAY_REPROMPT": "<break time='300ms'/> Möchtest du die {Card}-Karte halten?",
+  "POKER_HAND_3OFAKIND": "Dreier",
+  "POKER_HAND_FLUSH": "ein Flush",
+  "POKER_HAND_NOTHING_ACE": "ein Ass-High",
+  "POKER_HAND_NOTHING_EIGHT": "ein Acht-High",
+  "POKER_HAND_NOTHING_FIVE": "ein Fünf-High",
+  "POKER_HAND_NOTHING_FOUR": "ein Vier-High",
+  "POKER_HAND_NOTHING_JACK": "ein Bube-High",
+  "POKER_HAND_NOTHING_KING": "ein König-High",
+  "POKER_HAND_NOTHING_NINE": "ein Neun-High",
+  "POKER_HAND_NOTHING_QUEEN": "ein Königin-High",
+  "POKER_HAND_NOTHING_SEVEN": "ein Sieben-High",
+  "POKER_HAND_NOTHING_SIX": "ein Sechs-High",
+  "POKER_HAND_NOTHING_TEN": "ein Zehn-High",
+  "POKER_HAND_NOTHING_THREE": "ein Drei-High",
+  "POKER_HAND_NOTHING_TWO": "ein Zwei-High",
+  "POKER_HAND_PAIR_ACE": "ein Paar Asse",
+  "POKER_HAND_PAIR_EIGHT": "ein Paar Achten",
+  "POKER_HAND_PAIR_FIVE": "ein Paar Fünfen",
+  "POKER_HAND_PAIR_FOUR": "ein Paar Vieren",
+  "POKER_HAND_PAIR_JACK": "ein Paar Buben",
+  "POKER_HAND_PAIR_KING": "ein Paar Könige",
+  "POKER_HAND_PAIR_NINE": "ein Paar Neunen",
+  "POKER_HAND_PAIR_QUEEN": "ein Paar Königinnen",
+  "POKER_HAND_PAIR_SEVEN": "ein Paar Siebenen",
+  "POKER_HAND_PAIR_SIX": "ein Paar Sechsen",
+  "POKER_HAND_PAIR_TEN": "ein Paar Zehnen",
+  "POKER_HAND_PAIR_THREE": "ein Paar Dreien",
+  "POKER_HAND_PAIR_TWO": "ein Paar Zweien",
+  "POKER_HAND_STRAIGHT": "ein Straight",
+  "POKER_HAND_STRAIGHTFLUSH": "ein Straight Flush",
+  "PURCHASE_CONFIRM_REPROMPT": "Sage 'ja', um weitere Jetons zu kaufen",
+  "PURCHASE_MOREHANDS": "Wir bieten ein Produkt zum Kauf an, durch das du 10 zusätzliche Jetons erhältst. Möchtest du es kaufen?",
+  "PURCHASE_NO_PURCHASE": "Wobei kann ich dir sonst noch helfen?",
+  "REPEAT_HOLDING": {
+    "v1": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}} übrig. <break time='300ms'/> Du hast {Cards}, die für dich {Hand} ergeben, und behältst {HoldCards} <break time='300ms'/> Womit kann ich dir sonst noch helfen?",
+    "v2": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}} übrig. <break time='300ms'/> Du hast {Cards}, die {Hand} ergeben, und du hast beschlossen, {HoldCards} zu halten <break time='300ms'/> Womit kann ich dir sonst noch behilflich sein?"
+  },
+  "REPEAT_HOLDING_UPCARD": {
+    "v1": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}} übrig. <break time='300ms'/> Du hast {Cards}, durch die du {Hand} hast und behältst {HoldCards} <break time='300ms'/> Ich sehe, dass {OpponentName} {OpponentCard} zeigt <break time='300ms'/> Wie kann ich dir sonst noch helfen?",
+    "v2": "Du hast noch {Chips, plural, =1 {einen Jeton} other {# Jetons}}. <break time='300ms'/> Du hast {Cards}, die {Hand} ergeben, und du hast dich entschieden, {HoldCards} zu halten <break time='300ms'/> {OpponentName} beabsichtigt, {OpponentCard} zu zeigen <break time='300ms'/> Was kann ich sonst noch für dich tun?"
+  },
+  "REPEAT_OPPONENT_HAND": {
+    "v1": "Du hast {Chips, plural, =1 {einen Jeton} other {# Jetons}} übrig. <break time='300ms'/> Du hattest {Cards}, durch die du {Hand} erhalten hast, <break time='300ms'/> und {OpponentName} hatte {OpponentCards}, die {OpponentHand} ergaben <break time='300ms'/> Wobei kann ich dir noch behilflich sein?",
+    "v2": "Du hast noch {Chips, plural, =1 {einen Jeton} other {# Jetons}}. <break time='300ms'/> Du hattest {Cards}, die {Hand} ergaben, <break time='300ms'/> während {OpponentName} {OpponentCards} hatte, die {OpponentHand} ergaben <break time='300ms'/> Wie kann ich dir noch behilflich sein?"
+  },
+  "REPEAT_REPROMPT": "Womit kann ich dir sonst noch behilflich sein?",
+  "REPEAT_UPCARD": {
+    "v1": "Du hast noch {Chips, plural, =1 {einen Jeton} other {# Jetons}}. <break time='300ms'/> Du hast {Cards}, die für dich {Hand} ergeben <break time='300ms'/> Ich sehe, dass {OpponentName} {OpponentCard} zeigt <break time='300ms'/> Was kann ich außerdem für dich tun?",
+    "v2": "Du hast noch {Chips, plural, =1 {einen Jeton} other {# Jetons}}. <break time='300ms'/> Du hast {Cards}, die {Hand} ergeben <break time='300ms'/> {OpponentName} beabsichtigt, {OpponentCard} zu zeigen <break time='300ms'/> Was kann ich sonst noch für dich tun?"
+  },
+  "STARTGAME_PRESS_DISCARD": "<audio src=\"soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01\"/> Danke, {Name}, <break time='300ms'/> mit diesem grünen Button behält man Karten <break time='300ms'/> Drücke einen anderen Button, um ihn zum Ablegen von Karten zu verwenden.",
+  "STARTGAME_START": "<audio src=\"soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01\"/> Bestens. Mit diesem blauen Button legt man Karten ab. Sage 'spielen', um zu beginnen.",
+  "STARTGAME_START_NONAME": "<audio src=\"soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01\"/> Bestens. Mit diesem blauen Button legt man Karten ab. Bitte sage deinen Namen, um anzufangen.",
+  "STARTGAME_START_REPROMPT": "Sage 'spielen', um anzufangen.",
+  "STARTGAME_START_REPROMPT_NONAME": "Bitte sage deinen Namen, um anzufangen.",
+  "SUGGEST_CARDS": {
+    "v1": "Du solltest {Cards} halten. Möchtest du das tun?",
+    "v2": "Ich meine, {Cards} zu halten, wäre richtig. Klingt das gut?",
+    "v3": "Vielleicht solltest du {Cards} halten. Sage 'ja', um diesen Rat zu befolgen."
+  },
+  "SUGGEST_DISCARD_ALL": {
+    "v1": "Du solltest alle deine Karten ablegen. Möchtest du das tun?",
+    "v2": "Dieses Blatt ist Müll, <break time='300ms'/> wirf alle Karten fort. Klingt das gut?",
+    "v3": "Ich meine, du solltest drei neue Karten ziehen. Möchtest du das tun?"
+  },
+  "SUGGEST_REPROMPT": {
+    "v1": "Sage 'ja', um diesen Rat zu befolgen.",
+    "v2": "Möchtest du das tun?",
+    "v3": "Nun, <break time='300ms'/> was sagst du, ja oder nein?"
+  },
+  "UNKNOWN_INTENT": "Das habe ich leider nicht verstanden. Versuche, 'Hilfe' zu sagen.",
+  "UNKNOWN_INTENT_REPROMPT": "Versuche es damit, dass du 'Hilfe' sagst."
+}
