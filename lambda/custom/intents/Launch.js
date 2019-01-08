@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const buttons = require('../buttons');
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -15,73 +16,84 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(handlerInput);
     let response;
-    let speech;
-    let reprompt = '';
+    let speech = 'LAUNCH';
+    let reprompt;
+    const speechParams = {};
 
-    return new Promise((resolve, reject) => {
+    return utils.getGreeting(handlerInput)
+    .then((greeting) => {
       // First off - are they out of money?
+      speechParams.Greeting = greeting;
       if (attributes.busted) {
         // Is it the next day or not?
-        utils.isNextDay(event, attributes, (nextDay) => {
-          if (!nextDay) {
-            // Here's the place to do an upsell if we can!
-            if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.morehands) {
-              handlerInput.responseBuilder
-                .addDirective(utils.getPurchaseDirective(attributes, 'Upsell',
-                  res.getString('LAUNCH_BUSTED_UPSELL')
-                    .replace('{0}', utils.DAILY_REFRESH_POINTS)
-                    .replace('{1}', utils.PURCHASE_REFRESH_POINTS)));
-            } else {
-              handlerInput.responseBuilder
-                .speak(res.getString('LAUNCH_BUSTED').replace('{0}', utils.DAILY_REFRESH_POINTS));
-            }
-            response = handlerInput.responseBuilder
-              .withShouldEndSession(true)
-              .getResponse();
-            resolve(response);
-            return;
-          } else {
-            speech = res.getString('LAUNCH_BUSTED_REPLENISH')
-              .replace('{0}', utils.DAILY_REFRESH_POINTS)
-              .replace('{1}', (attributes.name ? attributes.name: ''));
-            attributes.points += utils.DAILY_REFRESH_POINTS;
-            attributes.busted = undefined;
-            finishResponse();
-          }
-        });
+        return utils.isNextDay(event, attributes);
       } else {
-        finishResponse();
+        return 'nobust';
       }
-
-      function finishResponse() {
-        utils.getGreeting(handlerInput, (greeting) => {
-          attributes.temp.newGame = true;
-          if (!speech) {
-            if (attributes.name) {
-              speech = res.getString('LAUNCH_WELCOME_BACK')
-                .replace('{0}', greeting)
-                .replace('{1}', attributes.name);
-              reprompt += res.getString('LAUNCH_RETURNING_REPRONPT');
-            } else {
-              speech = res.getString('LAUNCH_WELCOME')
-                .replace('{0}', greeting);
-              reprompt += res.getString('LAUNCH_REPROMPT');
-            }
-          }
-          if (buttons.supportButtons(handlerInput)) {
-            reprompt += res.getString('LAUNCH_REPROMPT_BUTTON');
-          }
-          speech += reprompt;
-
-          response = handlerInput.responseBuilder
-            .speak(speech)
-            .reprompt(reprompt)
+    }).then((nextDay) => {
+      if (nextDay === 'nobust') {
+        return 'continue';
+      } else if (!nextDay) {
+        // Here's the place to do an upsell if we can!
+        if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.morehands) {
+          speechParams.Chips = utils.DAILY_REFRESH_POINTS;
+          speechParams.ExtraChips = utils.PURCHASE_REFRESH_POINTS;
+          speech += '_BUSTED_UPSELL';
+          return handlerInput.jrm.renderItem(ri(speech, speechParams));
+        } else {
+          speech += '_BUSTED';
+          speechParams.Chips = utils.DAILY_REFRESH_POINTS;
+          response = handlerInput.jrb
+            .speak(ri(speech, speechParams))
+            .withShouldEndSession(true)
             .getResponse();
-          resolve(response);
-        });
+          return 'exit';
+        }
+      } else {
+        speech = 'LAUNCH_BUSTED_REPLENISH';
+        speechParams.Chips = utils.DAILY_REFRESH_POINTS;
+        speechParams.Name = (attributes.name ? attributes.name: '');
+        attributes.points += utils.DAILY_REFRESH_POINTS;
+        attributes.busted = undefined;
+        return 'continue';
       }
+    }).then((directive) => {
+      if (typeof directive !== 'string') {
+        directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
+        handlerInput.jrb.addDirective(directive);
+        response = handlerInput.jrb
+          .withShouldEndSession(true)
+          .getResponse();
+        return 'exit';
+      } else {
+        return directive;
+      }
+    }).then((action) => {
+      if (action === 'continue') {
+        attributes.temp.newGame = true;
+        if (speech === 'LAUNCH') {
+          if (attributes.name) {
+            speech += '_WELCOME_BACK';
+            speechParams.Name = attributes.name;
+            reprompt = 'LAUNCH_RETURNING_REPRONPT';
+          } else {
+            speech += '_WELCOME';
+            reprompt = 'LAUNCH_REPROMPT';
+          }
+        }
+        if (buttons.supportButtons(handlerInput)) {
+          reprompt += '_BUTTON';
+          speech += '_BUTTON';
+        }
+
+        response = handlerInput.jrb
+          .speak(ri(speech, speechParams))
+          .reprompt(ri(reprompt))
+          .getResponse();
+      }
+
+      return response;
     });
   },
 };

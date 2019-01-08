@@ -5,6 +5,7 @@
 'use strict';
 
 const ads = require('../ads');
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   canHandle(handlerInput) {
@@ -27,18 +28,16 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(handlerInput);
+    const speechParams = {};
 
-    return new Promise((resolve, reject) => {
-      ads.getAd(attributes, 'threecardpoker', event.request.locale, (adText) => {
-        const response = handlerInput.responseBuilder
-          .speak(res.getString('EXIT_GAME')
-            .replace('{0}', adText)
-            .replace('{1}', (attributes.name) ? attributes.name : ''))
-          .withShouldEndSession(true)
-          .getResponse();
-        resolve(response);
-      });
+    return ads.getAd(attributes, 'threecardpoker', event.request.locale)
+    .then((adText) => {
+      speechParams.Ad = adText;
+      speechParams.Name = (attributes.name) ? attributes.name : '';
+      return handlerInput.jrb
+        .speak(ri('EXIT_GAME', speechParams))
+        .withShouldEndSession(true)
+        .getResponse();
     });
   },
 };

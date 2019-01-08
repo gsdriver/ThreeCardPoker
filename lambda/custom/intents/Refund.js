@@ -4,8 +4,6 @@
 
 'use strict';
 
-const utils = require('../utils');
-
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -15,9 +13,19 @@ module.exports = {
   },
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const directive = {
+      'type': 'Connections.SendRequest',
+      'name': 'Cancel',
+      'payload': {
+        'InSkillProduct': {
+          'productId': attributes.paid.morehands.productId,
+        },
+      },
+      'token': 'Cancel',
+    };
 
-    return handlerInput.responseBuilder
-      .addDirective(utils.getPurchaseDirective(attributes, 'Cancel'))
+    return handlerInput.jrb
+      .addDirective(directive)
       .withShouldEndSession(true)
       .getResponse();
   },

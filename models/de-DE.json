@@ -1,0 +1,155 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "drei karten poker",
+      "intents": [
+        {
+          "name": "AMAZON.ScrollDownIntent"
+        },
+        {
+          "name": "AMAZON.RepeatIntent"
+        },
+        {
+          "name": "AMAZON.CancelIntent"
+        },
+        {
+          "name": "AMAZON.HelpIntent"
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent"
+        },
+        {
+          "name": "AMAZON.PageUpIntent"
+        },
+        {
+          "name": "AMAZON.PreviousIntent"
+        },
+        {
+          "name": "HighScoreIntent",
+          "samples": [
+            "Higscores vorlesen",
+            "nenne mir die Highscores",
+            "was sind die Highscores",
+            "was ist die Rangliste",
+            "Rangliste vorlesen",
+            "sage die Highscores",
+            "lies die Rangliste vor"
+          ]
+        },
+        {
+          "name": "ChangeNameIntent",
+          "slots": [
+            {
+              "name": "Name",
+              "type": "AMAZON.DE_FIRST_NAME"
+            }
+          ],
+          "samples": [
+            "Ändere meinen Namen",
+            "Meinen Namen ändern",
+            "Ändere meinen Namen zu {Name}",
+            "Namen ändern",
+            "Namen ändern zu {Name}",
+            "Mein Name ist {Name}",
+            "{Name}"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent"
+        },
+        {
+          "name": "AMAZON.NextIntent"
+        },
+        {
+          "name": "AMAZON.PageDownIntent"
+        },
+        {
+          "name": "AMAZON.ScrollLeftIntent"
+        },
+        {
+          "name": "AMAZON.ScrollUpIntent"
+        },
+        {
+          "name": "AMAZON.YesIntent"
+        },
+        {
+          "name": "AMAZON.NavigateSettingsIntent"
+        },
+        {
+          "name": "PlayIntent",
+          "samples": [
+            "Spiel spielen",
+            "Spiel beginnen",
+            "spielen",
+            "austeilen",
+            "los geht's"
+          ]
+        },
+        {
+          "name": "SuggestIntent",
+          "samples": [
+            "was soll ich tun",
+            "mach einen Vorschlag",
+            "erteile mir Rat",
+            "gib mir einen Rat",
+            "als Vorschlag",
+            "als Ratschlag",
+            "schlage Aktion vor",
+            "schlage Spiel vor",
+            "schlage Spielzug vor",
+            "schlage einen Spielzug vor",
+            "schlage eine Aktion vor",
+            "schlage ein Spiel vor"
+          ]
+        },
+        {
+          "name": "AMAZON.MoreIntent"
+        },
+        {
+          "name": "AMAZON.ScrollRightIntent"
+        },
+        {
+          "name": "AMAZON.NoIntent"
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "ChangeNameIntent",
+          "confirmationRequired": false,
+          "slots": [
+            {
+              "name": "Name",
+              "type": "AMAZON.DE_FIRST_NAME",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.1142476942671.1417417013686"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.1142476942671.1417417013686",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Und dein Name?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Wie ist dein Name?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Wie lautet dein Name?"
+          }
+        ]
+      }
+    ]
+  }
+}

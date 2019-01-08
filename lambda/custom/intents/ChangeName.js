@@ -5,6 +5,7 @@
 'use strict';
 
 const buttons = require('../buttons');
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -16,9 +17,9 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(handlerInput);
     let speech;
     let reprompt;
+    const speechParams = {};
 
     if (!event.request.intent || !event.request.intent.slots
       || !event.request.intent.slots.Name
@@ -31,22 +32,23 @@ module.exports = {
 
     // OK, we have a name - repeat it back and remind them they can change at any time
     attributes.name = event.request.intent.slots.Name.value;
-    speech = res.getString('CHANGE_CONFIRM').replace('{0}', attributes.name);
+    speechParams.Name = attributes.name;
+    speech = 'CHANGE_CONFIRM';
     if (!attributes.temp.namePrompt) {
-      speech += res.getString('CHANGE_PROMPT_CHANGE');
+      speech += '_PROMPT_CHANGE';
       attributes.temp.namePrompt = true;
     }
 
-    reprompt = res.getString('CHANGE_REPROMPT');
+    reprompt = 'CHANGE_REPROMPT';
     if (attributes.temp.newGame && buttons.supportButtons(handlerInput)
       && !(attributes.temp.buttons && attributes.temp.buttons.discard)) {
-      reprompt += res.getString('CHANGE_REPROMPT_BUTTON');
+      reprompt += '_BUTTON';
+      speech += '_BUTTON';
     }
-    speech += reprompt;
 
-    return handlerInput.responseBuilder
-      .speak(speech)
-      .reprompt(reprompt)
+    return handlerInput.jrb
+      .speak(ri(speech, speechParams))
+      .reprompt(ri(reprompt))
       .getResponse();
   },
 };

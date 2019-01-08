@@ -1,4 +1,4 @@
-var mainApp = require('../lambda/custom/index');
+var mainApp = require('./index');
 
 const attributeFile = 'attributes.txt';
 
@@ -7,7 +7,7 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const fs = require('fs');
 
-const LOCALE='en-US';
+const LOCALE='de-DE';
 const APPID = 'amzn1.ask.skill.115099ae-4d44-4d1c-aa99-634f34acf802';
 
 function BuildEvent(argv)

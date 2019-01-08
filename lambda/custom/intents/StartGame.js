@@ -5,6 +5,7 @@
 'use strict';
 
 const buttons = require('../buttons');
+const {ri} = require('@jargon/alexa-skill-sdk');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -28,9 +29,9 @@ module.exports = {
   },
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(handlerInput);
-    let speech = '<audio src="soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01"/> ';
+    let speech;
     let reprompt;
+    const speechParams = {};
 
     // Save this button
     attributes.usedButton = true;
@@ -39,27 +40,30 @@ module.exports = {
     }
     if (!attributes.temp.buttons.hold) {
       attributes.temp.buttons.hold = attributes.temp.buttonId;
-      speech += res.getString('STARTGAME_PRESS_DISCARD')
-        .replace('{0}', (attributes.name) ? attributes.name : '');
+      speechParams.Name = (attributes.name) ? attributes.name : '';
 
       // Turn off the microphone until they press the second button
       buttons.secondButtonInputHandler(handlerInput);
-      handlerInput.responseBuilder
-        .speak(speech)
+      handlerInput.jrb
+        .speak(ri('STARTGAME_PRESS_DISCARD', speechParams))
         .withShouldEndSession(undefined);
     } else {
       attributes.temp.buttons.discard = attributes.temp.buttonId;
-      speech += res.getString('STARTGAME_START');
-      reprompt = res.getString((attributes.name) ? 'STARTGAME_START_REPROMPT' : 'STARTGAME_START_REPROMPT_NONAME');
-      speech += reprompt;
+      speech = 'STARTGAME_START';
+      if (attributes.name) {
+        reprompt = 'STARTGAME_START_REPROMPT';
+      } else {
+        reprompt = 'STARTGAME_START_REPROMPT_NONAME';
+        speech += '_NONAME';
+      }
       buttons.turnOffButtons(handlerInput);
-      handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(reprompt);
+      handlerInput.jrb
+        .speak(ri(speech))
+        .reprompt(ri(reprompt));
     }
 
     // OK, set the button up for betting mode - flashing different colors
     buttons.lightPlayer(handlerInput);
-    return handlerInput.responseBuilder.getResponse();
+    return handlerInput.jrb.getResponse();
   },
 };
