@@ -50,7 +50,7 @@ module.exports = {
       || !(event.context && event.context.System &&
           event.context.System.device &&
           event.context.System.device.supportedInterfaces &&
-          event.context.System.device.supportedInterfaces.Display)) {
+          event.context.System.device.supportedInterfaces['Alexa.Presentation.APL'])) {
       return Promise.resolve();
     } else {
       attributes.display = true;
@@ -95,16 +95,40 @@ module.exports = {
             ? 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background-de.png'
             : 'https://s3.amazonaws.com/garrett-alexa-images/threecard/threecardpoker-background.png');
       }).then((imageUrl) => {
-        image = new Alexa.ImageHelper()
-          .addImageInstance(imageUrl)
-          .getImage();
+        image = imageUrl;
         return handlerInput.jrm.render((ri('GAME_TITLE')));
       }).then((title) => {
-        return handlerInput.jrb.addRenderTemplateDirective({
-          type: 'BodyTemplate6',
-          title: title,
-          backButton: 'HIDDEN',
-          backgroundImage: image,
+        const document = {
+          type: 'APL',
+          version: '1.6',
+          import: [{
+            name: 'alexa-layouts',
+            version: '1.3.0',
+          }],
+          mainTemplate: {
+            parameters: [
+              'headlineTemplateData',
+            ],
+            item: [{
+              type: 'AlexaHeadline',
+              headerTitle: '${headlineTemplateData.textContent}',
+              headerBackButton: false,
+              backgroundImageSource: '${headlineTemplateData.backgroundImage}',
+            }],
+          },
+        };
+        const datasources = {
+          headlineTemplateData: {
+            backgroundImage: image,
+            textContent: title,
+          },
+        };
+
+        return handlerInput.jrb.addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.1',
+          document,
+          datasources,
         });
       }).catch((err) => {
         // Just fail silently
