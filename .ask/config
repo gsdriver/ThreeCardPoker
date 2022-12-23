@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v2"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v3"
               }
             }
           }
@@ -16,34 +16,34 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "562d70fc46a73ed30feabce07a6663d3"
+          "eTag": "700e7c540547d34d5cff1b82859e05f5"
         },
         "interactionModel": {
           "en-US": {
-            "eTag": "77f3367fe1cf29f551dc9ddedb001b7d"
+            "eTag": "n68UB5jt4oJd8VqJneyWTA=="
           },
           "en-CA": {
-            "eTag": "77f3367fe1cf29f551dc9ddedb001b7d"
+            "eTag": "n68UB5jt4oJd8VqJneyWTA=="
           },
           "en-AU": {
-            "eTag": "77f3367fe1cf29f551dc9ddedb001b7d"
+            "eTag": "n68UB5jt4oJd8VqJneyWTA=="
           },
           "en-GB": {
-            "eTag": "c68669e51b4369f17079d0e4c4139657"
+            "eTag": "qHgRWyig6d6ByPo3rTMprA=="
           },
           "de-DE": {
-            "eTag": "44f3dac21ce7e911efbbf0a69ca97016"
+            "eTag": "a4wWBmeqc81HUjCtriKGGQ=="
           }
         },
         "lambda": [
           {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v2",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v2",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v3",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:ThreeCardPoker_v3",
             "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "f9bca8b0-b368-4cc1-8d24-63898556b4ed"
+            "revisionId": "c65c032c-5334-45c6-8f61-a928b96bcaa7"
           }
         ]
       },
