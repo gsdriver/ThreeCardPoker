@@ -203,9 +203,6 @@
         "en-CA": {
           "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
         },
-        "en-IN": {
-          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
-        },
         "de-DE": {
           "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy-DE.html"
         },
